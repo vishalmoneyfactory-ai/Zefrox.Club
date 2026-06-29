@@ -35,6 +35,7 @@ model User {
   fullName        String
   email           String           @unique
   phone           String
+  password        String?
   role            Role             @default(USER)
   totalPaid       Float            @default(0)
   createdAt       DateTime         @default(now())
