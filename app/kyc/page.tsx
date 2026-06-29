@@ -63,8 +63,7 @@ export default function KycPage() {
         if (data) {
           setKycData(data);
           if (data.status === 'APPROVED') {
-            router.push('/dashboard');
-            return;
+            // We do not redirect, we let the UI show the Approved state
           }
           if (data.status === 'REJECTED') {
             reset({
@@ -200,6 +199,48 @@ export default function KycPage() {
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
             Processing...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show approved status
+  if (kycData?.status === 'APPROVED') {
+    return (
+      <div className="max-w-2xl mx-auto mt-12 animate-fade-in">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-50 mb-6">
+              <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">KYC Approved</h2>
+            <p className="text-slate-500">
+              Your identity verification is complete. You can now make payments.
+            </p>
+          </div>
+          
+          <div className="space-y-4 border-t border-slate-100 pt-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm font-medium text-slate-500">Full Name</p>
+                <p className="text-slate-900 font-semibold">{kycData.fullName}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-500">UPI ID</p>
+                <p className="text-slate-900 font-semibold">{kycData.upiId}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-500">Bank Account</p>
+                <p className="text-slate-900 font-semibold">{kycData.bankAccount}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-500">Aadhaar Number</p>
+                <p className="text-slate-900 font-semibold">XXXXXXXX{kycData.aadhaarNumber?.slice(-4)}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
