@@ -6,6 +6,7 @@ import { useToast } from '@/components/ui/Toast';
 import Modal from '@/components/ui/Modal';
 import Badge from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
+import ScreenshotModal from '@/components/features/ScreenshotModal';
 
 interface User {
   id: string;
@@ -44,6 +45,7 @@ export default function AdminUsersPage() {
   // View modal
   const [viewUser, setViewUser] = useState<UserDetail | null>(null);
   const [viewLoading, setViewLoading] = useState(false);
+  const [imageModal, setImageModal] = useState<{ open: boolean; url: string; title: string }>({ open: false, url: '', title: '' });
 
   // Edit modal
   const [editUser, setEditUser] = useState<User | null>(null);
@@ -238,7 +240,14 @@ export default function AdminUsersPage() {
             {viewUser.kyc?.selfieUrl && (
               <div>
                 <p className="text-xs text-slate-400 uppercase font-semibold mb-2">KYC Selfie</p>
-                <img src={viewUser.kyc.selfieUrl} alt="KYC Selfie" className="w-24 h-24 rounded-xl object-cover border" />
+                <div className="relative group cursor-pointer inline-block" onClick={() => setImageModal({ open: true, url: viewUser.kyc!.selfieUrl, title: 'KYC Selfie' })}>
+                  <img src={viewUser.kyc.selfieUrl} alt="KYC Selfie" className="w-24 h-24 rounded-xl object-cover border group-hover:opacity-90 transition-opacity" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-xl">
+                    <svg className="w-6 h-6 text-white drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -352,6 +361,14 @@ export default function AdminUsersPage() {
           </div>
         </div>
       </Modal>
+
+      {/* Fullscreen Image Viewer */}
+      <ScreenshotModal
+        isOpen={imageModal.open}
+        onClose={() => setImageModal({ open: false, url: '', title: '' })}
+        imageUrl={imageModal.url}
+        title={imageModal.title}
+      />
     </div>
   );
 }

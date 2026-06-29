@@ -6,6 +6,7 @@ import { useToast } from '@/components/ui/Toast';
 import Modal from '@/components/ui/Modal';
 import Badge from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
+import ScreenshotModal from '@/components/features/ScreenshotModal';
 
 interface KycRecord {
   id: string;
@@ -35,6 +36,7 @@ export default function AdminKycPage() {
   const [rejectReason, setRejectReason] = useState('');
   const [showRejectInput, setShowRejectInput] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [imageModal, setImageModal] = useState<{ open: boolean; url: string; title: string }>({ open: false, url: '', title: '' });
 
   const fetchKyc = useCallback(async () => {
     setLoading(true);
@@ -187,11 +189,25 @@ export default function AdminKycPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <p className="text-xs text-slate-400 uppercase font-semibold mb-2">Selfie</p>
-                <img src={selectedKyc.selfieUrl} alt="KYC Selfie" className="w-full h-48 rounded-xl object-cover border-2 border-slate-100" />
+                <div className="relative group cursor-pointer" onClick={() => setImageModal({ open: true, url: selectedKyc.selfieUrl, title: 'KYC Selfie' })}>
+                  <img src={selectedKyc.selfieUrl} alt="KYC Selfie" className="w-full h-48 rounded-xl object-cover border-2 border-slate-100 group-hover:opacity-90 transition-opacity" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-xl">
+                    <svg className="w-8 h-8 text-white drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+                    </svg>
+                  </div>
+                </div>
               </div>
               <div>
                 <p className="text-xs text-slate-400 uppercase font-semibold mb-2">Aadhaar Card</p>
-                <img src={selectedKyc.aadhaarPhotoUrl} alt="KYC Aadhaar Card" className="w-full h-48 rounded-xl object-contain border-2 border-slate-100 bg-slate-50" />
+                <div className="relative group cursor-pointer" onClick={() => setImageModal({ open: true, url: selectedKyc.aadhaarPhotoUrl, title: 'KYC Aadhaar Card' })}>
+                  <img src={selectedKyc.aadhaarPhotoUrl} alt="KYC Aadhaar Card" className="w-full h-48 rounded-xl object-contain border-2 border-slate-100 bg-slate-50 group-hover:opacity-90 transition-opacity" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-xl">
+                    <svg className="w-8 h-8 text-slate-700 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -232,6 +248,14 @@ export default function AdminKycPage() {
           </div>
         )}
       </Modal>
+
+      {/* Fullscreen Image Viewer */}
+      <ScreenshotModal
+        isOpen={imageModal.open}
+        onClose={() => setImageModal({ open: false, url: '', title: '' })}
+        imageUrl={imageModal.url}
+        title={imageModal.title}
+      />
     </div>
   );
 }

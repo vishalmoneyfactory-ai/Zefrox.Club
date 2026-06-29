@@ -8,6 +8,7 @@ import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
 import Badge from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
+import ScreenshotModal from '@/components/features/ScreenshotModal';
 
 const editSchema = z.object({
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -42,6 +43,7 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [payments, setPayments] = useState<{ status: string; amount: number }[]>([]);
   const [requests, setRequests] = useState<{ status: string; amount: number }[]>([]);
+  const [imageModal, setImageModal] = useState<{ open: boolean; url: string; title: string }>({ open: false, url: '', title: '' });
 
   const {
     register,
@@ -206,11 +208,18 @@ export default function ProfilePage() {
         <h2 className="text-lg font-semibold text-slate-900 mb-4">KYC Status</h2>
         <div className="flex items-center gap-4">
           {user.kyc?.selfieUrl && (
-            <img
-              src={user.kyc.selfieUrl}
-              alt="KYC selfie"
-              className="w-16 h-16 rounded-xl object-cover border-2 border-slate-100"
-            />
+            <div className="relative group cursor-pointer" onClick={() => setImageModal({ open: true, url: user.kyc!.selfieUrl!, title: 'Your KYC Selfie' })}>
+              <img
+                src={user.kyc.selfieUrl}
+                alt="KYC selfie"
+                className="w-16 h-16 rounded-xl object-cover border-2 border-slate-100 group-hover:opacity-90 transition-opacity"
+              />
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-xl">
+                <svg className="w-5 h-5 text-white drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+                </svg>
+              </div>
+            </div>
           )}
           <div>
             <Badge
@@ -284,6 +293,14 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Fullscreen Image Viewer */}
+      <ScreenshotModal
+        isOpen={imageModal.open}
+        onClose={() => setImageModal({ open: false, url: '', title: '' })}
+        imageUrl={imageModal.url}
+        title={imageModal.title}
+      />
     </div>
   );
 }

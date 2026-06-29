@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
+import ScreenshotModal from '@/components/features/ScreenshotModal';
 
 interface PaymentProofModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export default function PaymentProofModal({
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [imageModal, setImageModal] = useState(false);
 
   const upiId = process.env.NEXT_PUBLIC_UPI_ID || 'company@upi';
 
@@ -104,6 +106,7 @@ export default function PaymentProofModal({
   };
 
   return (
+    <>
     <Modal isOpen={isOpen} onClose={onClose} title="Upload Payment Proof" size="md">
       <div className="space-y-6">
         {/* Payment details section */}
@@ -112,7 +115,14 @@ export default function PaymentProofModal({
             <h3 className="text-sm font-semibold text-slate-900 mb-1">Scan to Pay</h3>
             <p className="text-xs text-slate-500 mb-3">Scan this QR code with any UPI app</p>
             <div className="bg-white p-2 rounded-xl inline-block shadow-sm border border-slate-100 mb-2">
-              <img src="/images/admin-qr.jpeg" alt="Admin QR Code" className="w-40 h-40 object-cover rounded-lg" />
+              <div className="relative group cursor-pointer" onClick={() => setImageModal(true)}>
+                <img src="/images/admin-qr.jpeg" alt="Admin QR Code" className="w-40 h-40 object-cover rounded-lg group-hover:opacity-90 transition-opacity" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-lg">
+                  <svg className="w-8 h-8 text-slate-700 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+                  </svg>
+                </div>
+              </div>
             </div>
             <div className="flex items-center justify-center gap-2">
               <span className="text-2xl font-bold text-slate-900">
@@ -214,5 +224,13 @@ export default function PaymentProofModal({
         </Button>
       </div>
     </Modal>
+    
+    <ScreenshotModal
+      isOpen={imageModal}
+      onClose={() => setImageModal(false)}
+      imageUrl="/images/admin-qr.jpeg"
+      title="Admin QR Code"
+    />
+    </>
   );
 }

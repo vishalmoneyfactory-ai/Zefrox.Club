@@ -6,6 +6,7 @@ import { useToast } from '@/components/ui/Toast';
 import Modal from '@/components/ui/Modal';
 import Badge from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
+import ScreenshotModal from '@/components/features/ScreenshotModal';
 
 interface PaymentRecord {
   id: string;
@@ -38,6 +39,7 @@ export default function AdminPaymentsPage() {
   const [showRejectInput, setShowRejectInput] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [imageModal, setImageModal] = useState<{ open: boolean; url: string; title: string }>({ open: false, url: '', title: '' });
 
   const fetchPayments = useCallback(async () => {
     try {
@@ -196,11 +198,18 @@ export default function AdminPaymentsPage() {
             {/* Screenshot */}
             <div className="flex-1">
               <p className="text-xs text-slate-400 uppercase font-semibold mb-2">Payment Screenshot</p>
-              <img
-                src={selectedPayment.screenshotUrl}
-                alt="Payment proof"
-                className="w-full rounded-xl border border-slate-200 object-contain max-h-[500px]"
-              />
+              <div className="relative group cursor-pointer" onClick={() => setImageModal({ open: true, url: selectedPayment.screenshotUrl, title: 'Payment Proof' })}>
+                <img
+                  src={selectedPayment.screenshotUrl}
+                  alt="Payment proof"
+                  className="w-full rounded-xl border border-slate-200 object-contain max-h-[500px] group-hover:opacity-90 transition-opacity"
+                />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-xl">
+                  <svg className="w-10 h-10 text-white drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             {/* Details sidebar */}
@@ -280,6 +289,14 @@ export default function AdminPaymentsPage() {
           </div>
         )}
       </Modal>
+
+      {/* Fullscreen Image Viewer */}
+      <ScreenshotModal
+        isOpen={imageModal.open}
+        onClose={() => setImageModal({ open: false, url: '', title: '' })}
+        imageUrl={imageModal.url}
+        title={imageModal.title}
+      />
     </div>
   );
 }
