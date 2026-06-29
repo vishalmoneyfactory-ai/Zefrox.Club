@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentRequestStatus {
+  PENDING
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PROOF_UPLOADED
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id              String           @id @default(cuid())
+  fullName        String
+  email           String           @unique
+  phone           String
+  role            Role             @default(USER)
+  totalPaid       Float            @default(0)
+  createdAt       DateTime         @default(now())
+  kyc             Kyc?
+  paymentRequests PaymentRequest[]
+  payments        Payment[]
+  notifications   Notification[]
+  otps            Otp[]
+}
+
+model Otp {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [email], references: [email])
+}
+
+model Kyc {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  fullName        String
+  address         String
+  upiId           String
+  bankAccount     String
+  ifscCode        String
+  aadhaarNumber   String
+  aadhaarPhotoUrl String
+  selfieUrl       String
+  status          KycStatus @default(PENDING)
+  rejectionReason String?
+  submittedAt     DateTime  @default(now())
+  reviewedAt      DateTime?
+  user            User      @relation(fields: [userId], references: [id])
+}
+
+model PaymentRequest {
+  id        String               @id @default(cuid())
+  userId    String
+  amount    Float
+  status    PaymentRequestStatus @default(PENDING)
+  createdAt DateTime             @default(now())
+  user      User                 @relation(fields: [userId], references: [id])
+  payment   Payment?
+}
+
+model Payment {
+  id               String        @id @default(cuid())
+  userId           String
+  paymentRequestId String        @unique
+  amount           Float
+  screenshotUrl    String
+  status           PaymentStatus @default(PROOF_UPLOADED)
+  rejectionReason  String?
+  submittedAt      DateTime      @default(now())
+  reviewedAt       DateTime?
+  transactionId    String        @default(cuid())
+  user             User          @relation(fields: [userId], references: [id])
+  paymentRequest   PaymentRequest @relation(fields: [paymentRequestId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
