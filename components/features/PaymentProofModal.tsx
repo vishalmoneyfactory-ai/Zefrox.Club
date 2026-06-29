@@ -107,24 +107,43 @@ export default function PaymentProofModal({
     <Modal isOpen={isOpen} onClose={onClose} title="Upload Payment Proof" size="md">
       <div className="space-y-6">
         {/* Payment details section */}
-        <div className="bg-slate-50 rounded-lg p-4 space-y-3">
-          <h3 className="text-sm font-semibold text-slate-900">Payment Details</h3>
-
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-slate-500">Amount</span>
-            <span className="text-lg font-bold text-slate-900">
-              ₹{amount.toLocaleString()}
-            </span>
+        <div className="bg-slate-50 rounded-lg p-5 space-y-4">
+          <div className="text-center">
+            <h3 className="text-sm font-semibold text-slate-900 mb-1">Scan to Pay</h3>
+            <p className="text-xs text-slate-500 mb-3">Scan this QR code with any UPI app</p>
+            <div className="bg-white p-2 rounded-xl inline-block shadow-sm border border-slate-100 mb-2">
+              <img src="/images/admin-qr.jpeg" alt="Admin QR Code" className="w-40 h-40 object-cover rounded-lg" />
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-2xl font-bold text-slate-900">
+                ₹{amount.toLocaleString('en-IN')}
+              </span>
+            </div>
           </div>
 
-          <div className="border-t border-slate-200 pt-3 space-y-2">
-            <div className="flex justify-between">
-              <span className="text-sm text-slate-500">UPI ID</span>
-              <span className="text-sm font-medium text-slate-700">{upiId}</span>
+          <div className="border-t border-slate-200 pt-4 space-y-3">
+            <div className="bg-white rounded-lg border border-slate-200 p-3">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">UPI Details</p>
+              <div className="flex justify-between items-center mb-1.5">
+                <span className="text-sm text-slate-500">UPI ID</span>
+                <span className="text-sm font-medium text-slate-900 font-mono">{upiId}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-slate-500">Account Name</span>
+                <span className="text-sm font-medium text-slate-900">Company</span>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-slate-500">Account Name</span>
-              <span className="text-sm font-medium text-slate-700">Company</span>
+
+            <div className="bg-white rounded-lg border border-slate-200 p-3">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Bank Details</p>
+              <div className="flex justify-between items-center mb-1.5">
+                <span className="text-sm text-slate-500">A/C Number</span>
+                <span className="text-sm font-medium text-slate-900 font-mono">XXXX-XXXX-1234</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-slate-500">IFSC Code</span>
+                <span className="text-sm font-medium text-slate-900 font-mono">SBIN0001234</span>
+              </div>
             </div>
           </div>
         </div>
