@@ -118,7 +118,7 @@ export default function AdminSidebar() {
           />
 
           {/* Sidebar panel */}
-          <aside className="relative w-64 h-full bg-white p-4 shadow-xl animate-slide-up">
+          <aside className="relative w-64 h-full bg-white p-4 shadow-xl animate-slide-right">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold text-slate-900">

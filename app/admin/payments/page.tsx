@@ -112,36 +112,36 @@ export default function AdminPaymentsPage() {
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[700px]">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">User</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Amount</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3 hidden sm:table-cell">Submitted</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3 hidden md:table-cell">Days Pending</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Action</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">User</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Amount</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden sm:table-cell">Submitted</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden md:table-cell">Days Pending</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {payments.map((payment) => (
                 <tr key={payment.id} className="hover:bg-slate-50/50">
-                  <td className="px-6 py-4">
+                  <td className="px-4 sm:px-6 py-4">
                     <div>
                       <p className="text-sm font-medium text-slate-900">{payment.user.fullName}</p>
                       <p className="text-xs text-slate-500">{payment.user.email}</p>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm font-semibold text-slate-900">
+                  <td className="px-4 sm:px-6 py-4 text-sm font-semibold text-slate-900">
                     ₹{payment.amount.toLocaleString('en-IN')}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-500 hidden sm:table-cell">
+                  <td className="px-4 sm:px-6 py-4 text-sm text-slate-500 hidden sm:table-cell">
                     {new Date(payment.submittedAt).toLocaleDateString('en-IN', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
                     })}
                   </td>
-                  <td className="px-6 py-4 hidden md:table-cell">
+                  <td className="px-4 sm:px-6 py-4 hidden md:table-cell">
                     {(() => {
                       const days = getDaysPending(payment.submittedAt);
                       return (
@@ -155,7 +155,7 @@ export default function AdminPaymentsPage() {
                       );
                     })()}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 sm:px-6 py-4">
                     <button
                       onClick={() => {
                         setSelectedPayment(payment);

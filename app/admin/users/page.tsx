@@ -145,34 +145,34 @@ export default function AdminUsersPage() {
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[800px]">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Name</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Email</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3 hidden sm:table-cell">Phone</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">KYC</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3 hidden lg:table-cell">Total Paid</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3 hidden lg:table-cell">Joined</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Actions</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Name</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Email</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden sm:table-cell">Phone</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">KYC</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden lg:table-cell">Total Paid</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden lg:table-cell">Joined</th>
+                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {users.map((user) => (
                 <tr key={user.id} className="hover:bg-slate-50/50">
-                  <td className="px-6 py-4 text-sm font-medium text-slate-900">{user.fullName}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{user.email}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600 hidden sm:table-cell">{user.phone}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 sm:px-6 py-4 text-sm font-medium text-slate-900">{user.fullName}</td>
+                  <td className="px-4 sm:px-6 py-4 text-sm text-slate-600">{user.email}</td>
+                  <td className="px-4 sm:px-6 py-4 text-sm text-slate-600 hidden sm:table-cell">{user.phone}</td>
+                  <td className="px-4 sm:px-6 py-4">
                     <Badge variant={user.kyc?.status === 'APPROVED' ? 'approved' : user.kyc?.status === 'REJECTED' ? 'rejected' : 'pending'}>
                       {user.kyc?.status || 'None'}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-slate-900 hidden lg:table-cell">₹{user.totalPaid.toLocaleString('en-IN')}</td>
-                  <td className="px-6 py-4 text-sm text-slate-500 hidden lg:table-cell">
+                  <td className="px-4 sm:px-6 py-4 text-sm font-medium text-slate-900 hidden lg:table-cell">₹{user.totalPaid.toLocaleString('en-IN')}</td>
+                  <td className="px-4 sm:px-6 py-4 text-sm text-slate-500 hidden lg:table-cell">
                     {new Date(user.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 sm:px-6 py-4">
                     <div className="flex items-center gap-1">
                       <button onClick={() => handleView(user.id)} className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors" title="View">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

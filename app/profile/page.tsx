@@ -117,7 +117,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Personal Information */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold text-slate-900">Personal Information</h2>
           {!editing && (
@@ -204,7 +204,7 @@ export default function ProfilePage() {
       </div>
 
       {/* KYC Status */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-8">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">KYC Status</h2>
         <div className="flex items-center gap-4">
           {user.kyc?.selfieUrl && (
@@ -251,7 +251,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Payment Statistics */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-8">
         <h2 className="text-lg font-semibold text-slate-900 mb-6">Payment Statistics</h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="text-center p-4 bg-green-50 rounded-xl">
@@ -274,7 +274,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Account Info */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-8">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">Account Information</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div>

@@ -176,7 +176,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {activeTab === 'requests' ? (
             <div>
               {requests.filter((r) => !r.payment).length === 0 ? (
@@ -237,7 +237,7 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full min-w-[600px]">
                     <thead>
                       <tr className="border-b border-slate-200">
                         <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Date</th>

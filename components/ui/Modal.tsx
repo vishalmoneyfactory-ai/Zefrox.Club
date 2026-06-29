@@ -66,7 +66,7 @@ export default function Modal({
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-200">
           <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
           <button
             onClick={onClose}
@@ -89,7 +89,7 @@ export default function Modal({
         </div>
 
         {/* Body */}
-        <div className="overflow-y-auto max-h-[80vh] p-6">{children}</div>
+        <div className="overflow-y-auto max-h-[75vh] sm:max-h-[85vh] p-4 sm:p-6">{children}</div>
       </div>
     </div>,
     document.body

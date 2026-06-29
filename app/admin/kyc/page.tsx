@@ -121,30 +121,30 @@ export default function AdminKycPage() {
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[800px]">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">User</th>
-                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Email</th>
-                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3 hidden sm:table-cell">Submitted</th>
-                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Status</th>
-                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Action</th>
+                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">User</th>
+                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Email</th>
+                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden sm:table-cell">Submitted</th>
+                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Status</th>
+                  <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {kycRecords.map((kyc) => (
                   <tr key={kyc.id} className="hover:bg-slate-50/50 cursor-pointer" onClick={() => { setSelectedKyc(kyc); setShowRejectInput(false); setRejectReason(''); }}>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{kyc.user.fullName}</td>
-                    <td className="px-6 py-4 text-sm text-slate-600">{kyc.user.email}</td>
-                    <td className="px-6 py-4 text-sm text-slate-500 hidden sm:table-cell">
+                    <td className="px-4 sm:px-6 py-4 text-sm font-medium text-slate-900">{kyc.user.fullName}</td>
+                    <td className="px-4 sm:px-6 py-4 text-sm text-slate-600">{kyc.user.email}</td>
+                    <td className="px-4 sm:px-6 py-4 text-sm text-slate-500 hidden sm:table-cell">
                       {new Date(kyc.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       <Badge variant={kyc.status === 'APPROVED' ? 'approved' : kyc.status === 'REJECTED' ? 'rejected' : 'pending'}>
                         {kyc.status}
                       </Badge>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       <button className="text-sm text-blue-600 hover:text-blue-700 font-medium" onClick={(e) => { e.stopPropagation(); setSelectedKyc(kyc); setShowRejectInput(false); setRejectReason(''); }}>
                         View
                       </button>
