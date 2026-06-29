@@ -236,69 +236,116 @@ export default function DashboardPage() {
                   <p className="text-slate-400 text-sm mt-1">Your payment history will appear here</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[600px]">
-                    <thead>
-                      <tr className="border-b border-slate-200">
-                        <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Date</th>
-                        <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Amount</th>
-                        <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Status</th>
-                        <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Transaction ID</th>
-                        <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Proof</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {payments.map((payment) => (
-                        <tr key={payment.id} className="hover:bg-slate-50/50">
-                          <td className="px-4 py-3.5 text-sm text-slate-600">
-                            {new Date(payment.submittedAt).toLocaleDateString('en-IN', {
-                              day: 'numeric',
-                              month: 'short',
-                              year: 'numeric',
-                            })}
-                          </td>
-                          <td className="px-4 py-3.5 text-sm font-semibold text-slate-900">
-                            ₹{payment.amount.toLocaleString('en-IN')}
-                          </td>
-                          <td className="px-4 py-3.5">
-                            <Badge
-                              variant={
-                                payment.status === 'APPROVED'
-                                  ? 'approved'
-                                  : payment.status === 'REJECTED'
-                                  ? 'rejected'
-                                  : 'proof-uploaded'
-                              }
-                            >
-                              {payment.status.replace('_', ' ')}
-                            </Badge>
-                          </td>
-                          <td className="px-4 py-3.5 text-sm text-slate-500 font-mono">
-                            {payment.transactionId.substring(0, 12)}...
-                          </td>
-                          <td className="px-4 py-3.5">
-                            <button
-                              onClick={() =>
-                                setScreenshotModal({ open: true, url: payment.screenshotUrl })
-                              }
-                              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                            >
-                              View
-                            </button>
-                          </td>
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full min-w-[600px]">
+                      <thead>
+                        <tr className="border-b border-slate-200">
+                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Date</th>
+                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Amount</th>
+                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Status</th>
+                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Transaction ID</th>
+                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Proof</th>
                         </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {payments.map((payment) => (
+                          <tr key={payment.id} className="hover:bg-slate-50/50">
+                            <td className="px-4 py-3.5 text-sm text-slate-600">
+                              {new Date(payment.submittedAt).toLocaleDateString('en-IN', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                              })}
+                            </td>
+                            <td className="px-4 py-3.5 text-sm font-semibold text-slate-900">
+                              ₹{payment.amount.toLocaleString('en-IN')}
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <Badge
+                                variant={
+                                  payment.status === 'APPROVED'
+                                    ? 'approved'
+                                    : payment.status === 'REJECTED'
+                                    ? 'rejected'
+                                    : 'proof-uploaded'
+                                }
+                              >
+                                {payment.status.replace('_', ' ')}
+                              </Badge>
+                            </td>
+                            <td className="px-4 py-3.5 text-sm text-slate-500 font-mono">
+                              {payment.transactionId.substring(0, 12)}...
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <button
+                                onClick={() =>
+                                  setScreenshotModal({ open: true, url: payment.screenshotUrl })
+                                }
+                                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                              >
+                                View
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {/* Rejection reasons */}
+                    {payments
+                      .filter((p) => p.status === 'REJECTED' && p.rejectionReason)
+                      .map((p) => (
+                        <div key={`rej-${p.id}`} className="mt-2 px-4 py-2 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700">
+                          <span className="font-medium">Rejected (₹{p.amount.toLocaleString('en-IN')}):</span> {p.rejectionReason}
+                        </div>
                       ))}
-                    </tbody>
-                  </table>
-                  {/* Rejection reasons */}
-                  {payments
-                    .filter((p) => p.status === 'REJECTED' && p.rejectionReason)
-                    .map((p) => (
-                      <div key={`rej-${p.id}`} className="mt-2 px-4 py-2 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700">
-                        <span className="font-medium">Rejected (₹{p.amount.toLocaleString('en-IN')}):</span> {p.rejectionReason}
+                  </div>
+
+                  {/* Mobile Card View */}
+                  <div className="md:hidden space-y-4">
+                    {payments.map((payment) => (
+                      <div key={payment.id} className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm space-y-3">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="text-lg font-bold text-slate-900">₹{payment.amount.toLocaleString('en-IN')}</p>
+                            <p className="text-xs text-slate-500">
+                              {new Date(payment.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            </p>
+                          </div>
+                          <Badge
+                            variant={
+                              payment.status === 'APPROVED'
+                                ? 'approved'
+                                : payment.status === 'REJECTED'
+                                ? 'rejected'
+                                : 'proof-uploaded'
+                            }
+                          >
+                            {payment.status.replace('_', ' ')}
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between items-center pt-2 border-t border-slate-100">
+                          <div>
+                            <p className="text-xs text-slate-400 font-semibold mb-0.5">Transaction ID</p>
+                            <p className="text-sm font-mono text-slate-700">{payment.transactionId.substring(0, 12)}...</p>
+                          </div>
+                          <button
+                            onClick={() => setScreenshotModal({ open: true, url: payment.screenshotUrl })}
+                            className="text-xs text-blue-600 font-medium py-1.5 px-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                          >
+                            View Proof
+                          </button>
+                        </div>
+                        {payment.status === 'REJECTED' && payment.rejectionReason && (
+                          <div className="mt-2 px-3 py-2 bg-red-50 border border-red-100 rounded-lg text-xs text-red-700">
+                            <span className="font-semibold">Rejected:</span> {payment.rejectionReason}
+                          </div>
+                        )}
                       </div>
                     ))}
-                </div>
+                  </div>
+                </>
               )}
             </div>
           )}
