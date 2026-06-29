@@ -9,7 +9,7 @@ import api from '@/lib/axios';
 import OtpInput from '@/components/features/OtpInput';
 import { useToast } from '@/components/ui/Toast';
 
-const appName = process.env.NEXT_PUBLIC_APP_NAME || 'PaymentPlatform';
+const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zefrox.Club';
 
 const loginSchema = z.object({
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
@@ -249,3 +249,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

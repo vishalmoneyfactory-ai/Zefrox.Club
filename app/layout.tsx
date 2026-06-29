@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ToastProvider } from '@/components/ui/Toast';
 
-const appName = process.env.NEXT_PUBLIC_APP_NAME || 'PaymentPlatform';
+const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zefrox.Club';
 
 export const metadata: Metadata = {
   title: `${appName} — Secure Payment Management`,
@@ -25,3 +25,4 @@ export default function RootLayout({
     </html>
   );
 }
+

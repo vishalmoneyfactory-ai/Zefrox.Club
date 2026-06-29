@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-const appName = process.env.NEXT_PUBLIC_APP_NAME || 'PaymentPlatform';
+const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zefrox.Club';
 
 const features = [
   {
@@ -215,7 +215,7 @@ export default function LandingPage() {
               Ready to Get Started?
             </h2>
             <p className="text-lg text-blue-100 max-w-xl mx-auto mb-10">
-              Join our secure payment platform today. Quick registration, fast KYC verification, and reliable payment tracking.
+              Join our secure Zefrox.Club platform today. Quick registration, fast KYC verification, and reliable payment tracking.
             </p>
             <Link
               href="/login"
@@ -251,3 +251,4 @@ export default function LandingPage() {
     </div>
   );
 }
+

@@ -85,7 +85,7 @@ export default function UserSidebar() {
           <aside className="relative w-64 h-full bg-white p-4 shadow-xl animate-slide-up">
             <div className="flex items-center justify-between mb-6">
               <span className="text-lg font-bold gradient-text">
-                {process.env.NEXT_PUBLIC_APP_NAME || 'PaymentPlatform'}
+                {process.env.NEXT_PUBLIC_APP_NAME || 'Zefrox.Club'}
               </span>
               <button
                 onClick={() => setSidebarOpen(false)}
@@ -103,3 +103,4 @@ export default function UserSidebar() {
     </>
   );
 }
+

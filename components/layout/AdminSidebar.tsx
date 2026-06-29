@@ -122,7 +122,7 @@ export default function AdminSidebar() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold text-slate-900">
-                  {process.env.NEXT_PUBLIC_APP_NAME || 'PaymentPlatform'}
+                  {process.env.NEXT_PUBLIC_APP_NAME || 'Zefrox.Club'}
                 </span>
                 <span className="bg-primary-600 text-white text-xs px-2 py-0.5 rounded-full font-medium">
                   Admin
@@ -144,3 +144,4 @@ export default function AdminSidebar() {
     </>
   );
 }
+

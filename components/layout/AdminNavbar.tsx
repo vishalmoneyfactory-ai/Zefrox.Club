@@ -23,7 +23,7 @@ export default function AdminNavbar({ adminName }: AdminNavbarProps) {
     window.location.href = '/login';
   };
 
-  const appName = process.env.NEXT_PUBLIC_APP_NAME || 'PaymentPlatform';
+  const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zefrox.Club';
 
   return (
     <nav className="sticky top-0 z-40 h-16 bg-slate-900 border-b border-slate-700">
@@ -77,3 +77,4 @@ export default function AdminNavbar({ adminName }: AdminNavbarProps) {
     </nav>
   );
 }
+
