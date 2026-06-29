@@ -134,7 +134,7 @@ export default function DepositPage() {
           <h2 className="text-lg font-semibold text-slate-900 mb-2">Scan & Pay</h2>
           <div className="inline-block bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-4">
             <img 
-              src="/images/admin-qr.jpg" 
+              src="/images/admin-qr.jpeg" 
               alt="Admin Payment QR Code" 
               className="w-48 h-48 object-contain"
               onError={(e) => {
