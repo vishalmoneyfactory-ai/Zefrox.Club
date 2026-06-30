@@ -1,376 +1,128 @@
-'use client';
+import Link from 'next/link';
+import TickerTape from '@/components/features/TickerTape';
+import MiniChart from '@/components/features/MiniChart';
 
-import { useState, useEffect, useCallback } from 'react';
-import api from '@/lib/axios';
-import { useToast } from '@/components/ui/Toast';
-import KycStatusBanner from '@/components/features/KycStatusBanner';
-import StatsCard from '@/components/features/StatsCard';
-import PaymentProofModal from '@/components/features/PaymentProofModal';
-import ScreenshotModal from '@/components/features/ScreenshotModal';
-import Badge from '@/components/ui/Badge';
-import Spinner from '@/components/ui/Spinner';
+const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zerofx.club';
 
-interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  totalPaid: number;
-  kycStatus: string | null;
-}
+const features = [
+  {
+    icon: (
+      <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+      </svg>
+    ),
+    title: 'Ultra-Low Spreads',
+    description: 'on XAU EUR',
+  },
+  {
+    icon: (
+      <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+      </svg>
+    ),
+    title: '200+ Instruments',
+    description: 'Forex, Crypto & More',
+  },
+  {
+    icon: (
+      <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 8.25H9m6 3H9m3 6l-3-3h1.5a3 3 0 100-6M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    title: '$40 Minimum',
+    description: 'Start with just $40',
+  },
+  {
+    icon: (
+      <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+      </svg>
+    ),
+    title: '24/7 Support',
+    description: 'Round-the-clock assistance',
+  },
+];
 
-interface PaymentRequest {
-  id: string;
-  amount: number;
-  status: string;
-  createdAt: string;
-  payment?: { id: string } | null;
-}
-
-interface Payment {
-  id: string;
-  amount: number;
-  status: string;
-  screenshotUrl: string;
-  transactionId: string;
-  submittedAt: string;
-  rejectionReason: string | null;
-  paymentRequest: {
-    id: string;
-    amount: number;
-  };
-}
-
-export default function DashboardPage() {
-  const { showSuccess, showError } = useToast();
-  const [user, setUser] = useState<User | null>(null);
-  const [requests, setRequests] = useState<PaymentRequest[]>([]);
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'requests' | 'history'>('requests');
-  const [proofModal, setProofModal] = useState<{ open: boolean; requestId: string; amount: number }>({
-    open: false,
-    requestId: '',
-    amount: 0,
-  });
-  const [screenshotModal, setScreenshotModal] = useState<{ open: boolean; url: string }>({
-    open: false,
-    url: '',
-  });
-
-  const fetchData = useCallback(async () => {
-    try {
-      const [userRes, requestsRes, paymentsRes] = await Promise.all([
-        api.get('/api/users/me'),
-        api.get('/api/payments/my-requests'),
-        api.get('/api/payments'),
-      ]);
-      setUser(userRes.data);
-      setRequests(requestsRes.data);
-      setPayments(paymentsRes.data);
-    } catch {
-      showError('Failed to load dashboard data');
-    } finally {
-      setLoading(false);
-    }
-  }, [showError]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
-
-  const pendingRequestsCount = requests.filter((r) => !r.payment).length;
-  const approvedPaymentsCount = payments.filter((p) => p.status === 'APPROVED').length;
-
+export default function DashboardHome() {
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* KYC Banner */}
-      <KycStatusBanner status={user?.kycStatus as 'PENDING' | 'APPROVED' | 'REJECTED' | null} rejectionReason={null} />
-
-      {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-        <p className="text-slate-500 mt-1">Welcome back, {user?.fullName}</p>
+    <div className="flex-1 w-full bg-slate-50 relative overflow-hidden selection:bg-blue-200 selection:text-blue-900">
+      
+      {/* Background decoration */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-100/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute top-1/2 left-0 w-[300px] h-[300px] bg-indigo-100/40 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/4" />
       </div>
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard
-          title="Total Paid"
-          value={`₹${(user?.totalPaid || 0).toLocaleString('en-IN')}`}
-          color="green"
-          icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-            </svg>
-          }
-        />
-        <StatsCard
-          title="Pending Requests"
-          value={pendingRequestsCount}
-          color="yellow"
-          icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          }
-        />
-        <StatsCard
-          title="Approved Payments"
-          value={approvedPaymentsCount}
-          color="blue"
-          icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          }
-        />
-        <StatsCard
-          title="KYC Status"
-          value={user?.kycStatus || 'Not Submitted'}
-          color={user?.kycStatus === 'APPROVED' ? 'green' : user?.kycStatus === 'REJECTED' ? 'red' : 'yellow'}
-          icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z" />
-            </svg>
-          }
-        />
+      {/* Ticker Tape */}
+      <div className="w-full bg-white h-[44px] shadow-sm relative z-10 border-b border-slate-200">
+        <TickerTape />
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-        <div className="border-b border-slate-200">
-          <div className="flex">
-            <button
-              onClick={() => setActiveTab('requests')}
-              className={`flex-1 sm:flex-none px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'requests'
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-slate-500 hover:text-slate-700'
-              }`}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
+        
+        {/* Hero Section */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 mb-20">
+          {/* Left Content */}
+          <div className="flex-1 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium mb-8">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+              Welcome to {appName}
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 mb-6">
+              Trade Smarter<br className="hidden sm:block" />
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text"> Trade Faster</span>
+            </h1>
+
+            <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              Your account is active. Manage your payments, track your history, and experience execution built for low latency.
+            </p>
+
+            <Link
+              href="/dashboard/history"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:-translate-y-0.5"
             >
-              Pending Requests
-              {pendingRequestsCount > 0 && (
-                <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
-                  {pendingRequestsCount}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab('history')}
-              className={`flex-1 sm:flex-none px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'history'
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              Payment History
-            </button>
+              View Payment History
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
+          </div>
+
+          {/* Right Content (Mini Chart) */}
+          <div className="flex-1 w-full max-w-lg lg:max-w-xl">
+            <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 p-4 h-[350px]">
+              <MiniChart />
+            </div>
           </div>
         </div>
 
-        <div className="p-4 sm:p-6">
-          {activeTab === 'requests' ? (
-            <div>
-              {requests.filter((r) => !r.payment).length === 0 ? (
-                <div className="text-center py-12">
-                  <svg className="w-16 h-16 mx-auto text-slate-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
-                  </svg>
-                  <p className="text-slate-500 font-medium">No pending requests</p>
-                  <p className="text-slate-400 text-sm mt-1">Payment requests from admin will appear here</p>
+        {/* Features Section */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-slate-900 mb-8">Platform Features</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow text-center"
+              >
+                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4">
+                  {feature.icon}
                 </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {requests
-                    .filter((r) => !r.payment)
-                    .map((request) => (
-                      <div
-                        key={request.id}
-                        className="border border-slate-200 rounded-xl p-5 hover:shadow-md transition-shadow"
-                      >
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <p className="text-2xl font-bold text-slate-900">
-                              ₹{request.amount.toLocaleString('en-IN')}
-                            </p>
-                            <p className="text-xs text-slate-400 mt-1">
-                              {new Date(request.createdAt).toLocaleDateString('en-IN', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                              })}
-                            </p>
-                          </div>
-                          <Badge variant="pending">Pending</Badge>
-                        </div>
-                        <button
-                          onClick={() =>
-                            setProofModal({ open: true, requestId: request.id, amount: request.amount })
-                          }
-                          disabled={user?.kycStatus !== 'APPROVED'}
-                          className="w-full mt-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
-                        >
-                          {user?.kycStatus !== 'APPROVED' ? 'Complete KYC First' : 'Upload Payment Proof'}
-                        </button>
-                      </div>
-                    ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            <div>
-              {payments.length === 0 ? (
-                <div className="text-center py-12">
-                  <svg className="w-16 h-16 mx-auto text-slate-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                  </svg>
-                  <p className="text-slate-500 font-medium">No payments yet</p>
-                  <p className="text-slate-400 text-sm mt-1">Your payment history will appear here</p>
-                </div>
-              ) : (
-                <>
-                  {/* Desktop Table View */}
-                  <div className="hidden md:block overflow-x-auto">
-                    <table className="w-full min-w-[600px]">
-                      <thead>
-                        <tr className="border-b border-slate-200">
-                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Date</th>
-                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Amount</th>
-                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Status</th>
-                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Transaction ID</th>
-                          <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 py-3">Proof</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {payments.map((payment) => (
-                          <tr key={payment.id} className="hover:bg-slate-50/50">
-                            <td className="px-4 py-3.5 text-sm text-slate-600">
-                              {new Date(payment.submittedAt).toLocaleDateString('en-IN', {
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric',
-                              })}
-                            </td>
-                            <td className="px-4 py-3.5 text-sm font-semibold text-slate-900">
-                              ₹{payment.amount.toLocaleString('en-IN')}
-                            </td>
-                            <td className="px-4 py-3.5">
-                              <Badge
-                                variant={
-                                  payment.status === 'APPROVED'
-                                    ? 'approved'
-                                    : payment.status === 'REJECTED'
-                                    ? 'rejected'
-                                    : 'proof-uploaded'
-                                }
-                              >
-                                {payment.status.replace('_', ' ')}
-                              </Badge>
-                            </td>
-                            <td className="px-4 py-3.5 text-sm text-slate-500 font-mono">
-                              {payment.transactionId.substring(0, 12)}...
-                            </td>
-                            <td className="px-4 py-3.5">
-                              <button
-                                onClick={() =>
-                                  setScreenshotModal({ open: true, url: payment.screenshotUrl })
-                                }
-                                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                              >
-                                View
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    {/* Rejection reasons */}
-                    {payments
-                      .filter((p) => p.status === 'REJECTED' && p.rejectionReason)
-                      .map((p) => (
-                        <div key={`rej-${p.id}`} className="mt-2 px-4 py-2 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700">
-                          <span className="font-medium">Rejected (₹{p.amount.toLocaleString('en-IN')}):</span> {p.rejectionReason}
-                        </div>
-                      ))}
-                  </div>
-
-                  {/* Mobile Card View */}
-                  <div className="md:hidden space-y-4">
-                    {payments.map((payment) => (
-                      <div key={payment.id} className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm space-y-3">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <p className="text-lg font-bold text-slate-900">₹{payment.amount.toLocaleString('en-IN')}</p>
-                            <p className="text-xs text-slate-500">
-                              {new Date(payment.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                            </p>
-                          </div>
-                          <Badge
-                            variant={
-                              payment.status === 'APPROVED'
-                                ? 'approved'
-                                : payment.status === 'REJECTED'
-                                ? 'rejected'
-                                : 'proof-uploaded'
-                            }
-                          >
-                            {payment.status.replace('_', ' ')}
-                          </Badge>
-                        </div>
-                        <div className="flex justify-between items-center pt-2 border-t border-slate-100">
-                          <div>
-                            <p className="text-xs text-slate-400 font-semibold mb-0.5">Transaction ID</p>
-                            <p className="text-sm font-mono text-slate-700">{payment.transactionId.substring(0, 12)}...</p>
-                          </div>
-                          <button
-                            onClick={() => setScreenshotModal({ open: true, url: payment.screenshotUrl })}
-                            className="text-xs text-blue-600 font-medium py-1.5 px-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
-                          >
-                            View Proof
-                          </button>
-                        </div>
-                        {payment.status === 'REJECTED' && payment.rejectionReason && (
-                          <div className="mt-2 px-3 py-2 bg-red-50 border border-red-100 rounded-lg text-xs text-red-700">
-                            <span className="font-semibold">Rejected:</span> {payment.rejectionReason}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+                <h3 className="text-base font-bold text-slate-900 mb-1">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-slate-600 font-medium">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
+        
       </div>
-
-      {/* Modals */}
-      <PaymentProofModal
-        isOpen={proofModal.open}
-        onClose={() => setProofModal({ open: false, requestId: '', amount: 0 })}
-        paymentRequestId={proofModal.requestId}
-        amount={proofModal.amount}
-        onSuccess={() => {
-          setProofModal({ open: false, requestId: '', amount: 0 });
-          showSuccess('Payment proof uploaded successfully!');
-          fetchData();
-        }}
-      />
-
-      <ScreenshotModal
-        isOpen={screenshotModal.open}
-        onClose={() => setScreenshotModal({ open: false, url: '' })}
-        imageUrl={screenshotModal.url}
-        title="Payment Proof"
-      />
     </div>
   );
 }

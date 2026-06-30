@@ -20,7 +20,7 @@ export default function MiniChart() {
         "height": "100%",
         "locale": "en",
         "dateRange": "1M",
-        "colorTheme": "dark",
+        "colorTheme": "light",
         "isTransparent": true,
         "autosize": true,
         "largeChartUrl": ""
