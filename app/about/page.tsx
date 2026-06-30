@@ -22,8 +22,6 @@ export default function AboutPage() {
             <div className="hidden md:flex flex-1 items-center justify-center space-x-8">
               <Link href="/" className="text-slate-600 font-medium hover:text-blue-600 transition-colors pb-1">Home</Link>
               <Link href="/about" className="text-blue-600 font-semibold transition-colors border-b-2 border-blue-600 pb-1">About Us</Link>
-              <Link href="/#contact" className="text-slate-600 font-medium hover:text-blue-600 transition-colors pb-1">Contact</Link>
-              <Link href="/admin/login" className="text-slate-600 font-medium hover:text-blue-600 transition-colors pb-1">Admin</Link>
             </div>
 
             <div className="flex flex-1 items-center justify-end">
@@ -107,7 +105,6 @@ export default function AboutPage() {
             <div className="flex gap-6 text-sm font-medium text-slate-500">
               <a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a>
-              <a href="#contact" className="hover:text-blue-600 transition-colors">Contact</a>
             </div>
 
             <p className="text-sm text-slate-500">

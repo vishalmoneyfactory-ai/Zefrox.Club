@@ -17,29 +17,17 @@ export default function TickerTape() {
     script.innerHTML = `
       {
         "symbols": [
-          {
-            "description": "100 Cash CFD",
-            "proName": "CAPITALCOM:UK100"
-          },
-          {
-            "description": "EUR to USD",
-            "proName": "FX:EURUSD"
-          },
-          {
-            "description": "Bitcoin",
-            "proName": "BITSTAMP:BTCUSD"
-          },
-          {
-            "description": "Ethereum",
-            "proName": "BITSTAMP:ETHUSD"
-          },
-          {
-            "description": "S&P 500 Index",
-            "proName": "SP:SPX"
-          }
+          { "description": "Gold", "proName": "OANDA:XAUUSD" },
+          { "description": "EUR/USD", "proName": "FX:EURUSD" },
+          { "description": "GBP/USD", "proName": "FX:GBPUSD" },
+          { "description": "Bitcoin", "proName": "BITSTAMP:BTCUSD" },
+          { "description": "Ethereum", "proName": "BITSTAMP:ETHUSD" },
+          { "description": "S&P 500", "proName": "SP:SPX" },
+          { "description": "Nasdaq 100", "proName": "OANDA:NAS100USD" },
+          { "description": "Tesla", "proName": "NASDAQ:TSLA" }
         ],
         "showSymbolLogo": true,
-        "isTransparent": false,
+        "isTransparent": true,
         "displayMode": "adaptive",
         "colorTheme": "light",
         "locale": "en"

@@ -54,7 +54,7 @@ export default function DashboardHome() {
       </div>
 
       {/* Ticker Tape */}
-      <div className="w-full bg-white h-[44px] shadow-sm relative z-10 border-b border-slate-200">
+      <div className="w-full bg-white/60 backdrop-blur-md h-[44px] shadow-sm relative z-10 border-b border-slate-200/50">
         <TickerTape />
       </div>
 

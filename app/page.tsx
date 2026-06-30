@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import TickerTape from '@/components/features/TickerTape';
 import MiniChart from '@/components/features/MiniChart';
 
 const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zerofx.club';
@@ -46,6 +47,11 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 selection:bg-blue-200 selection:text-blue-900">
       
+      {/* Ticker Tape */}
+      <div className="w-full bg-white/60 backdrop-blur-md h-[44px] relative z-20 border-b border-slate-200/50">
+        <TickerTape />
+      </div>
+
       {/* Navigation */}
       <nav className="sticky top-0 z-50 glass border-b border-slate-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,8 +68,6 @@ export default function LandingPage() {
             <div className="hidden md:flex flex-1 items-center justify-center space-x-8">
               <Link href="/" className="text-blue-600 font-semibold transition-colors border-b-2 border-blue-600 pb-1">Home</Link>
               <Link href="/about" className="text-slate-600 font-medium hover:text-blue-600 transition-colors pb-1">About Us</Link>
-              <Link href="#contact" className="text-slate-600 font-medium hover:text-blue-600 transition-colors pb-1">Contact</Link>
-              <Link href="/admin/login" className="text-slate-600 font-medium hover:text-blue-600 transition-colors pb-1">Admin</Link>
             </div>
 
             <div className="flex flex-1 items-center justify-end">
@@ -212,7 +216,6 @@ export default function LandingPage() {
             <div className="flex gap-6 text-sm font-medium text-slate-500">
               <a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a>
               <a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a>
-              <a href="#contact" className="hover:text-blue-600 transition-colors">Contact</a>
             </div>
 
             <p className="text-sm text-slate-500">
