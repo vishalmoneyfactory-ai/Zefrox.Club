@@ -47,13 +47,8 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 selection:bg-blue-200 selection:text-blue-900">
       
-      {/* Ticker Tape */}
-      <div className="w-full bg-white/60 backdrop-blur-md h-[44px] relative z-20 border-b border-slate-200/50">
-        <TickerTape />
-      </div>
-
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 glass border-b border-slate-200/50">
+      <nav className="sticky top-0 z-50 glass border-b border-slate-200/50 flex flex-col">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex flex-1 items-center justify-start gap-2">
@@ -80,10 +75,15 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+        
+        {/* Ticker Tape */}
+        <div className="w-full bg-white/40 backdrop-blur-md h-[44px] border-t border-slate-200/50">
+          <TickerTape />
+        </div>
       </nav>
 
       {/* Hero Section */}
-      <header className="relative pt-20 pb-32 overflow-hidden">
+      <header className="relative pt-12 pb-32 overflow-hidden">
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-1/4 left-0 w-64 h-64 bg-blue-200/40 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2" />
           <div className="absolute top-1/4 right-0 w-96 h-96 bg-indigo-200/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
