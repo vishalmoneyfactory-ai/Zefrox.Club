@@ -7,7 +7,7 @@ export default function KycLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#030712] text-slate-100 overflow-x-hidden">
       <UserNavbar />
       <div className="flex">
         <UserSidebar />

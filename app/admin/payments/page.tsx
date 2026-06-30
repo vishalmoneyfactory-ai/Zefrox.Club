@@ -1,12 +1,16 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CreditCard, Eye, CheckCircle2, XCircle, AlertTriangle, IndianRupee, Calendar } from 'lucide-react';
 import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
 import Modal from '@/components/ui/Modal';
 import Badge from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
 import ScreenshotModal from '@/components/features/ScreenshotModal';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 
 interface PaymentRecord {
   id: string;
@@ -98,190 +102,183 @@ export default function AdminPaymentsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Spinner size="lg" />
+        <Spinner size="lg" className="text-aurora-cyan" />
       </div>
     );
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }
+  };
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Payment Verification</h1>
-        <p className="text-slate-500 mt-1">{payments.length} payments pending verification</p>
+    <div className="relative z-10 space-y-6 animate-fade-in pb-12">
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-aurora-indigo/10 rounded-full blur-[120px] -translate-x-1/3" />
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px]">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">User</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Amount</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden sm:table-cell">Submitted</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden md:table-cell">Days Pending</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {payments.map((payment) => (
-                <tr key={payment.id} className="hover:bg-slate-50/50">
-                  <td className="px-4 sm:px-6 py-4">
-                    <div>
-                      <p className="text-sm font-medium text-slate-900">{payment.user.fullName}</p>
-                      <p className="text-xs text-slate-500">{payment.user.email}</p>
-                    </div>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 text-sm font-semibold text-slate-900">
-                    ₹{payment.amount.toLocaleString('en-IN')}
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 text-sm text-slate-500 hidden sm:table-cell">
-                    {new Date(payment.submittedAt).toLocaleDateString('en-IN', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 hidden md:table-cell">
-                    {(() => {
+      <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-6">
+        <motion.div variants={itemVariants} className="mb-6">
+          <h1 className="text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
+            <CreditCard className="w-8 h-8 text-aurora-indigo" /> Payment Ledger
+          </h1>
+          <p className="text-slate-400 mt-2 font-medium">Verify pending payment proofs ({payments.length} pending)</p>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <Card glass className="p-0 border-white/5 bg-slate-900/60 shadow-2xl overflow-hidden">
+            <div className="overflow-x-auto custom-scrollbar">
+              <table className="w-full min-w-[700px]">
+                <thead>
+                  <tr className="bg-slate-950/50 border-b border-white/5">
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">User</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">Amount</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider hidden sm:table-cell">Submitted</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider hidden md:table-cell">Days Pending</th>
+                    <th className="text-right text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  <AnimatePresence>
+                    {payments.map((payment) => {
                       const days = getDaysPending(payment.submittedAt);
                       return (
-                        <span
-                          className={`text-sm font-medium ${
-                            days > 3 ? 'text-red-600' : days > 1 ? 'text-yellow-600' : 'text-green-600'
-                          }`}
+                        <motion.tr
+                          key={payment.id}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="hover:bg-white/[0.02] cursor-pointer transition-colors"
+                          onClick={() => { setSelectedPayment(payment); setShowRejectInput(false); setRejectReason(''); }}
                         >
-                          {days === 0 ? 'Today' : `${days} day${days > 1 ? 's' : ''}`}
-                        </span>
+                          <td className="px-6 py-4">
+                            <p className="text-sm font-bold text-white">{payment.user.fullName}</p>
+                            <p className="text-xs text-slate-400 mt-1">{payment.user.email}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-aurora-cyan/10 text-aurora-cyan text-sm font-black border border-aurora-cyan/20">
+                              ₹{payment.amount.toLocaleString('en-IN')}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-slate-400 hidden sm:table-cell font-medium">
+                            {new Date(payment.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </td>
+                          <td className="px-6 py-4 hidden md:table-cell">
+                            <span className={`text-sm font-bold px-2.5 py-1 rounded-lg ${days > 3 ? 'bg-red-500/20 text-red-400 border border-red-500/30' : days > 1 ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' : 'bg-green-500/20 text-green-400 border border-green-500/30'}`}>
+                              {days === 0 ? 'Today' : `${days} day${days > 1 ? 's' : ''}`}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-1.5 text-xs font-bold text-aurora-indigo bg-aurora-indigo/10 hover:bg-aurora-indigo/20 border border-aurora-indigo/20 rounded-md transition-colors inline-flex items-center gap-1.5" onClick={(e) => { e.stopPropagation(); setSelectedPayment(payment); setShowRejectInput(false); setRejectReason(''); }}>
+                              <Eye className="w-3.5 h-3.5" /> View
+                            </motion.button>
+                          </td>
+                        </motion.tr>
                       );
-                    })()}
-                  </td>
-                  <td className="px-4 sm:px-6 py-4">
-                    <button
-                      onClick={() => {
-                        setSelectedPayment(payment);
-                        setShowRejectInput(false);
-                        setRejectReason('');
-                      }}
-                      className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {payments.length === 0 && (
-          <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto text-slate-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p className="text-slate-500 font-medium">All payments verified!</p>
-            <p className="text-slate-400 text-sm mt-1">No pending payment proofs to review</p>
-          </div>
-        )}
-      </div>
+                    })}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+            </div>
+            {payments.length === 0 && (
+              <div className="text-center py-16">
+                <CheckCircle2 className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
+                <p className="text-slate-300 font-bold text-lg mb-1">All Caught Up!</p>
+                <p className="text-slate-500 font-medium">No pending payment proofs to review right now.</p>
+              </div>
+            )}
+          </Card>
+        </motion.div>
+      </motion.div>
 
       {/* Payment Detail Modal */}
-      <Modal
-        isOpen={!!selectedPayment}
-        onClose={() => {
-          setSelectedPayment(null);
-          setShowRejectInput(false);
-        }}
-        title="Payment Verification"
-        size="xl"
-      >
+      <Modal isOpen={!!selectedPayment} onClose={() => { setSelectedPayment(null); setShowRejectInput(false); }} title="Verify Payment Proof" size="xl">
         {selectedPayment && (
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row gap-8 animate-fade-in text-white">
             {/* Screenshot */}
             <div className="flex-1">
-              <p className="text-xs text-slate-400 uppercase font-semibold mb-2">Payment Screenshot</p>
-              <div className="relative group cursor-pointer" onClick={() => setImageModal({ open: true, url: selectedPayment.screenshotUrl, title: 'Payment Proof' })}>
+              <p className="text-xs text-slate-400 uppercase font-black tracking-widest mb-3 flex items-center gap-2">
+                <Eye className="w-4 h-4 text-aurora-cyan" /> Proof Screenshot
+              </p>
+              <div className="relative group cursor-pointer rounded-2xl overflow-hidden border-2 border-white/10 bg-slate-900/50 flex items-center justify-center min-h-[300px]" onClick={() => setImageModal({ open: true, url: selectedPayment.screenshotUrl, title: 'Payment Proof' })}>
                 <img
                   src={selectedPayment.screenshotUrl}
                   alt="Payment proof"
-                  className="w-full rounded-xl border border-slate-200 object-contain max-h-[500px] group-hover:opacity-90 transition-opacity"
+                  className="w-full h-full object-contain max-h-[500px] group-hover:scale-[1.02] transition-transform duration-500"
                 />
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-xl">
-                  <svg className="w-10 h-10 text-white drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
-                  </svg>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
+                  <Eye className="w-10 h-10 text-white drop-shadow-md" />
                 </div>
               </div>
             </div>
 
             {/* Details sidebar */}
-            <div className="lg:w-72 space-y-4">
-              <div className="bg-slate-50 rounded-xl p-4 space-y-3">
+            <div className="lg:w-80 space-y-6">
+              <div className="bg-slate-950/50 rounded-2xl p-5 border border-white/5 space-y-4 shadow-inner">
                 <div>
-                  <p className="text-xs text-slate-400 uppercase font-semibold">User</p>
-                  <p className="text-sm font-medium text-slate-900">{selectedPayment.user.fullName}</p>
-                  <p className="text-xs text-slate-500">{selectedPayment.user.email}</p>
+                  <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">User Details</p>
+                  <p className="text-base font-bold text-white">{selectedPayment.user.fullName}</p>
+                  <p className="text-xs text-slate-400 font-medium">{selectedPayment.user.email}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-slate-400 uppercase font-semibold">Total Paid (Lifetime)</p>
-                  <p className="text-sm font-medium text-slate-900">₹{selectedPayment.user.totalPaid.toLocaleString('en-IN')}</p>
+                <div className="pt-4 border-t border-white/10">
+                  <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Lifetime Value</p>
+                  <p className="text-sm font-black text-green-400">₹{selectedPayment.user.totalPaid.toLocaleString('en-IN')}</p>
                 </div>
               </div>
 
-              <div className="bg-blue-50 rounded-xl p-4 text-center">
-                <p className="text-xs text-blue-500 uppercase font-semibold">Payment Amount</p>
-                <p className="text-2xl font-bold text-blue-800 mt-1">₹{selectedPayment.amount.toLocaleString('en-IN')}</p>
+              <div className="bg-aurora-cyan/10 rounded-2xl p-5 border border-aurora-cyan/20 text-center shadow-[0_0_20px_rgba(34,211,238,0.1)]">
+                <p className="text-[10px] text-aurora-cyan uppercase font-black tracking-widest flex items-center justify-center gap-1 mb-2">
+                  <IndianRupee className="w-3 h-3" /> Claimed Amount
+                </p>
+                <p className="text-3xl font-black text-white drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">
+                  ₹{selectedPayment.amount.toLocaleString('en-IN')}
+                </p>
               </div>
 
-              <div className="text-sm text-slate-500 space-y-1">
-                <div className="flex justify-between">
-                  <span>Submitted</span>
-                  <span>{new Date(selectedPayment.submittedAt).toLocaleDateString('en-IN')}</span>
+              <div className="bg-slate-950/50 rounded-2xl p-5 border border-white/5 space-y-3 shadow-inner">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-400 font-medium flex items-center gap-2"><Calendar className="w-4 h-4" /> Submitted</span>
+                  <span className="font-bold text-white">{new Date(selectedPayment.submittedAt).toLocaleDateString('en-IN')}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Request Date</span>
-                  <span>{new Date(selectedPayment.paymentRequest.createdAt).toLocaleDateString('en-IN')}</span>
+                <div className="flex items-center justify-between text-sm pt-3 border-t border-white/10">
+                  <span className="text-slate-400 font-medium">Requested</span>
+                  <span className="font-bold text-slate-300">{new Date(selectedPayment.paymentRequest.createdAt).toLocaleDateString('en-IN')}</span>
                 </div>
               </div>
 
               {/* Actions */}
               {showRejectInput ? (
-                <div className="space-y-3">
-                  <textarea
-                    value={rejectReason}
-                    onChange={(e) => setRejectReason(e.target.value)}
-                    placeholder="Enter rejection reason..."
-                    rows={3}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm resize-none"
-                  />
-                  <button
-                    onClick={() => handleReject(selectedPayment.id)}
-                    disabled={actionLoading}
-                    className="w-full py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-                  >
-                    {actionLoading && <Spinner size="sm" />}
-                    Confirm Reject
-                  </button>
-                  <button
-                    onClick={() => setShowRejectInput(false)}
-                    className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-colors"
-                  >
+                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-slate-500 uppercase font-black tracking-widest ml-1">Rejection Reason</label>
+                    <textarea
+                      value={rejectReason}
+                      onChange={(e) => setRejectReason(e.target.value)}
+                      placeholder="Why is this proof invalid?"
+                      rows={3}
+                      className="w-full px-4 py-3 bg-slate-950/80 rounded-xl border border-red-500/30 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 text-sm resize-none transition-all"
+                    />
+                  </div>
+                  <Button variant="danger" onClick={() => handleReject(selectedPayment.id)} disabled={actionLoading} loading={actionLoading} className="w-full py-3">
+                    Confirm Rejection
+                  </Button>
+                  <button onClick={() => setShowRejectInput(false)} className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-sm font-bold rounded-xl transition-colors border border-white/5">
                     Cancel
                   </button>
-                </div>
+                </motion.div>
               ) : (
-                <div className="space-y-2">
-                  <button
-                    onClick={() => handleApprove(selectedPayment.id)}
-                    disabled={actionLoading}
-                    className="w-full py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-                  >
-                    {actionLoading && <Spinner size="sm" />}
-                    Approve Payment
-                  </button>
-                  <button
-                    onClick={() => setShowRejectInput(true)}
-                    className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
-                  >
-                    Reject Payment
+                <div className="space-y-3 pt-2">
+                  <Button variant="glow" onClick={() => handleApprove(selectedPayment.id)} disabled={actionLoading} loading={actionLoading} className="w-full py-3 !bg-green-600 hover:!bg-green-500 !border-green-500 shadow-[0_0_15px_rgba(22,163,74,0.3)]">
+                    <CheckCircle2 className="w-5 h-5 mr-2" /> Approve Payment
+                  </Button>
+                  <button onClick={() => setShowRejectInput(true)} className="w-full py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-bold rounded-xl transition-colors border border-red-500/20 flex items-center justify-center gap-2">
+                    <AlertTriangle className="w-5 h-5" /> Reject Payment
                   </button>
                 </div>
               )}
@@ -290,7 +287,6 @@ export default function AdminPaymentsPage() {
         )}
       </Modal>
 
-      {/* Fullscreen Image Viewer */}
       <ScreenshotModal
         isOpen={imageModal.open}
         onClose={() => setImageModal({ open: false, url: '', title: '' })}

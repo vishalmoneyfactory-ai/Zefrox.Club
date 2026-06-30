@@ -1,12 +1,16 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Users, Search, Eye, Edit2, Trash2, ShieldAlert, CreditCard, Clock, Camera, AlertTriangle } from 'lucide-react';
 import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
 import Modal from '@/components/ui/Modal';
 import Badge from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
 import ScreenshotModal from '@/components/features/ScreenshotModal';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 
 interface User {
   id: string;
@@ -122,130 +126,176 @@ export default function AdminUsersPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Spinner size="lg" />
+        <Spinner size="lg" className="text-aurora-cyan" />
       </div>
     );
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }
+  };
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">User Management</h1>
-          <p className="text-slate-500 mt-1">{users.length} total users</p>
-        </div>
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search users..."
-          className="w-full sm:w-72 px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-        />
+    <div className="relative z-10 space-y-6 animate-fade-in pb-12">
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-aurora-cyan/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[800px]">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Name</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Email</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden sm:table-cell">Phone</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">KYC</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden lg:table-cell">Total Paid</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3 hidden lg:table-cell">Joined</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-4 sm:px-6 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {users.map((user) => (
-                <tr key={user.id} className="hover:bg-slate-50/50">
-                  <td className="px-4 sm:px-6 py-4 text-sm font-medium text-slate-900">{user.fullName}</td>
-                  <td className="px-4 sm:px-6 py-4 text-sm text-slate-600">{user.email}</td>
-                  <td className="px-4 sm:px-6 py-4 text-sm text-slate-600 hidden sm:table-cell">{user.phone}</td>
-                  <td className="px-4 sm:px-6 py-4">
-                    <Badge variant={user.kyc?.status === 'APPROVED' ? 'approved' : user.kyc?.status === 'REJECTED' ? 'rejected' : 'pending'}>
-                      {user.kyc?.status || 'None'}
-                    </Badge>
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 text-sm font-medium text-slate-900 hidden lg:table-cell">₹{user.totalPaid.toLocaleString('en-IN')}</td>
-                  <td className="px-4 sm:px-6 py-4 text-sm text-slate-500 hidden lg:table-cell">
-                    {new Date(user.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </td>
-                  <td className="px-4 sm:px-6 py-4">
-                    <div className="flex items-center gap-1">
-                      <button onClick={() => handleView(user.id)} className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors" title="View">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                      </button>
-                      <button onClick={() => handleEdit(user)} className="p-2 hover:bg-yellow-50 rounded-lg text-yellow-600 transition-colors" title="Edit">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
-                        </svg>
-                      </button>
-                      {user.role !== 'ADMIN' && (
-                        <button onClick={() => setDeleteUser(user)} className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors" title="Delete">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {users.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-slate-400">No users found</p>
+      <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-6">
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
+          <div>
+            <h1 className="text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
+              <Users className="w-8 h-8 text-aurora-cyan" /> User Management
+            </h1>
+            <p className="text-slate-400 mt-2 font-medium">Manage all platform users, KYC, and history ({users.length} total)</p>
           </div>
-        )}
-      </div>
+          <div className="relative w-full sm:w-72">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 text-slate-500" />
+            </div>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search users..."
+              className="w-full pl-10 pr-4 py-3 bg-slate-900/60 rounded-xl border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-aurora-cyan/50 focus:ring-1 focus:ring-aurora-cyan/50 transition-all text-sm backdrop-blur-md shadow-2xl"
+            />
+          </div>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <Card glass className="p-0 border-white/5 bg-slate-900/60 shadow-2xl overflow-hidden">
+            <div className="overflow-x-auto custom-scrollbar">
+              <table className="w-full min-w-[900px]">
+                <thead>
+                  <tr className="bg-slate-950/50 border-b border-white/5">
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">Name & Email</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider hidden sm:table-cell">Phone</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">KYC</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider hidden lg:table-cell">Total Paid</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider hidden lg:table-cell">Joined</th>
+                    <th className="text-right text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  <AnimatePresence>
+                    {users.map((user) => (
+                      <motion.tr
+                        key={user.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="hover:bg-white/[0.02] transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <p className="text-sm font-bold text-white">{user.fullName}</p>
+                          <p className="text-xs text-slate-400 mt-1">{user.email}</p>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-300 hidden sm:table-cell font-medium">{user.phone}</td>
+                        <td className="px-6 py-4">
+                          <Badge variant={user.kyc?.status === 'APPROVED' ? 'approved' : user.kyc?.status === 'REJECTED' ? 'rejected' : 'pending'}>
+                            {user.kyc?.status || 'None'}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 hidden lg:table-cell">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-green-500/10 text-green-400 text-sm font-black border border-green-500/20">
+                            ₹{user.totalPaid.toLocaleString('en-IN')}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-400 hidden lg:table-cell font-medium">
+                          {new Date(user.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => handleView(user.id)} className="p-2 hover:bg-aurora-cyan/20 rounded-xl text-aurora-cyan transition-colors border border-transparent hover:border-aurora-cyan/30 bg-aurora-cyan/10" title="View">
+                              <Eye className="w-4 h-4" />
+                            </motion.button>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => handleEdit(user)} className="p-2 hover:bg-yellow-500/20 rounded-xl text-yellow-400 transition-colors border border-transparent hover:border-yellow-500/30 bg-yellow-500/10" title="Edit">
+                              <Edit2 className="w-4 h-4" />
+                            </motion.button>
+                            {user.role !== 'ADMIN' && (
+                              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => setDeleteUser(user)} className="p-2 hover:bg-red-500/20 rounded-xl text-red-400 transition-colors border border-transparent hover:border-red-500/30 bg-red-500/10" title="Delete">
+                                <Trash2 className="w-4 h-4" />
+                              </motion.button>
+                            )}
+                          </div>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+            </div>
+            {users.length === 0 && (
+              <div className="text-center py-16">
+                <Users className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
+                <p className="text-slate-400 font-medium">No users found matching your search</p>
+              </div>
+            )}
+          </Card>
+        </motion.div>
+      </motion.div>
 
       {/* View Modal */}
-      <Modal isOpen={!!viewUser || viewLoading} onClose={() => setViewUser(null)} title="User Details" size="xl">
+      <Modal isOpen={!!viewUser || viewLoading} onClose={() => setViewUser(null)} title="User Profile Details" size="xl">
         {viewLoading ? (
-          <div className="flex justify-center py-12"><Spinner size="lg" /></div>
+          <div className="flex justify-center py-16"><Spinner size="lg" className="text-aurora-cyan" /></div>
         ) : viewUser ? (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="space-y-8 animate-fade-in text-white">
+            {/* Header Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-950/50 p-4 rounded-xl border border-white/5">
               <div>
-                <p className="text-xs text-slate-400 uppercase font-semibold">Name</p>
-                <p className="text-sm font-medium text-slate-900 mt-1">{viewUser.fullName}</p>
+                <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Total Paid</p>
+                <p className="text-lg font-black text-green-400">₹{viewUser.totalPaid.toLocaleString('en-IN')}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400 uppercase font-semibold">Email</p>
-                <p className="text-sm text-slate-900 mt-1">{viewUser.email}</p>
+                <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Joined</p>
+                <p className="text-sm font-bold text-slate-300">{new Date(viewUser.createdAt).toLocaleDateString('en-IN')}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400 uppercase font-semibold">Phone</p>
-                <p className="text-sm text-slate-900 mt-1">{viewUser.phone}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-400 uppercase font-semibold">Total Paid</p>
-                <p className="text-sm font-semibold text-green-700 mt-1">₹{viewUser.totalPaid.toLocaleString('en-IN')}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-400 uppercase font-semibold">KYC Status</p>
+                <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">KYC Status</p>
                 <Badge variant={viewUser.kyc?.status === 'APPROVED' ? 'approved' : viewUser.kyc?.status === 'REJECTED' ? 'rejected' : 'pending'}>
                   {viewUser.kyc?.status || 'None'}
                 </Badge>
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Role</p>
+                <span className={`text-xs font-bold px-2 py-1 rounded-md ${viewUser.role === 'ADMIN' ? 'bg-aurora-purple/20 text-aurora-purple' : 'bg-slate-800 text-slate-300'}`}>{viewUser.role}</span>
+              </div>
+            </div>
+
+            {/* Basic Info */}
+            <div>
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Users className="w-4 h-4" /> Personal Information</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div>
+                  <p className="text-xs text-slate-500 mb-1">Full Name</p>
+                  <p className="text-sm font-bold">{viewUser.fullName}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 mb-1">Email</p>
+                  <p className="text-sm font-bold break-all">{viewUser.email}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500 mb-1">Phone</p>
+                  <p className="text-sm font-bold">{viewUser.phone}</p>
+                </div>
               </div>
             </div>
 
             {viewUser.kyc?.selfieUrl && (
               <div>
-                <p className="text-xs text-slate-400 uppercase font-semibold mb-2">KYC Selfie</p>
-                <div className="relative group cursor-pointer inline-block" onClick={() => setImageModal({ open: true, url: viewUser.kyc!.selfieUrl, title: 'KYC Selfie' })}>
-                  <img src={viewUser.kyc.selfieUrl} alt="KYC Selfie" className="w-24 h-24 rounded-xl object-cover border group-hover:opacity-90 transition-opacity" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-xl">
-                    <svg className="w-6 h-6 text-white drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
-                    </svg>
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Camera className="w-4 h-4" /> Identity Verification</h3>
+                <div className="relative group cursor-pointer inline-block rounded-xl overflow-hidden border-2 border-white/10" onClick={() => setImageModal({ open: true, url: viewUser.kyc!.selfieUrl, title: 'KYC Selfie' })}>
+                  <img src={viewUser.kyc.selfieUrl} alt="KYC Selfie" className="w-32 h-32 object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
+                    <Camera className="w-8 h-8 text-white drop-shadow-md" />
                   </div>
                 </div>
               </div>
@@ -253,26 +303,26 @@ export default function AdminUsersPage() {
 
             {viewUser.payments.length > 0 && (
               <div>
-                <p className="text-xs text-slate-400 uppercase font-semibold mb-2">Payments ({viewUser.payments.length})</p>
-                <div className="overflow-x-auto">
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><CreditCard className="w-4 h-4" /> Payment Ledger ({viewUser.payments.length})</h3>
+                <div className="bg-slate-950/50 rounded-xl border border-white/5 overflow-hidden custom-scrollbar max-h-60 overflow-y-auto">
                   <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-slate-200">
-                        <th className="text-left py-2 text-slate-500 font-medium">Amount</th>
-                        <th className="text-left py-2 text-slate-500 font-medium">Status</th>
-                        <th className="text-left py-2 text-slate-500 font-medium">Date</th>
+                    <thead className="bg-slate-900/80 sticky top-0">
+                      <tr>
+                        <th className="text-left px-4 py-3 text-slate-400 font-bold text-xs uppercase">Amount</th>
+                        <th className="text-left px-4 py-3 text-slate-400 font-bold text-xs uppercase">Status</th>
+                        <th className="text-left px-4 py-3 text-slate-400 font-bold text-xs uppercase">Date</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-white/5">
                       {viewUser.payments.map((p) => (
-                        <tr key={p.id}>
-                          <td className="py-2 font-medium">₹{p.amount.toLocaleString('en-IN')}</td>
-                          <td className="py-2">
+                        <tr key={p.id} className="hover:bg-white/[0.02]">
+                          <td className="px-4 py-3 font-black text-green-400">₹{p.amount.toLocaleString('en-IN')}</td>
+                          <td className="px-4 py-3">
                             <Badge variant={p.status === 'APPROVED' ? 'approved' : p.status === 'REJECTED' ? 'rejected' : 'proof-uploaded'}>
                               {p.status.replace('_', ' ')}
                             </Badge>
                           </td>
-                          <td className="py-2 text-slate-500">{new Date(p.submittedAt).toLocaleDateString('en-IN')}</td>
+                          <td className="px-4 py-3 text-slate-400">{new Date(p.submittedAt).toLocaleDateString('en-IN')}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -283,11 +333,11 @@ export default function AdminUsersPage() {
 
             {viewUser.paymentRequests.length > 0 && (
               <div>
-                <p className="text-xs text-slate-400 uppercase font-semibold mb-2">Payment Requests ({viewUser.paymentRequests.length})</p>
-                <div className="space-y-1">
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2"><Clock className="w-4 h-4" /> Admin Requests ({viewUser.paymentRequests.length})</h3>
+                <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
                   {viewUser.paymentRequests.map((r) => (
-                    <div key={r.id} className="flex items-center justify-between py-2 px-3 bg-slate-50 rounded-lg text-sm">
-                      <span className="font-medium">₹{r.amount.toLocaleString('en-IN')}</span>
+                    <div key={r.id} className="flex items-center justify-between p-4 bg-slate-950/50 border border-white/5 rounded-xl hover:border-white/10 transition-colors">
+                      <span className="font-black text-aurora-cyan">₹{r.amount.toLocaleString('en-IN')}</span>
                       <Badge variant={r.status === 'COMPLETED' ? 'approved' : 'pending'}>{r.status}</Badge>
                     </div>
                   ))}
@@ -300,42 +350,41 @@ export default function AdminUsersPage() {
 
       {/* Edit Modal */}
       <Modal isOpen={!!editUser} onClose={() => setEditUser(null)} title="Edit User" size="sm">
-        <div className="space-y-4">
-          <div>
-            <label htmlFor="edit-name" className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+        <div className="space-y-6">
+          <div className="space-y-1">
+            <label htmlFor="edit-name" className="text-sm font-semibold text-slate-300 ml-1">Full Name</label>
             <input
               id="edit-name"
               value={editForm.fullName}
               onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="w-full px-4 py-3 bg-slate-950/50 rounded-xl border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50 text-sm transition-all"
             />
           </div>
-          <div>
-            <label htmlFor="edit-email" className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+          <div className="space-y-1">
+            <label htmlFor="edit-email" className="text-sm font-semibold text-slate-300 ml-1">Email</label>
             <input
               id="edit-email"
               value={editForm.email}
               onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="w-full px-4 py-3 bg-slate-950/50 rounded-xl border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50 text-sm transition-all"
             />
           </div>
-          <div>
-            <label htmlFor="edit-phone" className="block text-sm font-medium text-slate-700 mb-1">Phone</label>
+          <div className="space-y-1">
+            <label htmlFor="edit-phone" className="text-sm font-semibold text-slate-300 ml-1">Phone</label>
             <input
               id="edit-phone"
               value={editForm.phone}
               onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="w-full px-4 py-3 bg-slate-950/50 rounded-xl border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50 text-sm transition-all"
             />
           </div>
-          <div className="flex gap-3 pt-2">
-            <button onClick={handleSaveEdit} disabled={editSaving} className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
-              {editSaving && <Spinner size="sm" />}
-              Save
-            </button>
-            <button onClick={() => setEditUser(null)} className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-colors">
+          <div className="flex gap-3 pt-4">
+            <button onClick={() => setEditUser(null)} className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-sm font-bold rounded-xl transition-colors border border-white/5">
               Cancel
             </button>
+            <Button variant="glow" onClick={handleSaveEdit} disabled={editSaving} loading={editSaving} className="flex-1">
+              Save Changes
+            </Button>
           </div>
         </div>
       </Modal>
@@ -343,26 +392,22 @@ export default function AdminUsersPage() {
       {/* Delete Modal */}
       <Modal isOpen={!!deleteUser} onClose={() => setDeleteUser(null)} title="Delete User" size="sm">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-50 mb-4">
-            <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-            </svg>
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 mb-6">
+            <AlertTriangle className="w-8 h-8 text-red-500" />
           </div>
-          <p className="text-slate-900 font-medium mb-1">Delete {deleteUser?.fullName}?</p>
-          <p className="text-slate-500 text-sm mb-6">This will permanently delete all their data including payments, KYC, and notifications.</p>
+          <p className="text-xl text-white font-black mb-2">Delete {deleteUser?.fullName}?</p>
+          <p className="text-red-400/80 text-sm mb-8 font-medium bg-red-500/5 p-3 rounded-lg border border-red-500/10">This will permanently delete all their data including payments, KYC, and history.</p>
           <div className="flex gap-3">
-            <button onClick={handleDelete} disabled={deleting} className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
-              {deleting && <Spinner size="sm" />}
-              Delete
-            </button>
-            <button onClick={() => setDeleteUser(null)} className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition-colors">
+            <button onClick={() => setDeleteUser(null)} className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-sm font-bold rounded-xl transition-colors border border-white/5">
               Cancel
             </button>
+            <Button variant="danger" onClick={handleDelete} disabled={deleting} loading={deleting} className="flex-1">
+              Delete
+            </Button>
           </div>
         </div>
       </Modal>
 
-      {/* Fullscreen Image Viewer */}
       <ScreenshotModal
         isOpen={imageModal.open}
         onClose={() => setImageModal({ open: false, url: '', title: '' })}

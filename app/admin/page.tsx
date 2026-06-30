@@ -2,10 +2,14 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Users, ShieldAlert, CreditCard, DollarSign, Wallet, Activity, Search, PlusCircle, CheckCircle2, XCircle } from 'lucide-react';
 import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
 import StatsCard from '@/components/features/StatsCard';
 import Spinner from '@/components/ui/Spinner';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 
 interface DashboardData {
   totalUsers: number;
@@ -110,146 +114,192 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Spinner size="lg" />
+        <Spinner size="lg" className="text-aurora-cyan" />
       </div>
     );
   }
 
   if (!data) return null;
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }
+  };
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
-        <p className="text-slate-500 mt-1">Overview of platform activity and management</p>
+    <div className="relative z-10 space-y-8 animate-fade-in pb-12">
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-aurora-purple/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-aurora-cyan/10 rounded-full blur-[120px] -translate-x-1/2" />
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-        <StatsCard title="Total Users" value={data.totalRegularUsers} color="blue" onClick={() => router.push('/admin/users')} />
-        <StatsCard title="Pending KYC" value={data.pendingKyc} color="yellow" onClick={() => router.push('/admin/kyc')} />
-        <StatsCard title="Pending Payments" value={data.pendingPayments} color="red" onClick={() => router.push('/admin/payments')} />
-        <StatsCard title="Today's Collection" value={`₹${data.todayApprovedAmount.toLocaleString('en-IN')}`} color="green" />
-        <StatsCard title="Total Collection" value={`₹${data.totalApprovedAmount.toLocaleString('en-IN')}`} color="purple" />
-        <StatsCard title="Pending Amount" value={`₹${data.pendingRequestsAmount.toLocaleString('en-IN')}`} color="yellow" />
-      </div>
+      <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-8">
+        <motion.div variants={itemVariants} className="mb-4">
+          <h1 className="text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
+            <Activity className="w-8 h-8 text-aurora-cyan" /> Command Center
+          </h1>
+          <p className="text-slate-400 mt-2 font-medium">Overview of platform activity and management</p>
+        </motion.div>
 
-      {/* Create Payment Request */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">Create Payment Request</h2>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
-            <label htmlFor="admin-user-search" className="block text-xs font-medium text-slate-500 mb-1">Select User</label>
-            {selectedUser ? (
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg">
-                <span className="text-sm font-medium text-blue-800">{selectedUser.fullName}</span>
-                <span className="text-xs text-blue-600">({selectedUser.email})</span>
-                <button
-                  onClick={() => { setSelectedUser(null); setUserSearch(''); }}
-                  className="ml-auto text-blue-400 hover:text-blue-600"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            ) : (
-              <>
-                <input
-                  id="admin-user-search"
-                  type="text"
-                  value={userSearch}
-                  onChange={(e) => setUserSearch(e.target.value)}
-                  placeholder="Search by name or email..."
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  onFocus={() => userSearch.length >= 1 && setShowDropdown(true)}
-                  onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-                />
-                {showDropdown && users.length > 0 && (
-                  <div className="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                    {users.map((u) => (
-                      <button
-                        key={u.id}
-                        onClick={() => {
-                          setSelectedUser(u);
-                          setShowDropdown(false);
-                          setUserSearch('');
-                        }}
-                        className="w-full px-4 py-2.5 text-left hover:bg-blue-50 text-sm flex items-center justify-between"
-                      >
-                        <span className="font-medium text-slate-900">{u.fullName}</span>
-                        <span className="text-xs text-slate-500">{u.email}</span>
-                      </button>
-                    ))}
+        {/* Stats Grid */}
+        <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+          <StatsCard title="Total Users" value={data.totalRegularUsers} color="blue" icon={<Users className="w-6 h-6" />} onClick={() => router.push('/admin/users')} />
+          <StatsCard title="Pending KYC" value={data.pendingKyc} color="yellow" icon={<ShieldAlert className="w-6 h-6" />} onClick={() => router.push('/admin/kyc')} />
+          <StatsCard title="Pending Proofs" value={data.pendingPayments} color="red" icon={<CreditCard className="w-6 h-6" />} onClick={() => router.push('/admin/payments')} />
+          <StatsCard title="Today's Flow" value={`₹${data.todayApprovedAmount.toLocaleString('en-IN')}`} color="green" icon={<DollarSign className="w-6 h-6" />} />
+          <StatsCard title="Total Flow" value={`₹${data.totalApprovedAmount.toLocaleString('en-IN')}`} color="purple" icon={<Wallet className="w-6 h-6" />} />
+          <StatsCard title="Pending Amt" value={`₹${data.pendingRequestsAmount.toLocaleString('en-IN')}`} color="yellow" icon={<Activity className="w-6 h-6" />} />
+        </motion.div>
+
+        {/* Create Payment Request */}
+        <motion.div variants={itemVariants}>
+          <Card glass glow className="p-6 border-white/5 bg-slate-900/60 shadow-2xl">
+            <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+              <PlusCircle className="w-5 h-5 text-aurora-cyan" /> Create Payment Request
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
+              <div className="flex-1 w-full relative">
+                <label htmlFor="admin-user-search" className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Select User</label>
+                {selectedUser ? (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-aurora-cyan/10 border border-aurora-cyan/30 rounded-xl w-full">
+                    <span className="text-sm font-bold text-white">{selectedUser.fullName}</span>
+                    <span className="text-xs text-aurora-cyan/80">({selectedUser.email})</span>
+                    <button
+                      onClick={() => { setSelectedUser(null); setUserSearch(''); }}
+                      className="ml-auto text-aurora-cyan hover:text-white transition-colors"
+                    >
+                      <XCircle className="w-5 h-5" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Search className="h-4 w-4 text-slate-500" />
+                    </div>
+                    <input
+                      id="admin-user-search"
+                      type="text"
+                      value={userSearch}
+                      onChange={(e) => setUserSearch(e.target.value)}
+                      placeholder="Search by name or email..."
+                      className="w-full pl-10 pr-4 py-3 bg-slate-950/50 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:border-aurora-cyan/50 focus:ring-1 focus:ring-aurora-cyan/50 transition-all text-sm"
+                      onFocus={() => userSearch.length >= 1 && setShowDropdown(true)}
+                      onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                    />
+                    <AnimatePresence>
+                      {showDropdown && users.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          className="absolute z-20 mt-2 w-full bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto"
+                        >
+                          {users.map((u) => (
+                            <button
+                              key={u.id}
+                              onClick={() => {
+                                setSelectedUser(u);
+                                setShowDropdown(false);
+                                setUserSearch('');
+                              }}
+                              className="w-full px-4 py-3 text-left hover:bg-white/5 text-sm flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/5 last:border-0 transition-colors"
+                            >
+                              <span className="font-bold text-white">{u.fullName}</span>
+                              <span className="text-xs text-slate-400 mt-1 sm:mt-0">{u.email}</span>
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 )}
-              </>
+              </div>
+              <div className="w-full sm:w-48">
+                <label htmlFor="admin-amount" className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Amount (₹)</label>
+                <input
+                  id="admin-amount"
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.00"
+                  min="1"
+                  className="w-full px-4 py-3 bg-slate-950/50 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:border-aurora-cyan/50 focus:ring-1 focus:ring-aurora-cyan/50 transition-all text-sm"
+                />
+              </div>
+              <div className="w-full sm:w-auto">
+                <Button
+                  variant="glow"
+                  onClick={handleCreateRequest}
+                  disabled={creating || !selectedUser || !amount}
+                  loading={creating}
+                  className="w-full sm:w-auto py-3 px-8"
+                >
+                  Send Request
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Paid Today / Not Paid Today */}
+        <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card glass className="p-6 border-white/5 bg-slate-900/60 shadow-2xl">
+            <h3 className="text-base font-bold text-white mb-6 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20">
+                <CheckCircle2 className="w-4 h-4 text-green-400" />
+              </div>
+              Paid Today
+              <span className="ml-auto bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded-md border border-green-500/30">
+                {data.paidTodayUsers.length} Users
+              </span>
+            </h3>
+            {data.paidTodayUsers.length === 0 ? (
+              <div className="py-8 text-center border border-dashed border-white/10 rounded-xl bg-white/5">
+                <p className="text-slate-400 text-sm font-medium">No payments collected today.</p>
+              </div>
+            ) : (
+              <div className="space-y-3 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
+                {data.paidTodayUsers.map((u) => (
+                  <div key={u.id} className="flex items-center justify-between px-4 py-3 bg-slate-950/50 rounded-xl border border-white/5 hover:border-green-500/30 transition-colors">
+                    <span className="text-sm font-bold text-white">{u.fullName}</span>
+                    <span className="text-sm font-black text-green-400 bg-green-500/10 px-3 py-1 rounded-lg">₹{u.totalPaid.toLocaleString('en-IN')}</span>
+                  </div>
+                ))}
+              </div>
             )}
-          </div>
-          <div className="w-full sm:w-48">
-            <label htmlFor="admin-amount" className="block text-xs font-medium text-slate-500 mb-1">Amount (₹)</label>
-            <input
-              id="admin-amount"
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
-              min="1"
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-            />
-          </div>
-          <div className="flex items-end">
-            <button
-              onClick={handleCreateRequest}
-              disabled={creating || !selectedUser || !amount}
-              className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
-            >
-              {creating && <Spinner size="sm" />}
-              Send Request
-            </button>
-          </div>
-        </div>
-      </div>
+          </Card>
 
-      {/* Paid Today / Not Paid Today */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500" />
-            Paid Today ({data.paidTodayUsers.length})
-          </h3>
-          {data.paidTodayUsers.length === 0 ? (
-            <p className="text-slate-400 text-sm">No payments today</p>
-          ) : (
-            <div className="space-y-2 max-h-64 overflow-y-auto">
-              {data.paidTodayUsers.map((u) => (
-                <div key={u.id} className="flex items-center justify-between px-3 py-2 bg-green-50 rounded-lg">
-                  <span className="text-sm font-medium text-slate-900">{u.fullName}</span>
-                  <span className="text-sm font-semibold text-green-700">₹{u.totalPaid.toLocaleString('en-IN')}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-          <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-red-500" />
-            Not Paid Today ({data.notPaidTodayUsers.length})
-          </h3>
-          {data.notPaidTodayUsers.length === 0 ? (
-            <p className="text-slate-400 text-sm">Everyone has paid!</p>
-          ) : (
-            <div className="space-y-2 max-h-64 overflow-y-auto">
-              {data.notPaidTodayUsers.map((u) => (
-                <div key={u.id} className="flex items-center px-3 py-2 bg-red-50 rounded-lg">
-                  <span className="text-sm font-medium text-slate-900">{u.fullName}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+          <Card glass className="p-6 border-white/5 bg-slate-900/60 shadow-2xl">
+            <h3 className="text-base font-bold text-white mb-6 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                <XCircle className="w-4 h-4 text-red-400" />
+              </div>
+              Not Paid Today
+              <span className="ml-auto bg-red-500/20 text-red-400 text-xs px-2 py-1 rounded-md border border-red-500/30">
+                {data.notPaidTodayUsers.length} Users
+              </span>
+            </h3>
+            {data.notPaidTodayUsers.length === 0 ? (
+              <div className="py-8 text-center border border-dashed border-white/10 rounded-xl bg-white/5">
+                <p className="text-slate-400 text-sm font-medium">Everyone is up to date!</p>
+              </div>
+            ) : (
+              <div className="space-y-3 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
+                {data.notPaidTodayUsers.map((u) => (
+                  <div key={u.id} className="flex items-center px-4 py-3 bg-slate-950/50 rounded-xl border border-white/5 hover:border-red-500/30 transition-colors">
+                    <span className="text-sm font-bold text-slate-300">{u.fullName}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

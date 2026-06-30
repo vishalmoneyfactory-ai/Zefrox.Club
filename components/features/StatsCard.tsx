@@ -10,19 +10,27 @@ interface StatsCardProps {
 }
 
 const borderColorMap: Record<string, string> = {
-  blue: 'border-l-primary-500',
-  green: 'border-l-green-500',
-  red: 'border-l-red-500',
-  yellow: 'border-l-yellow-500',
-  purple: 'border-l-purple-500',
+  blue: 'border-l-blue-400 border-t-white/5 border-r-white/5 border-b-white/5',
+  green: 'border-l-green-400 border-t-white/5 border-r-white/5 border-b-white/5',
+  red: 'border-l-red-400 border-t-white/5 border-r-white/5 border-b-white/5',
+  yellow: 'border-l-yellow-400 border-t-white/5 border-r-white/5 border-b-white/5',
+  purple: 'border-l-purple-400 border-t-white/5 border-r-white/5 border-b-white/5',
 };
 
 const iconBgMap: Record<string, string> = {
-  blue: 'bg-primary-50 text-primary-600',
-  green: 'bg-green-50 text-green-600',
-  red: 'bg-red-50 text-red-600',
-  yellow: 'bg-yellow-50 text-yellow-600',
-  purple: 'bg-purple-50 text-purple-600',
+  blue: 'bg-blue-500/10 text-blue-400',
+  green: 'bg-green-500/10 text-green-400',
+  red: 'bg-red-500/10 text-red-400',
+  yellow: 'bg-yellow-500/10 text-yellow-400',
+  purple: 'bg-purple-500/10 text-purple-400',
+};
+
+const glowMap: Record<string, string> = {
+  blue: 'group-hover:shadow-[0_0_20px_rgba(96,165,250,0.15)]',
+  green: 'group-hover:shadow-[0_0_20px_rgba(74,222,128,0.15)]',
+  red: 'group-hover:shadow-[0_0_20px_rgba(248,113,113,0.15)]',
+  yellow: 'group-hover:shadow-[0_0_20px_rgba(250,204,21,0.15)]',
+  purple: 'group-hover:shadow-[0_0_20px_rgba(192,132,252,0.15)]',
 };
 
 export default function StatsCard({
@@ -37,23 +45,23 @@ export default function StatsCard({
     <div
       onClick={onClick}
       className={`
-        bg-white rounded-xl shadow-sm border border-slate-200 p-6
-        border-l-4 ${borderColorMap[color]}
-        ${onClick ? 'cursor-pointer hover:shadow-md transition-all duration-200' : ''}
+        bg-slate-900/60 backdrop-blur-md rounded-xl p-6 group
+        border-l-4 ${borderColorMap[color]} ${glowMap[color]}
+        ${onClick ? 'cursor-pointer transition-all duration-300 transform hover:-translate-y-1' : 'transition-all duration-300'}
       `}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-slate-500">{title}</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
+          <p className="text-xs uppercase tracking-widest font-bold text-slate-400">{title}</p>
+          <p className="text-3xl font-black text-white mt-2 tracking-tight">{value}</p>
           {subtitle && (
-            <p className="text-sm text-slate-500 mt-1">{subtitle}</p>
+            <p className="text-sm font-medium text-slate-500 mt-2">{subtitle}</p>
           )}
         </div>
 
         {icon && (
           <div
-            className={`p-3 rounded-full flex-shrink-0 ${iconBgMap[color]}`}
+            className={`p-3 rounded-xl flex-shrink-0 border border-white/5 ${iconBgMap[color]}`}
           >
             {icon}
           </div>

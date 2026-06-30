@@ -29,7 +29,7 @@ export default function TickerTape() {
         "showSymbolLogo": true,
         "isTransparent": true,
         "displayMode": "adaptive",
-        "colorTheme": "light",
+        "colorTheme": "dark",
         "locale": "en"
       }
     `;

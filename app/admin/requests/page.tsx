@@ -1,10 +1,14 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Send, Search, XCircle, Clock, User, CheckCircle2, IndianRupee } from 'lucide-react';
 import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
 import Badge from '@/components/ui/Badge';
 import Spinner from '@/components/ui/Spinner';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 
 interface UserOption {
   id: string;
@@ -41,21 +45,6 @@ export default function AdminRequestsPage() {
   const [creating, setCreating] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const fetchRequests = useCallback(async () => {
-    try {
-      const { data } = await api.get('/api/payments?status=all');
-      // We use the payments endpoint with admin role to get all data
-      // But we actually want payment requests. Let's fetch them differently.
-      // Since we don't have a dedicated admin payment requests endpoint,
-      // we'll work with what we have - fetch all payments and their linked requests
-      setRequests([]);
-    } catch {
-      showError('Failed to load requests');
-    } finally {
-      setLoading(false);
-    }
-  }, [showError]);
 
   // Fetch all payment requests through the payments API
   const fetchAllRequests = useCallback(async () => {
@@ -155,165 +144,210 @@ export default function AdminRequestsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Spinner size="lg" />
+        <Spinner size="lg" className="text-aurora-purple" />
       </div>
     );
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }
+  };
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Payment Requests</h1>
-        <p className="text-slate-500 mt-1">Create and manage payment requests for users</p>
+    <div className="relative z-10 space-y-8 animate-fade-in pb-12">
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-aurora-purple/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
       </div>
 
-      {/* Create Payment Request */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">Create New Request</h2>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
-            <label htmlFor="request-user-search" className="block text-xs font-medium text-slate-500 mb-1">
-              Select User
-            </label>
-            {selectedUser ? (
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg">
-                <span className="text-sm font-medium text-blue-800">{selectedUser.fullName}</span>
-                <span className="text-xs text-blue-600">({selectedUser.email})</span>
-                <button
-                  onClick={() => {
-                    setSelectedUser(null);
-                    setUserSearch('');
-                  }}
-                  className="ml-auto text-blue-400 hover:text-blue-600"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            ) : (
-              <>
-                <input
-                  id="request-user-search"
-                  type="text"
-                  value={userSearch}
-                  onChange={(e) => setUserSearch(e.target.value)}
-                  placeholder="Search by name or email..."
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  onFocus={() => userSearch.length >= 1 && setShowDropdown(true)}
-                  onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-                />
-                {showDropdown && users.length > 0 && (
-                  <div className="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                    {users.map((u) => (
-                      <button
-                        key={u.id}
-                        onClick={() => {
-                          setSelectedUser(u);
-                          setShowDropdown(false);
-                          setUserSearch('');
-                        }}
-                        className="w-full px-4 py-2.5 text-left hover:bg-blue-50 text-sm flex items-center justify-between"
-                      >
-                        <span className="font-medium text-slate-900">{u.fullName}</span>
-                        <span className="text-xs text-slate-500">{u.email}</span>
-                      </button>
-                    ))}
+      <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-8">
+        <motion.div variants={itemVariants}>
+          <h1 className="text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
+            <Send className="w-8 h-8 text-aurora-purple" /> Payment Requests
+          </h1>
+          <p className="text-slate-400 mt-2 font-medium">Issue and track payment requests to users</p>
+        </motion.div>
+
+        {/* Create Payment Request */}
+        <motion.div variants={itemVariants}>
+          <Card glass glow className="p-6 border-white/5 bg-slate-900/60 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-aurora-cyan via-aurora-purple to-pink-500 opacity-50" />
+            <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+              <Send className="w-5 h-5 text-aurora-cyan" /> Issue New Request
+            </h2>
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
+              <div className="flex-1 w-full relative">
+                <label htmlFor="request-user-search" className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5" /> Select User
+                </label>
+                {selectedUser ? (
+                  <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex items-center gap-3 px-4 py-3 bg-aurora-purple/10 border border-aurora-purple/30 rounded-xl w-full">
+                    <span className="text-sm font-bold text-white">{selectedUser.fullName}</span>
+                    <span className="text-xs text-aurora-purple/80">({selectedUser.email})</span>
+                    <button
+                      onClick={() => { setSelectedUser(null); setUserSearch(''); }}
+                      className="ml-auto text-aurora-purple hover:text-white transition-colors"
+                    >
+                      <XCircle className="w-5 h-5" />
+                    </button>
+                  </motion.div>
+                ) : (
+                  <div className="relative z-20">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Search className="h-4 w-4 text-slate-500" />
+                    </div>
+                    <input
+                      id="request-user-search"
+                      type="text"
+                      value={userSearch}
+                      onChange={(e) => setUserSearch(e.target.value)}
+                      placeholder="Search by name or email..."
+                      className="w-full pl-10 pr-4 py-3 bg-slate-950/80 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:border-aurora-purple/50 focus:ring-1 focus:ring-aurora-purple/50 transition-all text-sm shadow-inner"
+                      onFocus={() => userSearch.length >= 1 && setShowDropdown(true)}
+                      onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                    />
+                    <AnimatePresence>
+                      {showDropdown && users.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          className="absolute z-50 mt-2 w-full bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto backdrop-blur-xl"
+                        >
+                          {users.map((u) => (
+                            <button
+                              key={u.id}
+                              onClick={() => {
+                                setSelectedUser(u);
+                                setShowDropdown(false);
+                                setUserSearch('');
+                              }}
+                              className="w-full px-4 py-3 text-left hover:bg-white/5 text-sm flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/5 last:border-0 transition-colors"
+                            >
+                              <span className="font-bold text-white">{u.fullName}</span>
+                              <span className="text-xs text-slate-400 mt-1 sm:mt-0">{u.email}</span>
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 )}
-              </>
-            )}
-          </div>
-          <div className="w-full sm:w-48">
-            <label htmlFor="request-amount" className="block text-xs font-medium text-slate-500 mb-1">
-              Amount (₹)
-            </label>
-            <input
-              id="request-amount"
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
-              min="1"
-              className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-            />
-          </div>
-          <div className="flex items-end">
-            <button
-              onClick={handleCreateRequest}
-              disabled={creating || !selectedUser || !amount}
-              className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
-            >
-              {creating && <Spinner size="sm" />}
-              Send Request
-            </button>
-          </div>
-        </div>
-      </div>
+              </div>
+              <div className="w-full md:w-48">
+                <label htmlFor="request-amount" className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <IndianRupee className="w-3.5 h-3.5" /> Amount (₹)
+                </label>
+                <input
+                  id="request-amount"
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.00"
+                  min="1"
+                  className="w-full px-4 py-3 bg-slate-950/80 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:border-aurora-purple/50 focus:ring-1 focus:ring-aurora-purple/50 transition-all text-sm shadow-inner font-mono font-bold"
+                />
+              </div>
+              <div className="w-full md:w-auto mt-4 md:mt-0">
+                <Button
+                  variant="glow"
+                  onClick={handleCreateRequest}
+                  disabled={creating || !selectedUser || !amount}
+                  loading={creating}
+                  className="w-full md:w-auto py-3 px-8 !bg-aurora-purple/20 !border-aurora-purple/50 !text-aurora-purple hover:!bg-aurora-purple/30 hover:!text-white shadow-[0_0_15px_rgba(168,85,247,0.2)]"
+                >
+                  <Send className="w-4 h-4 mr-2" /> Issue Request
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
 
-      {/* Requests Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">User</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Amount</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3 hidden sm:table-cell">Date</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3">Status</th>
-                <th className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3 hidden md:table-cell">Payment</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {requests.map((req) => (
-                <tr key={req.id} className="hover:bg-slate-50/50">
-                  <td className="px-6 py-4">
-                    <p className="text-sm font-medium text-slate-900">{req.user?.fullName}</p>
-                    <p className="text-xs text-slate-500">{req.user?.email}</p>
-                  </td>
-                  <td className="px-6 py-4 text-sm font-semibold text-slate-900">
-                    ₹{req.amount.toLocaleString('en-IN')}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-slate-500 hidden sm:table-cell">
-                    {new Date(req.createdAt).toLocaleDateString('en-IN', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </td>
-                  <td className="px-6 py-4">
-                    <Badge variant={req.status === 'COMPLETED' ? 'approved' : 'pending'}>
-                      {req.status}
-                    </Badge>
-                  </td>
-                  <td className="px-6 py-4 hidden md:table-cell">
-                    {req.payment ? (
-                      <Badge
-                        variant={
-                          req.payment.status === 'APPROVED'
-                            ? 'approved'
-                            : req.payment.status === 'REJECTED'
-                            ? 'rejected'
-                            : 'proof-uploaded'
-                        }
+        {/* Requests Table */}
+        <motion.div variants={itemVariants}>
+          <Card glass className="p-0 border-white/5 bg-slate-900/60 shadow-2xl overflow-hidden relative z-0">
+            <div className="overflow-x-auto custom-scrollbar">
+              <table className="w-full min-w-[800px]">
+                <thead>
+                  <tr className="bg-slate-950/50 border-b border-white/5">
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">User</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">Amount</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider hidden sm:table-cell">Date Issued</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">Request Status</th>
+                    <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider hidden md:table-cell">Payment Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  <AnimatePresence>
+                    {requests.map((req) => (
+                      <motion.tr
+                        key={req.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="hover:bg-white/[0.02] transition-colors"
                       >
-                        {req.payment.status.replace('_', ' ')}
-                      </Badge>
-                    ) : (
-                      <span className="text-xs text-slate-400">No proof yet</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {requests.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-slate-400">No payment requests found</p>
-          </div>
-        )}
-      </div>
+                        <td className="px-6 py-4">
+                          <p className="text-sm font-bold text-white">{req.user?.fullName}</p>
+                          <p className="text-xs text-slate-400 mt-1">{req.user?.email}</p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-aurora-cyan/10 text-aurora-cyan text-sm font-black border border-aurora-cyan/20">
+                            ₹{req.amount.toLocaleString('en-IN')}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-400 hidden sm:table-cell font-medium">
+                          {new Date(req.createdAt).toLocaleDateString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                          })}
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge variant={req.status === 'COMPLETED' ? 'approved' : 'pending'}>
+                            {req.status}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 hidden md:table-cell">
+                          {req.payment ? (
+                            <Badge
+                              variant={
+                                req.payment.status === 'APPROVED'
+                                  ? 'approved'
+                                  : req.payment.status === 'REJECTED'
+                                  ? 'rejected'
+                                  : 'proof-uploaded'
+                              }
+                            >
+                              {req.payment.status.replace('_', ' ')}
+                            </Badge>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800 text-slate-400 text-xs font-bold border border-white/5">
+                              <Clock className="w-3 h-3" /> Awaiting Proof
+                            </span>
+                          )}
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </tbody>
+              </table>
+            </div>
+            {requests.length === 0 && (
+              <div className="text-center py-16">
+                <CheckCircle2 className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
+                <p className="text-slate-300 font-bold text-lg mb-1">No Active Requests</p>
+                <p className="text-slate-500 font-medium">Create a payment request to see it listed here.</p>
+              </div>
+            )}
+          </Card>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
