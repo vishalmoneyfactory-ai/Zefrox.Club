@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zerofx.club';
+const appName = 'Zerofx.club';
 
 export default function AboutPage() {
   return (

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import TickerTape from '@/components/features/TickerTape';
 import MiniChart from '@/components/features/MiniChart';
 
-const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zerofx.club';
+const appName = 'Zerofx.club';
 
 const features = [
   {
@@ -54,7 +54,7 @@ export default function DashboardHome() {
       </div>
 
       {/* Ticker Tape */}
-      <div className="-mt-4 sm:-mt-6 lg:-mt-8 -mx-4 sm:-mx-6 lg:-mx-8 w-auto bg-white/60 backdrop-blur-md h-[44px] shadow-sm relative z-10 border-b border-slate-200/50">
+      <div className="w-full bg-white/60 backdrop-blur-md h-[44px] shadow-sm relative z-10 border border-slate-200/50 rounded-xl overflow-hidden mt-2 mb-4">
         <TickerTape />
       </div>
 

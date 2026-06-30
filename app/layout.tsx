@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ToastProvider } from '@/components/ui/Toast';
 
-const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zerofx.club';
+const appName = 'Zerofx.club';
 
 export const metadata: Metadata = {
   title: `${appName} — Secure Payment Management`,

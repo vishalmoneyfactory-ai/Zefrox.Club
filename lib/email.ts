@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Zerofx.club';
+const APP_NAME = 'Zerofx.club';
 
 const transporter = nodemailer.createTransport({
   host: 'smtp-relay.brevo.com',

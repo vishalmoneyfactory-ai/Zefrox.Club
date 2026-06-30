@@ -2,7 +2,7 @@ import Link from 'next/link';
 import TickerTape from '@/components/features/TickerTape';
 import MiniChart from '@/components/features/MiniChart';
 
-const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zerofx.club';
+const appName = 'Zerofx.club';
 
 const features = [
   {
@@ -74,12 +74,6 @@ export default function LandingPage() {
               </Link>
             </div>
           </div>
-        </div>
-        
-        {/* Ticker Tape */}
-        <div className="w-full bg-white/40 backdrop-blur-md h-[44px] border-t border-slate-200/50">
-          <TickerTape />
-        </div>
       </nav>
 
       {/* Hero Section */}
@@ -90,6 +84,12 @@ export default function LandingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Ticker Tape */}
+          <div className="w-full bg-white/60 backdrop-blur-md h-[44px] shadow-sm relative z-20 border border-slate-200/50 rounded-xl overflow-hidden mb-12">
+            <TickerTape />
+          </div>
+
           <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
             
             {/* Left Content */}
