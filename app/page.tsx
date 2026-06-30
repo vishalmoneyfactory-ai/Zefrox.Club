@@ -1,225 +1,249 @@
+'use client';
+
 import Link from 'next/link';
+import { motion, Variants } from 'framer-motion';
+import { ShieldCheck, LineChart, Zap, HeadphonesIcon, ArrowRight } from 'lucide-react';
 import TickerTape from '@/components/features/TickerTape';
 import MiniChart from '@/components/features/MiniChart';
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 
 const appName = 'Zerofx.club';
 
 const features = [
   {
-    icon: (
-      <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-      </svg>
-    ),
+    icon: <LineChart className="w-8 h-8 text-aurora-cyan" />,
     title: 'Ultra-Low Spreads',
     description: 'on XAU EUR',
   },
   {
-    icon: (
-      <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-      </svg>
-    ),
+    icon: <Zap className="w-8 h-8 text-aurora-cyan" />,
     title: '200+ Instruments',
     description: 'Forex, Crypto & More',
   },
   {
-    icon: (
-      <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 8.25H9m6 3H9m3 6l-3-3h1.5a3 3 0 100-6M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
+    icon: <ShieldCheck className="w-8 h-8 text-aurora-cyan" />,
     title: '$40 Minimum',
     description: 'Start with just $40',
   },
   {
-    icon: (
-      <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-      </svg>
-    ),
+    icon: <HeadphonesIcon className="w-8 h-8 text-aurora-cyan" />,
     title: '24/7 Support',
     description: 'Round-the-clock assistance',
   },
 ];
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, ease: "easeOut" }
+  }
+};
+
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 selection:bg-blue-200 selection:text-blue-900">
+    <div className="min-h-screen relative overflow-hidden selection:bg-aurora-cyan/30 selection:text-aurora-cyan">
       
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 glass border-b border-slate-200/50 flex flex-col">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.nav 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="sticky top-0 z-50 glass border-b border-white/5 flex flex-col"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex items-center justify-between h-20">
-            <div className="flex flex-1 items-center justify-start gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="flex items-center justify-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-aurora-cyan to-aurora-indigo flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+                <Zap className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xl font-bold tracking-tight text-slate-900">{appName}</span>
+              <span className="text-2xl font-black tracking-tighter text-white">{appName}</span>
             </div>
             
-            <div className="hidden md:flex flex-1 items-center justify-center space-x-8">
-              <Link href="/" className="text-blue-600 font-semibold transition-colors border-b-2 border-blue-600 pb-1">Home</Link>
-              <Link href="/about" className="text-slate-600 font-medium hover:text-blue-600 transition-colors pb-1">About Us</Link>
+            <div className="hidden md:flex items-center justify-center space-x-8">
+              <Link href="/" className="text-aurora-cyan font-semibold transition-colors border-b-2 border-aurora-cyan pb-1">Home</Link>
+              <Link href="/about" className="text-slate-400 font-medium hover:text-white transition-colors pb-1">About Us</Link>
             </div>
 
-            <div className="flex flex-1 items-center justify-end">
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
-              >
-                Sign In
+            <div className="flex items-center justify-end">
+              <Link href="/login">
+                <Button variant="glow" size="sm">
+                  Sign In
+                </Button>
               </Link>
             </div>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Hero Section */}
-      <header className="relative pt-12 pb-32 overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-1/4 left-0 w-64 h-64 bg-blue-200/40 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2" />
-          <div className="absolute top-1/4 right-0 w-96 h-96 bg-indigo-200/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        </div>
-
+      <header className="relative pt-20 pb-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Ticker Tape */}
-          <div className="w-full bg-white/60 backdrop-blur-md h-[44px] shadow-sm relative z-20 border border-slate-200/50 rounded-xl overflow-hidden mb-12">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="w-full glass-card h-[44px] relative z-20 rounded-xl overflow-hidden mb-16 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
+          >
             <TickerTape />
-          </div>
+          </motion.div>
 
           <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
             
             {/* Left Content */}
-            <div className="flex-1 text-center lg:text-left z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium mb-8">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                </svg>
+            <motion.div 
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+              className="flex-1 text-center lg:text-left z-10"
+            >
+              <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-aurora-cyan/30 text-aurora-cyan text-sm font-semibold mb-8 shadow-[0_0_15px_rgba(34,211,238,0.15)]">
+                <ShieldCheck className="w-4 h-4" />
                 Trusted by 12,400+ Traders
-              </div>
+              </motion.div>
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6">
+              <motion.h1 variants={itemVariants} className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white mb-6 leading-tight">
                 Trade Smarter<br className="hidden sm:block" />
-                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text"> Trade Faster</span>
-              </h1>
+                <span className="gradient-text drop-shadow-[0_0_15px_rgba(99,102,241,0.3)]"> Trade Faster</span>
+              </motion.h1>
 
-              <p className="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed">
-                Claim your 100% deposit bonus and join the ultimate trading platform built for low latency and deep liquidity.
-              </p>
+              <motion.p variants={itemVariants} className="text-lg sm:text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                Claim your 100% deposit bonus and join the ultimate futuristic trading platform built for low latency and extreme liquidity.
+              </motion.p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:-translate-y-0.5"
-                >
-                  Trade Now
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
+              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Link href="/login">
+                  <Button variant="glow" size="lg" className="w-full sm:w-auto">
+                    Start Trading <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
                 </Link>
-                <Link
-                  href="/about"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 text-base font-semibold rounded-xl border border-slate-200 transition-all duration-200"
-                >
-                  Learn More
+                <Link href="/about">
+                  <Button variant="secondary" size="lg" className="w-full sm:w-auto">
+                    Learn More
+                  </Button>
                 </Link>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             {/* Right Content (Mini Chart) */}
-            <div className="flex-1 w-full max-w-lg lg:max-w-xl z-10">
-              <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-4 h-[350px]">
-                <MiniChart />
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="flex-1 w-full max-w-lg lg:max-w-xl z-10"
+            >
+              <div className="glass-card p-4 h-[350px] relative">
+                <div className="absolute -inset-1 bg-gradient-to-r from-aurora-cyan to-aurora-purple rounded-[20px] blur opacity-20"></div>
+                <div className="relative h-full w-full rounded-xl overflow-hidden">
+                  <MiniChart />
+                </div>
               </div>
-            </div>
+            </motion.div>
 
           </div>
         </div>
       </header>
 
       {/* Features Section */}
-      <section className="py-24 bg-white border-y border-slate-200/60">
+      <section className="py-24 relative border-y border-white/5 bg-slate-900/20 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
-              Why Choose <span className="text-blue-600">{appName}</span>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
+              Why Choose <span className="text-aurora-cyan">{appName}</span>
             </h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              A complete trading solution engineered to give you the competitive edge.
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+              A complete trading solution engineered with next-gen technology to give you the competitive edge.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="group relative bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-lg hover:border-blue-100 transition-all duration-300 hover:-translate-y-1 text-center"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="w-14 h-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                  {feature.icon}
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-600 font-medium">
-                  {feature.description}
-                </p>
-              </div>
+                <Card hover glow className="h-full text-center group">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-800/80 flex items-center justify-center mx-auto mb-6 group-hover:bg-aurora-cyan/10 transition-colors duration-300 shadow-inner">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-slate-400 font-medium">
+                    {feature.description}
+                  </p>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 sm:py-32">
+      <section className="py-24 sm:py-32 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-8 py-16 sm:px-16 sm:py-24 text-center">
-            <div className="absolute inset-0 -z-10">
-              <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-white/10 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-white/5 rounded-full blur-2xl" />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-[2rem] glass-card px-8 py-16 sm:px-16 sm:py-24 text-center border-aurora-indigo/30"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-aurora-cyan/10 via-aurora-indigo/10 to-aurora-purple/10"></div>
+            <div className="relative z-10">
+              <h2 className="text-3xl sm:text-5xl font-black text-white mb-6 drop-shadow-md">
+                Ready to Get Started?
+              </h2>
+              <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10">
+                Join our secure {appName} platform today. Quick registration, instant KYC verification, and lightning-fast execution.
+              </p>
+              <Link href="/login">
+                <Button variant="glow" size="lg">
+                  Create Your Account
+                </Button>
+              </Link>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              Ready to Get Started?
-            </h2>
-            <p className="text-lg text-blue-100 max-w-xl mx-auto mb-10">
-              Join our secure {appName} platform today. Quick registration, fast KYC verification, and lightning-fast execution.
-            </p>
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-blue-50 text-blue-700 text-base font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-            >
-              Create Your Account
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white">
+      <footer className="border-t border-white/5 bg-slate-950/50 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-aurora-cyan to-aurora-indigo flex items-center justify-center">
+                <Zap className="w-4 h-4 text-white" />
               </div>
-              <span className="text-lg font-bold text-slate-900">{appName}</span>
+              <span className="text-xl font-black text-white">{appName}</span>
             </div>
             
-            <div className="flex gap-6 text-sm font-medium text-slate-500">
-              <a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a>
+            <div className="flex gap-8 text-sm font-medium text-slate-400">
+              <a href="#" className="hover:text-aurora-cyan transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-aurora-cyan transition-colors">Terms of Service</a>
             </div>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 font-medium">
               © {new Date().getFullYear()} {appName}. All rights reserved.
             </p>
           </div>

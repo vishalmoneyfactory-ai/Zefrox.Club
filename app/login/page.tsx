@@ -5,9 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Zap, Mail, Phone, User, Lock, ArrowRight } from 'lucide-react';
 import api from '@/lib/axios';
 import OtpInput from '@/components/features/OtpInput';
 import { useToast } from '@/components/ui/Toast';
+import Button from '@/components/ui/Button';
 
 const appName = 'Zerofx.club';
 
@@ -163,201 +166,261 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-100/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-indigo-100/30 rounded-full blur-3xl" />
-      </div>
-
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 shadow-lg shadow-blue-500/20 mb-4">
-            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+    <div className="min-h-screen relative flex items-center justify-center p-4 selection:bg-aurora-cyan/30 selection:text-aurora-cyan overflow-hidden">
+      
+      <div className="w-full max-w-md relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-aurora-cyan to-aurora-indigo shadow-[0_0_20px_rgba(34,211,238,0.3)] mb-4">
+            <Zap className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">{appName}</h1>
-          <p className="text-slate-500 mt-1">
-            {activeTab === 'login' ? 'Welcome back' : signupStep === 1 ? 'Create your account' : signupStep === 2 ? 'Verify your email' : 'Set your password'}
+          <h1 className="text-3xl font-black text-white tracking-tight">{appName}</h1>
+          <p className="text-slate-400 mt-2 font-medium">
+            {activeTab === 'login' ? 'Welcome back, trader' : signupStep === 1 ? 'Start your trading journey' : signupStep === 2 ? 'Verify your identity' : 'Secure your account'}
           </p>
-        </div>
+        </motion.div>
 
-        <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 p-8 overflow-hidden relative">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="glass-card rounded-[2rem] p-8 shadow-2xl relative border-aurora-indigo/20 overflow-hidden"
+        >
+          {/* Subtle inner glow */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-aurora-cyan/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           
-          {/* Tabs - Only show when logging in or at step 1 of signup */}
+          {/* Tabs */}
           {(activeTab === 'login' || signupStep === 1) && (
-            <div className="flex p-1 bg-slate-100 rounded-xl mb-6">
+            <div className="flex p-1 bg-slate-900/50 rounded-xl mb-8 border border-white/5 relative z-10">
               <button
                 onClick={() => setActiveTab('login')}
-                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
-                  activeTab === 'login' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300 relative ${
+                  activeTab === 'login' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
                 }`}
               >
-                Log In
+                {activeTab === 'login' && (
+                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-white/10 rounded-lg border border-white/10 shadow-sm" />
+                )}
+                <span className="relative z-10">Log In</span>
               </button>
               <button
                 onClick={() => setActiveTab('signup')}
-                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
-                  activeTab === 'signup' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300 relative ${
+                  activeTab === 'signup' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
                 }`}
               >
-                Sign Up
+                {activeTab === 'signup' && (
+                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-white/10 rounded-lg border border-white/10 shadow-sm" />
+                )}
+                <span className="relative z-10">Sign Up</span>
               </button>
             </div>
           )}
 
-          {activeTab === 'login' ? (
-            <form onSubmit={onLogin} className="space-y-5 animate-fade-in">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
-                <input
-                  type="email"
-                  required
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  placeholder="john@example.com"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
-                <input
-                  type="password"
-                  required
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
-              >
-                {loading ? 'Logging in...' : 'Log In'}
-              </button>
-            </form>
-          ) : (
-            <div className="animate-fade-in">
-              {signupStep === 1 && (
-                <form onSubmit={handleSignupSubmit(onSendOtp)} className="space-y-5">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
-                    <input
-                      type="text"
-                      placeholder="John Doe"
-                      {...registerSignup('fullName')}
-                      className={`w-full px-4 py-3 rounded-xl border ${
-                        signupErrors.fullName ? 'border-red-400 focus:ring-red-500' : 'border-slate-200 focus:ring-blue-500'
-                      } focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm`}
-                    />
-                    {signupErrors.fullName && (
-                      <p className="text-red-500 text-xs mt-1.5">{signupErrors.fullName.message}</p>
-                    )}
+          <div className="relative z-10">
+            <AnimatePresence mode="wait">
+              {activeTab === 'login' ? (
+                <motion.form 
+                  key="login"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  onSubmit={onLogin} 
+                  className="space-y-5"
+                >
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold text-slate-300 ml-1">Email Address</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Mail className="h-5 w-5 text-slate-500" />
+                      </div>
+                      <input
+                        type="email"
+                        required
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
+                        placeholder="trader@example.com"
+                        className="w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50 transition-all text-sm"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
-                    <input
-                      type="email"
-                      placeholder="john@example.com"
-                      {...registerSignup('email')}
-                      className={`w-full px-4 py-3 rounded-xl border ${
-                        signupErrors.email ? 'border-red-400 focus:ring-red-500' : 'border-slate-200 focus:ring-blue-500'
-                      } focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm`}
-                    />
-                    {signupErrors.email && (
-                      <p className="text-red-500 text-xs mt-1.5">{signupErrors.email.message}</p>
-                    )}
+                  <div className="space-y-1">
+                    <label className="text-sm font-semibold text-slate-300 ml-1">Password</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Lock className="h-5 w-5 text-slate-500" />
+                      </div>
+                      <input
+                        type="password"
+                        required
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50 transition-all text-sm"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Phone Number</label>
-                    <input
-                      type="tel"
-                      placeholder="9876543210"
-                      {...registerSignup('phone')}
-                      className={`w-full px-4 py-3 rounded-xl border ${
-                        signupErrors.phone ? 'border-red-400 focus:ring-red-500' : 'border-slate-200 focus:ring-blue-500'
-                      } focus:outline-none focus:ring-2 focus:border-transparent transition-all text-sm`}
-                    />
-                    {signupErrors.phone && (
-                      <p className="text-red-500 text-xs mt-1.5">{signupErrors.phone.message}</p>
-                    )}
-                  </div>
-                  <button
+                  <Button
                     type="submit"
-                    disabled={loading}
-                    className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+                    variant="glow"
+                    size="lg"
+                    className="w-full mt-6"
+                    loading={loading}
                   >
-                    {loading ? 'Sending OTP...' : 'Continue with OTP'}
-                  </button>
-                </form>
-              )}
-
-              {signupStep === 2 && (
-                <div className="animate-fade-in">
-                  <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 mb-4">
-                      <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                      </svg>
-                    </div>
-                    <p className="text-sm text-slate-600">We sent a 6-digit code to</p>
-                    <p className="font-semibold text-slate-900 mt-1">{email}</p>
-                  </div>
-                  <OtpInput length={6} onComplete={onVerifyOtp} disabled={loading} />
-                  
-                  {loading && (
-                    <div className="flex items-center justify-center gap-2 mt-6 text-sm text-slate-500">
-                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                      Verifying...
-                    </div>
+                    Access Platform
+                  </Button>
+                </motion.form>
+              ) : (
+                <motion.div 
+                  key="signup"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                >
+                  {signupStep === 1 && (
+                    <form onSubmit={handleSignupSubmit(onSendOtp)} className="space-y-5">
+                      <div className="space-y-1">
+                        <label className="text-sm font-semibold text-slate-300 ml-1">Full Name</label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <User className="h-5 w-5 text-slate-500" />
+                          </div>
+                          <input
+                            type="text"
+                            placeholder="John Doe"
+                            {...registerSignup('fullName')}
+                            className={`w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
+                              signupErrors.fullName ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50'
+                            } focus:outline-none focus:ring-2`}
+                          />
+                        </div>
+                        {signupErrors.fullName && (
+                          <p className="text-red-400 text-xs ml-1 mt-1">{signupErrors.fullName.message}</p>
+                        )}
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-sm font-semibold text-slate-300 ml-1">Email Address</label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Mail className="h-5 w-5 text-slate-500" />
+                          </div>
+                          <input
+                            type="email"
+                            placeholder="john@example.com"
+                            {...registerSignup('email')}
+                            className={`w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
+                              signupErrors.email ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50'
+                            } focus:outline-none focus:ring-2`}
+                          />
+                        </div>
+                        {signupErrors.email && (
+                          <p className="text-red-400 text-xs ml-1 mt-1">{signupErrors.email.message}</p>
+                        )}
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-sm font-semibold text-slate-300 ml-1">Phone Number</label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Phone className="h-5 w-5 text-slate-500" />
+                          </div>
+                          <input
+                            type="tel"
+                            placeholder="9876543210"
+                            {...registerSignup('phone')}
+                            className={`w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
+                              signupErrors.phone ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50'
+                            } focus:outline-none focus:ring-2`}
+                          />
+                        </div>
+                        {signupErrors.phone && (
+                          <p className="text-red-400 text-xs ml-1 mt-1">{signupErrors.phone.message}</p>
+                        )}
+                      </div>
+                      <Button
+                        type="submit"
+                        variant="glow"
+                        size="lg"
+                        className="w-full mt-6"
+                        loading={loading}
+                      >
+                        Continue with OTP <ArrowRight className="w-5 h-5 ml-1" />
+                      </Button>
+                    </form>
                   )}
-                  <div className="mt-8 text-center">
-                    <button
-                      onClick={handleResendOtp}
-                      disabled={resendTimer > 0 || loading}
-                      className="text-sm text-blue-600 hover:text-blue-700 disabled:text-slate-400 font-medium transition-colors"
-                    >
-                      {resendTimer > 0 ? `Resend OTP in ${resendTimer}s` : 'Resend OTP'}
-                    </button>
-                  </div>
-                  <button onClick={() => setSignupStep(1)} className="mt-4 w-full text-center text-sm text-slate-500 hover:text-slate-700">
-                    ← Back
-                  </button>
-                </div>
-              )}
 
-              {signupStep === 3 && (
-                <form onSubmit={onSetPassword} className="space-y-5 animate-fade-in">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">Create a Password</label>
-                    <input
-                      type="password"
-                      required
-                      minLength={6}
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
-                    />
-                    <p className="text-xs text-slate-500 mt-2">Must be at least 6 characters.</p>
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={loading || newPassword.length < 6}
-                    className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
-                  >
-                    {loading ? 'Saving...' : 'Finish & Log In'}
-                  </button>
-                </form>
+                  {signupStep === 2 && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="animate-fade-in"
+                    >
+                      <div className="text-center mb-8">
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-900/50 border border-aurora-cyan/30 mb-4 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                          <Mail className="w-8 h-8 text-aurora-cyan" />
+                        </div>
+                        <p className="text-sm text-slate-400">We sent a secure code to</p>
+                        <p className="font-semibold text-white mt-1 text-lg">{email}</p>
+                      </div>
+                      <OtpInput length={6} onComplete={onVerifyOtp} disabled={loading} />
+                      
+                      <div className="mt-8 text-center space-y-4">
+                        <button
+                          onClick={handleResendOtp}
+                          disabled={resendTimer > 0 || loading}
+                          className="text-sm text-aurora-cyan hover:text-aurora-cyan/80 disabled:text-slate-600 font-medium transition-colors"
+                        >
+                          {resendTimer > 0 ? `Resend OTP in ${resendTimer}s` : 'Resend OTP'}
+                        </button>
+                        <button 
+                          onClick={() => setSignupStep(1)} 
+                          className="block w-full text-center text-sm text-slate-500 hover:text-slate-300 transition-colors"
+                        >
+                          ← Back to details
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {signupStep === 3 && (
+                    <form onSubmit={onSetPassword} className="space-y-5 animate-fade-in">
+                      <div className="space-y-1">
+                        <label className="text-sm font-semibold text-slate-300 ml-1">Create a Password</label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Lock className="h-5 w-5 text-slate-500" />
+                          </div>
+                          <input
+                            type="password"
+                            required
+                            minLength={6}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            placeholder="••••••••"
+                            className="w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50 transition-all text-sm"
+                          />
+                        </div>
+                        <p className="text-xs text-slate-500 ml-1 mt-2">Must be at least 6 characters.</p>
+                      </div>
+                      <Button
+                        type="submit"
+                        variant="glow"
+                        size="lg"
+                        className="w-full mt-6"
+                        disabled={newPassword.length < 6}
+                        loading={loading}
+                      >
+                        Finish & Enter <ArrowRight className="w-5 h-5 ml-1" />
+                      </Button>
+                    </form>
+                  )}
+                </motion.div>
               )}
-            </div>
-          )}
-        </div>
+            </AnimatePresence>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

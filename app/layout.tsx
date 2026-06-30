@@ -16,8 +16,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-slate-50 antialiased">
+    <html lang="en" className="dark">
+      <body className="min-h-screen bg-background antialiased text-foreground overflow-x-hidden">
+        {/* Global Aurora Background */}
+        <div className="aurora-bg">
+          <div className="aurora-blob aurora-blob-1"></div>
+          <div className="aurora-blob aurora-blob-2"></div>
+          <div className="aurora-blob aurora-blob-3"></div>
+        </div>
+
         <ToastProvider>
           {children}
         </ToastProvider>
