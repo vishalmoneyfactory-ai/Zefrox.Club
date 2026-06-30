@@ -81,7 +81,7 @@ export default function DashboardHome() {
 
             <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white mb-6 leading-tight">
               Manage Your <br className="hidden sm:block" />
-              <span className="gradient-text">Portfolio</span>
+              <span className="gradient-text">Trading Account</span>
             </motion.h1>
 
             <motion.p variants={itemVariants} className="text-lg text-slate-400 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
