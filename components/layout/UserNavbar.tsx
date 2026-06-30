@@ -24,7 +24,7 @@ export default function UserNavbar({ userName }: UserNavbarProps) {
     window.location.href = '/login';
   };
 
-  const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zefrox.Club';
+  const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Zerofx.club';
 
   return (
     <nav className="sticky top-0 z-40 h-16 glass border-b border-slate-200/50">
