@@ -174,9 +174,9 @@ export default function AdminRequestsPage() {
         </motion.div>
 
         {/* Create Payment Request */}
-        <motion.div variants={itemVariants}>
-          <Card glass glow className="p-6 border-white/5 bg-slate-900/60 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-aurora-cyan via-aurora-purple to-pink-500 opacity-50" />
+        <motion.div variants={itemVariants} className="z-20 relative">
+          <Card glass glow className="p-6 border-white/5 bg-slate-900/60 shadow-2xl relative">
+            <div className="absolute top-0 left-0 w-full h-1 rounded-t-xl bg-gradient-to-r from-aurora-cyan via-aurora-purple to-pink-500 opacity-50" />
             <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
               <Send className="w-5 h-5 text-aurora-cyan" /> Issue New Request
             </h2>
