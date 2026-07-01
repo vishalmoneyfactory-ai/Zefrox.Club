@@ -52,7 +52,7 @@ const itemVariants: Variants = {
 
 export default function DashboardHome() {
   return (
-    <div className="flex-1 w-full relative overflow-hidden selection:bg-blue-200 selection:text-blue-900">
+    <div className="flex-1 w-full relative selection:bg-blue-200 selection:text-blue-900">
       
       {/* Ticker Tape */}
       <motion.div 
