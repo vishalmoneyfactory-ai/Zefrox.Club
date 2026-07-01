@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-export default function TickerTape() {
+export default function TickerTape({ theme = 'dark' }: { theme?: 'light' | 'dark' }) {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,12 +29,12 @@ export default function TickerTape() {
         "showSymbolLogo": true,
         "isTransparent": true,
         "displayMode": "adaptive",
-        "colorTheme": "dark",
+        "colorTheme": "${theme}",
         "locale": "en"
       }
     `;
     container.current.appendChild(script);
-  }, []);
+  }, [theme]);
 
   return (
     <div className="tradingview-widget-container w-full" ref={container}>

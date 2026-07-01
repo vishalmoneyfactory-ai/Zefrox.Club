@@ -32,7 +32,7 @@ export default function UserNavbar({ userName }: UserNavbarProps) {
     <motion.nav 
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="sticky top-0 z-40 h-16 glass border-b border-white/5 backdrop-blur-2xl bg-slate-950/50"
+      className="sticky top-0 z-40 h-16 bg-white/70 backdrop-blur-xl border-b border-slate-200/50 shadow-sm"
     >
       <div className="h-full flex items-center justify-between px-4 md:px-6">
         {/* Left */}
@@ -40,16 +40,16 @@ export default function UserNavbar({ userName }: UserNavbarProps) {
           {/* Mobile hamburger */}
           <button
             onClick={toggleSidebar}
-            className="md:hidden p-2 rounded-lg text-slate-300 hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50"
+            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           >
             <Menu className="w-6 h-6" />
           </button>
 
           <Link href="/dashboard" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-aurora-cyan to-aurora-indigo flex items-center justify-center shadow-[0_0_10px_rgba(34,211,238,0.2)] group-hover:shadow-[0_0_15px_rgba(34,211,238,0.4)] transition-all">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_4px_10px_rgba(59,130,246,0.2)] group-hover:shadow-[0_4px_15px_rgba(59,130,246,0.3)] transition-all">
               <Zap className="w-4 h-4 text-white" />
             </div>
-            <span className="text-xl font-black tracking-tight text-white hidden sm:block">{appName}</span>
+            <span className="text-xl font-black tracking-tight text-slate-900 hidden sm:block">{appName}</span>
           </Link>
         </div>
 
@@ -58,11 +58,11 @@ export default function UserNavbar({ userName }: UserNavbarProps) {
           <NotificationBell />
 
           {userName && (
-            <div className="hidden sm:flex items-center gap-2 pl-4 border-l border-white/10">
-              <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-aurora-cyan font-bold text-sm border border-aurora-cyan/20">
+            <div className="hidden sm:flex items-center gap-2 pl-4 border-l border-slate-200">
+              <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-700 font-bold text-sm border border-blue-200">
                 {userName.charAt(0).toUpperCase()}
               </div>
-              <span className="text-sm font-semibold text-slate-200">
+              <span className="text-sm font-semibold text-slate-700">
                 {userName}
               </span>
             </div>
@@ -70,7 +70,7 @@ export default function UserNavbar({ userName }: UserNavbarProps) {
 
           <button
             onClick={handleLogout}
-            className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors ml-2"
+            className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors ml-2"
             title="Logout"
           >
             <LogOut className="w-5 h-5" />

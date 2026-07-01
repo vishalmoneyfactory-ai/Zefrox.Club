@@ -48,19 +48,19 @@ export default function UserSidebar() {
             onClick={() => setSidebarOpen(false)}
             className={`
               relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300
-              ${active ? 'text-white shadow-[0_0_15px_rgba(34,211,238,0.2)]' : 'text-slate-400 hover:text-white hover:bg-white/5'}
+              ${active ? 'text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}
             `}
           >
             {active && (
               <motion.div
                 layoutId="active-sidebar-tab"
-                className="absolute inset-0 bg-gradient-to-r from-aurora-cyan/20 to-aurora-indigo/20 border border-aurora-cyan/30 rounded-xl"
+                className="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl"
                 initial={false}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               />
             )}
             <span className="relative z-10 flex items-center gap-3">
-              <span className={active ? "text-aurora-cyan drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" : ""}>
+              <span className={active ? "text-blue-600 drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]" : ""}>
                 {link.icon}
               </span>
               {link.name}
@@ -74,7 +74,7 @@ export default function UserSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:block fixed left-0 top-16 bottom-0 w-64 glass border-r border-white/5 p-4 overflow-y-auto bg-slate-950/30 backdrop-blur-3xl z-30">
+      <aside className="hidden md:block fixed left-0 top-16 bottom-0 w-64 bg-white/70 border-r border-slate-200/50 p-4 overflow-y-auto backdrop-blur-xl z-30">
         {linkList}
       </aside>
 
@@ -87,7 +87,7 @@ export default function UserSidebar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
               onClick={() => setSidebarOpen(false)}
             />
 
@@ -97,20 +97,20 @@ export default function UserSidebar() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className="relative w-64 h-full glass bg-slate-900/90 p-4 shadow-2xl border-r border-white/10"
+              className="relative w-64 h-full bg-white p-4 shadow-2xl border-r border-slate-200"
             >
-              <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+              <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-aurora-cyan to-aurora-indigo flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                     <Zap className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-xl font-black text-white">
+                  <span className="text-xl font-black text-slate-900">
                     Zerofx.club
                   </span>
                 </div>
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                  className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
