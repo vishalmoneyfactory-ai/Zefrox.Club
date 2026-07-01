@@ -58,7 +58,7 @@ export default function DashboardHome() {
       <motion.div 
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full bg-white/70 backdrop-blur-xl h-[44px] shadow-sm relative z-20 rounded-xl overflow-hidden mt-2 mb-8 border border-slate-200"
+        className="w-full bg-white/70 backdrop-blur-xl h-[44px] shadow-sm relative z-20 rounded-xl overflow-hidden -mt-3 mb-8 border border-slate-200"
       >
         <TickerTape theme="light" />
       </motion.div>

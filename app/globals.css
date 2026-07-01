@@ -226,3 +226,50 @@ body {
     transform: translate(-20px, 20px) scale(0.9);
   }
 }
+
+/* Daylight Background Orbs (Light Mode) */
+.daylight-bg {
+  position: relative;
+  z-index: 0;
+}
+
+.daylight-bg::before,
+.daylight-bg::after,
+.daylight-blob-3 {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  filter: blur(140px);
+  opacity: 0.6;
+  border-radius: 50%;
+  animation: float 25s infinite ease-in-out alternate;
+  pointer-events: none;
+}
+
+.daylight-bg::before {
+  top: -10%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: rgba(147, 197, 253, 0.4); /* blue-300 */
+  animation-delay: 0s;
+}
+
+.daylight-bg::after {
+  bottom: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: rgba(216, 180, 254, 0.3); /* purple-300 */
+  animation-delay: -5s;
+}
+
+/* We need a third blob for extra ambient lighting */
+.daylight-bg > .daylight-blob-3 {
+  top: 30%;
+  left: 30%;
+  width: 40vw;
+  height: 40vw;
+  background: rgba(167, 243, 208, 0.3); /* emerald-200 */
+  animation-delay: -10s;
+}
