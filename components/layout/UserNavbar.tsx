@@ -46,10 +46,7 @@ export default function UserNavbar({ userName }: UserNavbarProps) {
           </button>
 
           <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_4px_10px_rgba(59,130,246,0.3)] border border-white/10 group-hover:shadow-[0_4px_15px_rgba(59,130,246,0.5)] group-hover:scale-105 transition-all duration-300">
-              <Zap className="w-5 h-5 text-white drop-shadow-md" />
-            </div>
-            <span className="text-xl font-black tracking-tight text-white hidden sm:block bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-indigo-400 transition-all duration-300">
+            <span className="text-2xl font-black tracking-tighter text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)] hidden sm:block transition-all duration-300 group-hover:text-emerald-300">
               {appName}
             </span>
           </Link>

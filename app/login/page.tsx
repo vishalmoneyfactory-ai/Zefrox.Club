@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Mail, Phone, User, Lock, ArrowRight } from 'lucide-react';
+import { Mail, Phone, User, Lock, ArrowRight } from 'lucide-react';
 import api from '@/lib/axios';
 import OtpInput from '@/components/features/OtpInput';
 import { useToast } from '@/components/ui/Toast';
@@ -180,10 +180,7 @@ export default function LoginPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-[0_0_20px_rgba(59,130,246,0.3)] border border-white/10 mb-4">
-            <Zap className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">{appName}</h1>
+          <h1 className="text-4xl font-black tracking-tighter text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">{appName}</h1>
           <p className="text-slate-400 mt-2 font-medium">
             {activeTab === 'login' ? 'Welcome back, trader' : signupStep === 1 ? 'Start your trading journey' : signupStep === 2 ? 'Verify your identity' : 'Secure your account'}
           </p>

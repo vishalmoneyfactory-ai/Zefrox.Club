@@ -101,10 +101,7 @@ export default function UserSidebar() {
             >
               <div className="flex items-center justify-between mb-8 pb-5 border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_4px_10px_rgba(59,130,246,0.2)]">
-                    <Zap className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-xl font-black tracking-tight text-white">
+                  <span className="text-2xl font-black tracking-tighter text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">
                     Zerofx.club
                   </span>
                 </div>
