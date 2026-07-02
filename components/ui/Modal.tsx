@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { X } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -50,46 +51,37 @@ export default function Modal({
   if (!isOpen || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
       {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-[#060a14]/80 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
       <div
         className={`
-          relative bg-white rounded-xl shadow-2xl mx-4 w-full
-          animate-scale-in
+          relative bg-[#0b1221]/90 backdrop-blur-3xl rounded-[2rem] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] mx-4 w-full
+          animate-scale-in overflow-hidden
           ${sizeStyles[size]}
         `}
       >
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
         {/* Header */}
-        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-200">
-          <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+        <div className="flex items-center justify-between px-4 sm:px-8 py-5 border-b border-white/5 relative z-10">
+          <h2 className="text-xl font-bold text-white">{title}</h2>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            className="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
           >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* Body */}
-        <div className="overflow-y-auto max-h-[75vh] sm:max-h-[85vh] p-4 sm:p-6">{children}</div>
+        <div className="overflow-y-auto max-h-[75vh] sm:max-h-[85vh] p-4 sm:p-8 relative z-10">
+          {children}
+        </div>
       </div>
     </div>,
     document.body

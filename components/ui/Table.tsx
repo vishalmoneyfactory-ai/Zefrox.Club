@@ -10,21 +10,21 @@ interface TableProps {
 
 export default function Table({ headers, children, className = '' }: TableProps) {
   return (
-    <div className={`overflow-x-auto rounded-xl border border-slate-200 ${className}`}>
-      <table className="w-full">
-        <thead className="bg-slate-50">
+    <div className={`overflow-x-auto rounded-[1.5rem] border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.3)] bg-[#0b1221]/80 backdrop-blur-2xl ${className}`}>
+      <table className="w-full text-sm text-left">
+        <thead className="bg-[#111827]/80 border-b border-white/5">
           <tr>
             {headers.map((header) => (
               <th
                 key={header}
-                className="text-left text-xs uppercase text-slate-500 font-semibold px-6 py-3 tracking-wider"
+                className="text-left text-xs uppercase text-slate-400 font-semibold px-6 py-4 tracking-wider"
               >
                 {header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-200 bg-white [&>tr:nth-child(even)]:bg-slate-50/50">
+        <tbody className="divide-y divide-white/5 bg-transparent [&>tr:nth-child(even)]:bg-[#111827]/40 text-slate-300">
           {children}
         </tbody>
       </table>

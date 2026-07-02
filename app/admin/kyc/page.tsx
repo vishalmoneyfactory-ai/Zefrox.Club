@@ -1,16 +1,15 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Eye, Camera, CheckCircle2, XCircle, FileText, AlertTriangle } from 'lucide-react';
+import { Search, Eye, CheckCircle2, XCircle, Clock, AlertTriangle, ShieldCheck } from 'lucide-react';
 import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
-import Modal from '@/components/ui/Modal';
-import Badge from '@/components/ui/Badge';
-import Spinner from '@/components/ui/Spinner';
-import ScreenshotModal from '@/components/features/ScreenshotModal';
 import Card from '@/components/ui/Card';
+import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
+import Spinner from '@/components/ui/Spinner';
 
 interface KycRecord {
   id: string;
@@ -21,50 +20,52 @@ interface KycRecord {
   bankAccount: string;
   ifscCode: string;
   aadhaarNumber: string;
-  aadhaarPhotoUrl: string;
   selfieUrl: string;
-  status: string;
-  rejectionReason?: string;
+  aadhaarPhotoUrl: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  rejectionReason: string | null;
   submittedAt: string;
-  reviewedAt?: string;
-  user: { id: string; fullName: string; email: string };
+  user: {
+    email: string;
+    phone: string;
+  };
 }
 
 export default function AdminKycPage() {
   const { showSuccess, showError } = useToast();
   const [kycRecords, setKycRecords] = useState<KycRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'PENDING' | 'ALL'>('PENDING');
-  const [selectedKyc, setSelectedKyc] = useState<KycRecord | null>(null);
+  const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED'>('PENDING');
+  
+  const [viewModal, setViewModal] = useState<{ open: boolean; record: KycRecord | null }>({ open: false, record: null });
+  const [rejectModal, setRejectModal] = useState<{ open: boolean; id: string }>({ open: false, id: '' });
   const [rejectReason, setRejectReason] = useState('');
-  const [showRejectInput, setShowRejectInput] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
-  const [imageModal, setImageModal] = useState<{ open: boolean; url: string; title: string }>({ open: false, url: '', title: '' });
-
-  const fetchKyc = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = activeTab === 'ALL' ? '?all=true' : '?all=true&status=PENDING';
-      const { data } = await api.get(`/api/kyc${params}`);
-      setKycRecords(data);
-    } catch {
-      showError('Failed to load KYC records');
-    } finally {
-      setLoading(false);
-    }
-  }, [activeTab, showError]);
 
   useEffect(() => {
     fetchKyc();
-  }, [fetchKyc]);
+  }, [filter]);
 
-  const handleApprove = async (kycId: string) => {
+  const fetchKyc = async () => {
+    try {
+      setLoading(true);
+      const url = filter === 'ALL' ? '/api/kyc?all=true' : `/api/kyc?all=true&status=${filter}`;
+      const { data } = await api.get(url);
+      setKycRecords(data);
+    } catch {
+      showError('Failed to fetch KYC records');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApprove = async (id: string) => {
     setActionLoading(true);
     try {
-      await api.post(`/api/kyc/${kycId}/approve`);
-      showSuccess('KYC approved');
-      setSelectedKyc(null);
-      fetchKyc();
+      await api.post(`/api/kyc/${id}/approve`);
+      setKycRecords(kycRecords.filter((r) => r.id !== id));
+      showSuccess('KYC Approved');
+      setViewModal({ open: false, record: null });
     } catch {
       showError('Failed to approve KYC');
     } finally {
@@ -72,19 +73,19 @@ export default function AdminKycPage() {
     }
   };
 
-  const handleReject = async (kycId: string) => {
+  const handleReject = async () => {
     if (!rejectReason.trim()) {
-      showError('Please enter a rejection reason');
+      showError('Rejection reason is required');
       return;
     }
     setActionLoading(true);
     try {
-      await api.post(`/api/kyc/${kycId}/reject`, { reason: rejectReason });
-      showSuccess('KYC rejected');
-      setSelectedKyc(null);
-      setShowRejectInput(false);
+      await api.post(`/api/kyc/${rejectModal.id}/reject`, { reason: rejectReason });
+      setKycRecords(kycRecords.filter((r) => r.id !== rejectModal.id));
+      showSuccess('KYC Rejected');
+      setRejectModal({ open: false, id: '' });
       setRejectReason('');
-      fetchKyc();
+      setViewModal({ open: false, record: null });
     } catch {
       showError('Failed to reject KYC');
     } finally {
@@ -92,212 +93,253 @@ export default function AdminKycPage() {
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }
-  };
-
   return (
-    <div className="relative z-10 space-y-6 animate-fade-in pb-12">
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-yellow-500/10 rounded-full blur-[120px] translate-x-1/3" />
+    <div className="space-y-8 relative z-10 selection:bg-blue-500/30 selection:text-white pb-12">
+      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] mix-blend-screen -translate-y-1/2 -translate-x-1/4" />
       </div>
 
-      <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-6">
-        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
-          <div>
-            <h1 className="text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
-              <ShieldCheck className="w-8 h-8 text-yellow-400" /> KYC Verification
-            </h1>
-            <p className="text-slate-400 mt-2 font-medium">Review and verify user identity documents</p>
-          </div>
-          
-          {/* Tabs */}
-          <div className="flex gap-2 bg-slate-900/60 border border-white/5 rounded-xl p-1.5 w-fit backdrop-blur-md">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div>
+          <h1 className="text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
+            <span className="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
+               <ShieldCheck className="w-6 h-6 text-indigo-400" />
+            </span>
+            KYC Verification
+          </h1>
+          <p className="text-slate-400 mt-2 font-medium">Review and verify user identity documents.</p>
+        </div>
+        
+        <div className="flex bg-[#111827]/60 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md shadow-inner">
+          {['ALL', 'PENDING', 'APPROVED', 'REJECTED'].map((f) => (
             <button
-              onClick={() => setActiveTab('PENDING')}
-              className={`relative px-6 py-2.5 text-sm font-bold rounded-lg transition-all duration-300 ${
-                activeTab === 'PENDING' ? 'text-white' : 'text-slate-400 hover:text-white'
+              key={f}
+              onClick={() => setFilter(f as any)}
+              className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${
+                filter === f
+                  ? 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              {activeTab === 'PENDING' && (
-                <motion.div layoutId="kyc-tab" className="absolute inset-0 bg-yellow-500/20 border border-yellow-500/50 rounded-lg shadow-[0_0_10px_rgba(234,179,8,0.2)]" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
-              )}
-              <span className="relative z-10 flex items-center gap-2">Pending {activeTab === 'PENDING' && <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />}</span>
+              {f}
             </button>
-            <button
-              onClick={() => setActiveTab('ALL')}
-              className={`relative px-6 py-2.5 text-sm font-bold rounded-lg transition-all duration-300 ${
-                activeTab === 'ALL' ? 'text-white' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              {activeTab === 'ALL' && (
-                <motion.div layoutId="kyc-tab" className="absolute inset-0 bg-white/10 border border-white/20 rounded-lg" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
-              )}
-              <span className="relative z-10">All Records</span>
-            </button>
-          </div>
-        </motion.div>
-
-        {loading ? (
-          <div className="flex justify-center py-16"><Spinner size="lg" className="text-yellow-400" /></div>
-        ) : (
-          <motion.div variants={itemVariants}>
-            <Card glass className="p-0 border-white/5 bg-slate-900/60 shadow-2xl overflow-hidden">
-              <div className="overflow-x-auto custom-scrollbar">
-                <table className="w-full min-w-[800px]">
-                  <thead>
-                    <tr className="bg-slate-950/50 border-b border-white/5">
-                      <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">User</th>
-                      <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">Email</th>
-                      <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider hidden sm:table-cell">Submitted</th>
-                      <th className="text-left text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">Status</th>
-                      <th className="text-right text-xs uppercase text-slate-400 font-bold px-6 py-4 tracking-wider">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5">
-                    <AnimatePresence>
-                      {kycRecords.map((kyc) => (
-                        <motion.tr
-                          key={kyc.id}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="hover:bg-white/[0.02] cursor-pointer transition-colors"
-                          onClick={() => { setSelectedKyc(kyc); setShowRejectInput(false); setRejectReason(''); }}
-                        >
-                          <td className="px-6 py-4 font-bold text-white text-sm">{kyc.user.fullName}</td>
-                          <td className="px-6 py-4 text-sm text-slate-300">{kyc.user.email}</td>
-                          <td className="px-6 py-4 text-sm text-slate-400 hidden sm:table-cell font-medium">
-                            {new Date(kyc.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                          </td>
-                          <td className="px-6 py-4">
-                            <Badge variant={kyc.status === 'APPROVED' ? 'approved' : kyc.status === 'REJECTED' ? 'rejected' : 'pending'}>
-                              {kyc.status}
-                            </Badge>
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-1.5 text-xs font-bold text-aurora-cyan bg-aurora-cyan/10 hover:bg-aurora-cyan/20 border border-aurora-cyan/20 rounded-md transition-colors inline-flex items-center gap-1.5" onClick={(e) => { e.stopPropagation(); setSelectedKyc(kyc); setShowRejectInput(false); setRejectReason(''); }}>
-                              <Eye className="w-3.5 h-3.5" /> View
-                            </motion.button>
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </AnimatePresence>
-                  </tbody>
-                </table>
-              </div>
-              {kycRecords.length === 0 && (
-                <div className="text-center py-16">
-                  <FileText className="w-12 h-12 text-slate-600 mx-auto mb-4 opacity-50" />
-                  <p className="text-slate-400 font-medium">{activeTab === 'PENDING' ? 'No pending KYC submissions' : 'No KYC records found'}</p>
-                </div>
-              )}
-            </Card>
-          </motion.div>
-        )}
+          ))}
+        </div>
       </motion.div>
 
-      {/* KYC Detail Modal */}
-      <Modal isOpen={!!selectedKyc} onClose={() => { setSelectedKyc(null); setShowRejectInput(false); }} title="KYC Verification Details" size="xl">
-        {selectedKyc && (
-          <div className="space-y-8 animate-fade-in text-white">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center border border-white/5">
-                  <span className="text-lg font-black text-white">{selectedKyc.user.fullName.charAt(0)}</span>
-                </div>
-                <div>
-                  <p className="font-black text-white text-xl tracking-tight">{selectedKyc.user.fullName}</p>
-                  <p className="text-sm text-slate-400">{selectedKyc.user.email}</p>
-                </div>
-              </div>
-              <Badge variant={selectedKyc.status === 'APPROVED' ? 'approved' : selectedKyc.status === 'REJECTED' ? 'rejected' : 'pending'}>
-                {selectedKyc.status}
-              </Badge>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        <Card glass className="p-0 overflow-hidden bg-[#0b1221]/80 border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
+          {loading ? (
+            <div className="flex justify-center p-20">
+              <Spinner size="lg" className="text-blue-500" />
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-950/50 p-6 rounded-2xl border border-white/5">
-              <div><p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Full Name</p><p className="text-sm font-bold">{selectedKyc.fullName}</p></div>
-              <div><p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Address</p><p className="text-sm font-bold">{selectedKyc.address}</p></div>
-              <div><p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">UPI ID</p><p className="text-sm font-bold text-aurora-cyan">{selectedKyc.upiId}</p></div>
-              <div><p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Bank Account</p><p className="text-sm font-bold font-mono">{selectedKyc.bankAccount}</p></div>
-              <div><p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">IFSC Code</p><p className="text-sm font-bold">{selectedKyc.ifscCode}</p></div>
-              <div><p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Aadhaar Number</p><p className="text-sm font-bold">{selectedKyc.aadhaarNumber}</p></div>
-              <div><p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Submitted At</p><p className="text-sm font-bold">{new Date(selectedKyc.submittedAt).toLocaleString('en-IN')}</p></div>
+          ) : kycRecords.length === 0 ? (
+            <div className="p-20 text-center">
+               <div className="w-20 h-20 mx-auto bg-[#111827] rounded-full flex items-center justify-center mb-6 border border-white/5">
+                 <ShieldCheck className="w-8 h-8 text-slate-500" />
+               </div>
+               <p className="text-white font-bold text-lg mb-2">No {filter.toLowerCase()} KYC records found</p>
+               <p className="text-slate-400 font-medium">All caught up!</p>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <p className="text-xs text-slate-400 uppercase font-black tracking-widest mb-3 flex items-center gap-2"><Camera className="w-4 h-4 text-aurora-purple" /> Selfie</p>
-                <div className="relative group cursor-pointer rounded-2xl overflow-hidden border-2 border-white/10" onClick={() => setImageModal({ open: true, url: selectedKyc.selfieUrl, title: 'KYC Selfie' })}>
-                  <img src={selectedKyc.selfieUrl} alt="KYC Selfie" className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
-                    <Eye className="w-8 h-8 text-white drop-shadow-md" />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <p className="text-xs text-slate-400 uppercase font-black tracking-widest mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-aurora-cyan" /> Aadhaar Card</p>
-                <div className="relative group cursor-pointer rounded-2xl overflow-hidden border-2 border-white/10 bg-slate-900" onClick={() => setImageModal({ open: true, url: selectedKyc.aadhaarPhotoUrl, title: 'KYC Aadhaar Card' })}>
-                  <img src={selectedKyc.aadhaarPhotoUrl} alt="KYC Aadhaar Card" className="w-full h-48 object-contain group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
-                    <Eye className="w-8 h-8 text-white drop-shadow-md" />
-                  </div>
-                </div>
-              </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-white/10 bg-[#111827]/60 backdrop-blur-md">
+                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">User</th>
+                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Submitted</th>
+                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Aadhaar</th>
+                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5 text-slate-300">
+                  {kycRecords.map((record) => (
+                    <tr key={record.id} className="hover:bg-white/[0.02] transition-colors group">
+                      <td className="px-6 py-4">
+                        <div className="font-bold text-white mb-0.5">{record.fullName}</div>
+                        <div className="text-xs text-slate-500 font-medium">{record.user.email}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm font-medium">
+                          {new Date(record.submittedAt).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="font-mono text-sm bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-white/5 inline-block">
+                           {record.aadhaarNumber || 'N/A'}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <Badge variant={
+                          record.status === 'APPROVED' ? 'approved' : 
+                          record.status === 'REJECTED' ? 'rejected' : 'pending'
+                        }>
+                          {record.status}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => setViewModal({ open: true, record })}
+                          className="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          Review <Eye className="w-4 h-4 ml-2 inline" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+          )}
+        </Card>
+      </motion.div>
 
-            {selectedKyc.status === 'PENDING' && (
-              <div className="flex flex-col gap-4 pt-6 border-t border-white/10">
-                {showRejectInput ? (
-                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-                    <div className="space-y-1">
-                      <label className="text-sm font-semibold text-slate-300 ml-1">Rejection Reason</label>
-                      <textarea
-                        value={rejectReason}
-                        onChange={(e) => setRejectReason(e.target.value)}
-                        placeholder="Enter the reason for rejecting this KYC..."
-                        rows={3}
-                        className="w-full px-4 py-3 bg-slate-950/50 rounded-xl border border-red-500/30 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 text-sm resize-none transition-all"
-                      />
-                    </div>
-                    <div className="flex gap-3">
-                      <Button variant="danger" onClick={() => handleReject(selectedKyc.id)} disabled={actionLoading} loading={actionLoading} className="flex-1">
-                        Confirm Rejection
-                      </Button>
-                      <button onClick={() => setShowRejectInput(false)} className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-sm font-bold rounded-xl transition-colors border border-white/5">
-                        Cancel
-                      </button>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <div className="flex gap-3">
-                    <Button variant="glow" onClick={() => handleApprove(selectedKyc.id)} disabled={actionLoading} loading={actionLoading} className="flex-1 !bg-green-600 hover:!bg-green-500 !border-green-500 shadow-[0_0_15px_rgba(22,163,74,0.3)]">
-                      <CheckCircle2 className="w-5 h-5 mr-2" /> Approve KYC
-                    </Button>
-                    <button onClick={() => setShowRejectInput(true)} className="flex-1 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-bold rounded-xl transition-colors border border-red-500/20 flex items-center justify-center gap-2">
-                      <AlertTriangle className="w-5 h-5" /> Reject KYC
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+      {/* Review Modal */}
+      <Modal 
+        isOpen={viewModal.open} 
+        onClose={() => !actionLoading && setViewModal({ open: false, record: null })}
+        title="Review KYC Application"
+        size="xl"
+      >
+        {viewModal.record && (
+          <div className="space-y-8">
+             
+             {/* Header */}
+             <div className="flex justify-between items-start pb-6 border-b border-white/10">
+               <div>
+                  <h3 className="text-2xl font-black text-white mb-2">{viewModal.record.fullName}</h3>
+                  <p className="text-slate-400 font-medium">User ID: <span className="font-mono text-slate-300">{viewModal.record.userId}</span></p>
+               </div>
+               <Badge variant={
+                  viewModal.record.status === 'APPROVED' ? 'approved' : 
+                  viewModal.record.status === 'REJECTED' ? 'rejected' : 'pending'
+                }>
+                  {viewModal.record.status}
+                </Badge>
+             </div>
+             
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Images */}
+                <div className="space-y-6">
+                   <div className="bg-[#111827] rounded-2xl p-4 border border-white/5 shadow-inner">
+                      <p className="text-xs uppercase tracking-widest font-bold text-slate-500 mb-4">Selfie</p>
+                      <a href={viewModal.record.selfieUrl} target="_blank" rel="noreferrer" className="block relative group rounded-xl overflow-hidden">
+                        <img src={viewModal.record.selfieUrl} alt="Selfie" className="w-full aspect-square object-cover" />
+                        <div className="absolute inset-0 bg-[#060a14]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                           <Eye className="w-8 h-8 text-white" />
+                        </div>
+                      </a>
+                   </div>
+                   
+                   {viewModal.record.aadhaarPhotoUrl && (
+                    <div className="bg-[#111827] rounded-2xl p-4 border border-white/5 shadow-inner">
+                        <p className="text-xs uppercase tracking-widest font-bold text-slate-500 mb-4">Aadhaar Document</p>
+                        <a href={viewModal.record.aadhaarPhotoUrl} target="_blank" rel="noreferrer" className="block relative group rounded-xl overflow-hidden">
+                          <img src={viewModal.record.aadhaarPhotoUrl} alt="Aadhaar" className="w-full h-48 object-contain bg-slate-900" />
+                          <div className="absolute inset-0 bg-[#060a14]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                             <Eye className="w-8 h-8 text-white" />
+                          </div>
+                        </a>
+                     </div>
+                   )}
+                </div>
+
+                {/* Details */}
+                <div className="space-y-6">
+                   <div className="bg-[#111827]/40 rounded-2xl p-6 border border-white/5 space-y-5">
+                      <div>
+                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Email</p>
+                         <p className="text-white font-medium">{viewModal.record.user.email}</p>
+                      </div>
+                      <div>
+                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Phone</p>
+                         <p className="text-white font-medium">{viewModal.record.user.phone}</p>
+                      </div>
+                      <div>
+                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Address</p>
+                         <p className="text-white font-medium leading-relaxed">{viewModal.record.address}</p>
+                      </div>
+                   </div>
+
+                   <div className="bg-[#111827]/40 rounded-2xl p-6 border border-white/5 space-y-5">
+                      <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Aadhaar No.</p>
+                         <p className="text-white font-mono font-bold">{viewModal.record.aadhaarNumber}</p>
+                      </div>
+                      <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">UPI ID</p>
+                         <p className="text-blue-400 font-bold">{viewModal.record.upiId}</p>
+                      </div>
+                      <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Bank Account</p>
+                         <p className="text-white font-bold">{viewModal.record.bankAccount}</p>
+                      </div>
+                      <div className="flex items-center justify-between">
+                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">IFSC Code</p>
+                         <p className="text-white font-bold uppercase">{viewModal.record.ifscCode}</p>
+                      </div>
+                   </div>
+                </div>
+             </div>
+
+             {/* Actions */}
+             {viewModal.record.status === 'PENDING' && (
+                <div className="pt-6 border-t border-white/10 flex gap-4">
+                  <Button
+                    variant="danger"
+                    className="flex-1 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+                    onClick={() => setRejectModal({ open: true, id: viewModal.record!.id })}
+                    disabled={actionLoading}
+                  >
+                    <XCircle className="w-5 h-5 mr-2" /> Reject KYC
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                    onClick={() => handleApprove(viewModal.record!.id)}
+                    loading={actionLoading}
+                  >
+                    <CheckCircle2 className="w-5 h-5 mr-2" /> Approve KYC
+                  </Button>
+                </div>
+             )}
           </div>
         )}
       </Modal>
 
-      <ScreenshotModal
-        isOpen={imageModal.open}
-        onClose={() => setImageModal({ open: false, url: '', title: '' })}
-        imageUrl={imageModal.url}
-        title={imageModal.title}
-      />
+      {/* Reject Modal */}
+      <Modal
+        isOpen={rejectModal.open}
+        onClose={() => !actionLoading && setRejectModal({ open: false, id: '' })}
+        title="Reject KYC"
+        size="sm"
+      >
+        <div className="space-y-6">
+           <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex gap-4 items-start text-red-300 text-sm">
+             <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
+             <p>Rejection will notify the user and require them to resubmit their application.</p>
+           </div>
+           
+           <div className="space-y-2">
+             <label className="text-sm font-bold text-slate-300">Reason for Rejection *</label>
+             <textarea
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+                placeholder="e.g., Image is blurry, name mismatch..."
+                className="w-full px-4 py-3 bg-[#111827]/60 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 min-h-[120px] resize-none"
+             />
+           </div>
+
+           <div className="flex gap-4">
+              <Button variant="ghost" onClick={() => setRejectModal({ open: false, id: '' })} className="flex-1 bg-slate-800 text-white" disabled={actionLoading}>Cancel</Button>
+              <Button variant="danger" onClick={handleReject} loading={actionLoading} className="flex-1">Confirm Reject</Button>
+           </div>
+        </div>
+      </Modal>
+
     </div>
   );
 }

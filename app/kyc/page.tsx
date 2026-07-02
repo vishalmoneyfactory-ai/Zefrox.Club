@@ -173,7 +173,7 @@ export default function KycPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Spinner size="lg" className="text-blue-600" />
+        <Spinner size="lg" className="text-blue-500" />
       </div>
     );
   }
@@ -181,20 +181,20 @@ export default function KycPage() {
   // Show pending status
   if (kycData?.status === 'PENDING') {
     return (
-      <div className="max-w-lg mx-auto mt-12 relative z-10">
-        <div className="absolute inset-0 -z-10 bg-yellow-100 rounded-full blur-[100px]" />
+      <div className="max-w-xl mx-auto mt-12 relative z-10">
+        <div className="absolute inset-0 -z-10 bg-yellow-500/20 rounded-full blur-[100px] mix-blend-screen" />
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-          <Card glass glow className="text-center p-10 border-yellow-200 shadow-sm bg-white/80">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-yellow-100 mb-6 border border-yellow-200">
-              <ShieldAlert className="w-10 h-10 text-yellow-500" />
+          <Card glass glow className="text-center p-12 border-yellow-500/20 shadow-[0_0_30px_rgba(234,179,8,0.1)] bg-[#0b1221]/80 rounded-[2rem]">
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-yellow-500/10 mb-8 border border-yellow-500/20 shadow-inner">
+              <ShieldAlert className="w-12 h-12 text-yellow-400" />
             </div>
-            <h2 className="text-2xl font-black text-slate-900 mb-3">KYC Under Review</h2>
-            <p className="text-slate-600 mb-8 font-medium">
+            <h2 className="text-3xl font-black text-white mb-4">KYC Under Review</h2>
+            <p className="text-slate-400 mb-10 font-medium text-lg max-w-sm mx-auto">
               Your identity verification is currently being reviewed by our admin team.
               You&apos;ll receive a notification once it&apos;s processed.
             </p>
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-yellow-50 border border-yellow-200 rounded-xl text-yellow-600 text-sm font-bold shadow-inner">
-              <Spinner size="sm" className="text-yellow-600" />
+            <div className="inline-flex items-center gap-4 px-8 py-4 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl text-yellow-400 text-sm font-bold shadow-[0_0_15px_rgba(234,179,8,0.1)] backdrop-blur-md">
+              <Spinner size="md" className="text-yellow-400" />
               Processing Request...
             </div>
           </Card>
@@ -206,37 +206,37 @@ export default function KycPage() {
   // Show approved status
   if (kycData?.status === 'APPROVED') {
     return (
-      <div className="max-w-2xl mx-auto mt-12 relative z-10">
-        <div className="absolute inset-0 -z-10 bg-green-100 rounded-full blur-[100px]" />
+      <div className="max-w-3xl mx-auto mt-12 relative z-10">
+        <div className="absolute inset-0 -z-10 bg-emerald-500/20 rounded-full blur-[120px] mix-blend-screen" />
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-          <Card glass glow className="p-8 sm:p-12 border-green-200 shadow-sm bg-white/80">
-            <div className="text-center mb-10">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-6 border border-green-200">
-                <ShieldCheck className="w-10 h-10 text-green-500" />
+          <Card glass glow className="p-8 sm:p-12 border-emerald-500/20 shadow-[0_0_40px_rgba(16,185,129,0.15)] bg-[#0b1221]/90 rounded-[2rem]">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-emerald-500/10 mb-6 border border-emerald-500/20 shadow-inner">
+                <ShieldCheck className="w-12 h-12 text-emerald-400" />
               </div>
-              <h2 className="text-3xl font-black text-slate-900 mb-3">Identity Verified</h2>
-              <p className="text-slate-600 font-medium">
+              <h2 className="text-4xl font-black text-white mb-4">Identity Verified</h2>
+              <p className="text-slate-400 font-medium text-lg">
                 Your KYC is complete. You have full access to trading capabilities.
               </p>
             </div>
             
-            <div className="space-y-6 border-t border-slate-200 pt-8">
+            <div className="border-t border-white/10 pt-10">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
-                  <p className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Full Name</p>
-                  <p className="text-slate-900 font-semibold text-lg">{kycData.fullName}</p>
+                <div className="bg-[#111827]/60 p-6 rounded-2xl border border-white/5 shadow-sm">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Full Name</p>
+                  <p className="text-white font-black text-xl">{kycData.fullName}</p>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
-                  <p className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">UPI ID</p>
-                  <p className="text-slate-900 font-semibold text-lg">{kycData.upiId}</p>
+                <div className="bg-[#111827]/60 p-6 rounded-2xl border border-white/5 shadow-sm">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">UPI ID</p>
+                  <p className="text-white font-bold text-lg">{kycData.upiId}</p>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
-                  <p className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Bank Account</p>
-                  <p className="text-slate-900 font-semibold text-lg">{kycData.bankAccount}</p>
+                <div className="bg-[#111827]/60 p-6 rounded-2xl border border-white/5 shadow-sm">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Bank Account</p>
+                  <p className="text-white font-bold text-lg">{kycData.bankAccount}</p>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
-                  <p className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Aadhaar Number</p>
-                  <p className="text-slate-900 font-semibold text-lg">•••• •••• {kycData.aadhaarNumber?.slice(-4)}</p>
+                <div className="bg-[#111827]/60 p-6 rounded-2xl border border-white/5 shadow-sm">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Aadhaar Number</p>
+                  <p className="text-white font-mono font-bold text-lg">•••• •••• {kycData.aadhaarNumber?.slice(-4)}</p>
                 </div>
               </div>
             </div>
@@ -247,28 +247,33 @@ export default function KycPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto relative z-10 pb-12 selection:bg-blue-200 selection:text-blue-900">
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/4 right-0 w-[300px] h-[300px] bg-blue-200/50 rounded-full blur-[100px]" />
+    <div className="max-w-3xl mx-auto relative z-10 pb-12 selection:bg-blue-500/30 selection:text-white">
+      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] mix-blend-screen" />
       </div>
 
-      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-8">
-        <h1 className="text-3xl font-black text-slate-900 drop-shadow-sm flex items-center gap-3">
-          <Shield className="w-8 h-8 text-blue-600" /> KYC Verification
+      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-10">
+        <h1 className="text-4xl font-black text-white drop-shadow-sm flex items-center gap-4">
+          <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl shadow-inner">
+            <Shield className="w-8 h-8 text-blue-400" />
+          </div>
+          KYC Verification
         </h1>
-        <p className="text-slate-500 mt-2 font-medium">Complete your identity verification to unlock trading and payment features.</p>
+        <p className="text-slate-400 mt-4 text-lg font-medium">Complete your identity verification to unlock trading and payment features.</p>
       </motion.div>
 
       {/* Rejection banner */}
       <AnimatePresence>
         {kycData?.status === 'REJECTED' && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mb-8 overflow-hidden">
-            <div className="p-5 bg-red-50 border border-red-200 rounded-2xl flex gap-4 items-start shadow-sm">
-              <AlertTriangle className="w-6 h-6 text-red-500 flex-shrink-0" />
+            <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-[1.5rem] flex gap-5 items-start shadow-[0_0_20px_rgba(239,68,68,0.15)] backdrop-blur-md">
+              <div className="p-3 bg-red-500/20 rounded-xl">
+                <AlertTriangle className="w-8 h-8 text-red-400 flex-shrink-0" />
+              </div>
               <div>
-                <p className="font-bold text-red-700 text-lg">Verification Rejected</p>
-                <p className="text-red-600 text-sm mt-1">{kycData.rejectionReason}</p>
-                <p className="text-slate-700 text-sm mt-3 font-medium">Please correct the highlighted issues and resubmit below.</p>
+                <p className="font-black text-red-400 text-xl mb-1">Verification Rejected</p>
+                <p className="text-red-300 text-base font-medium">{kycData.rejectionReason}</p>
+                <p className="text-slate-300 text-sm mt-4 font-semibold">Please correct the highlighted issues and resubmit below.</p>
               </div>
             </div>
           </motion.div>
@@ -276,92 +281,92 @@ export default function KycPage() {
       </AnimatePresence>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <Card glass glow className="p-6 sm:p-10 border-slate-200 bg-white/80 shadow-sm">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="sm:col-span-2 space-y-1">
-                  <label htmlFor="kyc-fullName" className="text-sm font-semibold text-slate-700 ml-1">Full Legal Name *</label>
+        <Card glass glow className="p-6 sm:p-10 border-white/10 bg-[#0b1221]/80 shadow-[0_8px_40px_rgba(0,0,0,0.4)] rounded-[2rem]">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <div className="sm:col-span-2 space-y-2">
+                  <label htmlFor="kyc-fullName" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Full Legal Name *</label>
                   <input
                     id="kyc-fullName"
                     type="text"
                     {...register('fullName')}
-                    className={`w-full px-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm ${errors.fullName ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500 focus:border-blue-500'} focus:outline-none focus:ring-2`}
+                    className={`w-full px-5 py-4 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-500 transition-all text-base ${errors.fullName ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'} focus:outline-none focus:ring-2`}
                     placeholder="As per documents"
                   />
-                  {errors.fullName && <p className="text-red-500 text-xs ml-1 mt-1">{errors.fullName.message}</p>}
+                  {errors.fullName && <p className="text-red-400 text-xs ml-1 mt-1.5 font-medium">{errors.fullName.message}</p>}
                 </div>
 
-                <div className="sm:col-span-2 space-y-1">
-                  <label htmlFor="kyc-address" className="text-sm font-semibold text-slate-700 ml-1">Residential Address *</label>
+                <div className="sm:col-span-2 space-y-2">
+                  <label htmlFor="kyc-address" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Residential Address *</label>
                   <textarea
                     id="kyc-address"
                     {...register('address')}
                     rows={3}
-                    className={`w-full px-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm resize-none ${errors.address ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500 focus:border-blue-500'} focus:outline-none focus:ring-2`}
+                    className={`w-full px-5 py-4 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-500 transition-all text-base resize-none ${errors.address ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'} focus:outline-none focus:ring-2`}
                     placeholder="Complete address details"
                   />
-                  {errors.address && <p className="text-red-500 text-xs ml-1 mt-1">{errors.address.message}</p>}
+                  {errors.address && <p className="text-red-400 text-xs ml-1 mt-1.5 font-medium">{errors.address.message}</p>}
                 </div>
 
-                <div className="space-y-1">
-                  <label htmlFor="kyc-upiId" className="text-sm font-semibold text-slate-700 ml-1">UPI ID *</label>
+                <div className="space-y-2">
+                  <label htmlFor="kyc-upiId" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">UPI ID *</label>
                   <input
                     id="kyc-upiId"
                     type="text"
                     {...register('upiId')}
-                    className={`w-full px-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm ${errors.upiId ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500 focus:border-blue-500'} focus:outline-none focus:ring-2`}
+                    className={`w-full px-5 py-4 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-500 transition-all text-base ${errors.upiId ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'} focus:outline-none focus:ring-2`}
                     placeholder="name@upi"
                   />
-                  {errors.upiId && <p className="text-red-500 text-xs ml-1 mt-1">{errors.upiId.message}</p>}
+                  {errors.upiId && <p className="text-red-400 text-xs ml-1 mt-1.5 font-medium">{errors.upiId.message}</p>}
                 </div>
 
-                <div className="space-y-1">
-                  <label htmlFor="kyc-bankAccount" className="text-sm font-semibold text-slate-700 ml-1">Bank Account Number *</label>
+                <div className="space-y-2">
+                  <label htmlFor="kyc-bankAccount" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Bank Account Number *</label>
                   <input
                     id="kyc-bankAccount"
                     type="text"
                     {...register('bankAccount')}
-                    className={`w-full px-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm ${errors.bankAccount ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500 focus:border-blue-500'} focus:outline-none focus:ring-2`}
+                    className={`w-full px-5 py-4 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-500 transition-all text-base ${errors.bankAccount ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'} focus:outline-none focus:ring-2`}
                     placeholder="Account number"
                   />
-                  {errors.bankAccount && <p className="text-red-500 text-xs ml-1 mt-1">{errors.bankAccount.message}</p>}
+                  {errors.bankAccount && <p className="text-red-400 text-xs ml-1 mt-1.5 font-medium">{errors.bankAccount.message}</p>}
                 </div>
 
-                <div className="space-y-1">
-                  <label htmlFor="kyc-ifscCode" className="text-sm font-semibold text-slate-700 ml-1">IFSC Code *</label>
+                <div className="space-y-2">
+                  <label htmlFor="kyc-ifscCode" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">IFSC Code *</label>
                   <input
                     id="kyc-ifscCode"
                     type="text"
                     {...register('ifscCode')}
-                    className={`w-full px-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm uppercase ${errors.ifscCode ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500 focus:border-blue-500'} focus:outline-none focus:ring-2`}
+                    className={`w-full px-5 py-4 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-500 transition-all text-base uppercase ${errors.ifscCode ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'} focus:outline-none focus:ring-2`}
                     placeholder="SBIN0001234"
                   />
-                  {errors.ifscCode && <p className="text-red-500 text-xs ml-1 mt-1">{errors.ifscCode.message}</p>}
+                  {errors.ifscCode && <p className="text-red-400 text-xs ml-1 mt-1.5 font-medium">{errors.ifscCode.message}</p>}
                 </div>
 
-                <div className="space-y-1">
-                  <label htmlFor="kyc-aadhaar" className="text-sm font-semibold text-slate-700 ml-1">Aadhaar Number *</label>
+                <div className="space-y-2">
+                  <label htmlFor="kyc-aadhaar" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Aadhaar Number *</label>
                   <input
                     id="kyc-aadhaar"
                     type="text"
                     maxLength={12}
                     {...register('aadhaarNumber')}
-                    className={`w-full px-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm ${errors.aadhaarNumber ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-blue-500 focus:border-blue-500'} focus:outline-none focus:ring-2`}
+                    className={`w-full px-5 py-4 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-500 transition-all text-base ${errors.aadhaarNumber ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'} focus:outline-none focus:ring-2`}
                     placeholder="12 digit Aadhaar number"
                   />
-                  {errors.aadhaarNumber && <p className="text-red-500 text-xs ml-1 mt-1">{errors.aadhaarNumber.message}</p>}
+                  {errors.aadhaarNumber && <p className="text-red-400 text-xs ml-1 mt-1.5 font-medium">{errors.aadhaarNumber.message}</p>}
                 </div>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div className="pt-8 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-8">
               {/* Aadhaar Photo Upload */}
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 ml-1">Aadhaar Card Photo *</label>
+              <div className="space-y-3">
+                <label className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Aadhaar Card Photo *</label>
                 <div
                   onClick={() => aadhaarInputRef.current?.click()}
-                  className="border-2 border-dashed border-slate-300 bg-slate-50 rounded-2xl p-6 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 h-[200px] flex flex-col justify-center relative overflow-hidden group"
+                  className="border-2 border-dashed border-white/20 bg-[#111827]/40 rounded-2xl p-6 text-center cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 transition-all duration-300 h-[220px] flex flex-col justify-center relative overflow-hidden group shadow-inner"
                 >
                   {aadhaarPhotoPreview || kycData?.aadhaarPhotoUrl ? (
                     <div className="relative h-full w-full flex items-center justify-center">
@@ -370,18 +375,18 @@ export default function KycPage() {
                         alt="Aadhaar preview"
                         className="max-h-full rounded-xl object-contain z-10 relative"
                       />
-                      <div className="absolute inset-0 bg-white/60 opacity-0 group-hover:opacity-100 transition-opacity z-20 flex items-center justify-center rounded-xl backdrop-blur-sm">
-                        <p className="text-sm text-slate-900 font-bold tracking-wide">Change Image</p>
+                      <div className="absolute inset-0 bg-[#060a14]/60 opacity-0 group-hover:opacity-100 transition-opacity z-20 flex items-center justify-center rounded-xl backdrop-blur-sm">
+                        <p className="text-sm text-white font-bold tracking-widest uppercase">Change Image</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-3">
-                      <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto text-blue-600 group-hover:text-blue-700 group-hover:bg-blue-200 transition-colors">
-                        <UploadCloud className="w-6 h-6" />
+                    <div className="space-y-4">
+                      <div className="w-14 h-14 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto text-blue-400 group-hover:text-blue-300 group-hover:bg-blue-500/20 transition-all shadow-inner">
+                        <UploadCloud className="w-7 h-7" />
                       </div>
                       <div>
-                        <p className="text-slate-900 text-sm font-bold">Upload Aadhaar photo</p>
-                        <p className="text-slate-500 text-xs mt-1 font-medium">Clear photo of Aadhaar Card</p>
+                        <p className="text-white text-base font-bold">Upload Aadhaar photo</p>
+                        <p className="text-slate-400 text-xs mt-1 font-medium">Clear photo of Aadhaar Card</p>
                       </div>
                     </div>
                   )}
@@ -390,31 +395,31 @@ export default function KycPage() {
               </div>
 
               {/* Selfie Upload */}
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 ml-1">Selfie Photo *</label>
+              <div className="space-y-3">
+                <label className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Selfie Photo *</label>
                 <div
                   onClick={() => selfieInputRef.current?.click()}
-                  className="border-2 border-dashed border-slate-300 bg-slate-50 rounded-2xl p-6 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 h-[200px] flex flex-col justify-center relative overflow-hidden group"
+                  className="border-2 border-dashed border-white/20 bg-[#111827]/40 rounded-2xl p-6 text-center cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 transition-all duration-300 h-[220px] flex flex-col justify-center relative overflow-hidden group shadow-inner"
                 >
                   {selfiePreview || kycData?.selfieUrl ? (
                     <div className="relative h-full w-full flex items-center justify-center">
                       <img
                         src={selfiePreview || kycData?.selfieUrl}
                         alt="Selfie preview"
-                        className="max-h-full aspect-square rounded-xl object-cover z-10 relative border border-slate-200"
+                        className="max-h-full aspect-square rounded-xl object-cover z-10 relative border border-white/10"
                       />
-                      <div className="absolute inset-0 bg-white/60 opacity-0 group-hover:opacity-100 transition-opacity z-20 flex items-center justify-center rounded-xl backdrop-blur-sm">
-                        <p className="text-sm text-slate-900 font-bold tracking-wide">Change Image</p>
+                      <div className="absolute inset-0 bg-[#060a14]/60 opacity-0 group-hover:opacity-100 transition-opacity z-20 flex items-center justify-center rounded-xl backdrop-blur-sm">
+                        <p className="text-sm text-white font-bold tracking-widest uppercase">Change Image</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-3">
-                      <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto text-blue-600 group-hover:text-blue-700 group-hover:bg-blue-200 transition-colors">
-                        <UploadCloud className="w-6 h-6" />
+                    <div className="space-y-4">
+                      <div className="w-14 h-14 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto text-blue-400 group-hover:text-blue-300 group-hover:bg-blue-500/20 transition-all shadow-inner">
+                        <UploadCloud className="w-7 h-7" />
                       </div>
                       <div>
-                        <p className="text-slate-900 text-sm font-bold">Upload selfie photo</p>
-                        <p className="text-slate-500 text-xs mt-1 font-medium">Clear face photo (max 5MB)</p>
+                        <p className="text-white text-base font-bold">Upload selfie photo</p>
+                        <p className="text-slate-400 text-xs mt-1 font-medium">Clear face photo (max 5MB)</p>
                       </div>
                     </div>
                   )}
@@ -423,12 +428,12 @@ export default function KycPage() {
               </div>
             </div>
 
-            <div className="pt-4">
+            <div className="pt-6">
               <Button
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="w-full shadow-sm"
+                className="w-full shadow-[0_0_20px_rgba(37,99,235,0.4)] text-lg h-14 rounded-2xl"
                 loading={submitting}
               >
                 {kycData?.status === 'REJECTED' ? 'Resubmit Verification' : 'Submit for Verification'}

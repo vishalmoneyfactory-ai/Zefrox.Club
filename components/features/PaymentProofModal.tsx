@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import ScreenshotModal from '@/components/features/ScreenshotModal';
+import { UploadCloud, Info } from 'lucide-react';
 
 interface PaymentProofModalProps {
   isOpen: boolean;
@@ -110,49 +111,50 @@ export default function PaymentProofModal({
     <Modal isOpen={isOpen} onClose={onClose} title="Upload Payment Proof" size="md">
       <div className="space-y-6">
         {/* Payment details section */}
-        <div className="bg-slate-50 rounded-lg p-5 space-y-4">
+        <div className="bg-[#111827]/60 border border-white/5 rounded-[1.5rem] p-6 space-y-5 shadow-inner">
           <div className="text-center">
-            <h3 className="text-sm font-semibold text-slate-900 mb-1">Scan to Pay</h3>
-            <p className="text-xs text-slate-500 mb-3">Scan this QR code with any UPI app</p>
-            <div className="bg-white p-2 rounded-xl inline-block shadow-sm border border-slate-100 mb-2">
+            <h3 className="text-base font-bold text-white mb-1">Scan to Pay</h3>
+            <p className="text-xs text-slate-400 font-medium mb-4">Scan this QR code with any UPI app</p>
+            <div className="bg-white p-2.5 rounded-[1.5rem] inline-block shadow-[0_0_20px_rgba(255,255,255,0.1)] mb-4">
               <div className="relative group cursor-pointer" onClick={() => setImageModal(true)}>
-                <img src="/images/admin-qr.jpeg" alt="Admin QR Code" className="w-40 h-40 object-cover rounded-lg group-hover:opacity-90 transition-opacity" />
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-lg">
+                <img src="/images/admin-qr.jpeg" alt="Admin QR Code" className="w-40 h-40 object-cover rounded-xl group-hover:opacity-90 transition-opacity" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/10 rounded-xl">
                   <svg className="w-8 h-8 text-slate-700 drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
                   </svg>
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-2xl font-bold text-slate-900">
+            <div className="flex flex-col items-center justify-center">
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Requested Amount</p>
+              <span className="text-3xl font-black text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">
                 ₹{amount.toLocaleString('en-IN')}
               </span>
             </div>
           </div>
 
-          <div className="border-t border-slate-200 pt-4 space-y-3">
-            <div className="bg-white rounded-lg border border-slate-200 p-3">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">UPI Details</p>
-              <div className="flex justify-between items-center mb-1.5">
-                <span className="text-sm text-slate-500">UPI ID</span>
-                <span className="text-sm font-medium text-slate-900 font-mono">{upiId}</span>
+          <div className="border-t border-white/5 pt-5 space-y-4">
+            <div className="bg-[#060a14]/60 rounded-2xl border border-white/5 p-4 shadow-sm hover:border-white/10 transition-colors">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">UPI Details</p>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-slate-400">UPI ID</span>
+                <span className="text-sm font-bold text-white font-mono">{upiId}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-500">Account Name</span>
-                <span className="text-sm font-medium text-slate-900">Company</span>
+                <span className="text-sm font-medium text-slate-400">Account Name</span>
+                <span className="text-sm font-bold text-white">Company</span>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border border-slate-200 p-3">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Bank Details</p>
-              <div className="flex justify-between items-center mb-1.5">
-                <span className="text-sm text-slate-500">A/C Number</span>
-                <span className="text-sm font-medium text-slate-900 font-mono">XXXX-XXXX-1234</span>
+            <div className="bg-[#060a14]/60 rounded-2xl border border-white/5 p-4 shadow-sm hover:border-white/10 transition-colors">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Bank Details</p>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-slate-400">A/C Number</span>
+                <span className="text-sm font-bold text-white font-mono">XXXX-XXXX-1234</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-slate-500">IFSC Code</span>
-                <span className="text-sm font-medium text-slate-900 font-mono">SBIN0001234</span>
+                <span className="text-sm font-medium text-slate-400">IFSC Code</span>
+                <span className="text-sm font-bold text-white font-mono">SBIN0001234</span>
               </div>
             </div>
           </div>
@@ -160,68 +162,64 @@ export default function PaymentProofModal({
 
         {/* File upload section */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            Upload Payment Screenshot
+          <label className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider mb-2 block">
+            Upload Payment Screenshot *
           </label>
-          <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:border-primary-400 transition-colors">
+          <div className="border-2 border-dashed border-white/20 bg-[#111827]/40 rounded-2xl p-6 text-center cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 transition-all duration-300 relative overflow-hidden group shadow-inner">
             <input
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              className="hidden"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               id="proof-upload"
             />
-            <label htmlFor="proof-upload" className="cursor-pointer">
-              <svg
-                className="h-10 w-10 text-slate-400 mx-auto mb-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                />
-              </svg>
-              <p className="text-sm text-slate-600">
-                Click to upload or drag and drop
-              </p>
-              <p className="text-xs text-slate-400 mt-1">
-                PNG, JPG, JPEG up to 10MB
-              </p>
-            </label>
+            <div className="relative z-0 space-y-4">
+              <div className="w-14 h-14 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto text-blue-400 group-hover:text-blue-300 group-hover:bg-blue-500/20 transition-all shadow-inner">
+                 <UploadCloud className="w-7 h-7" />
+              </div>
+              <div>
+                 <p className="text-white text-base font-bold">Click to upload or drag & drop</p>
+                 <p className="text-slate-400 text-xs mt-1 font-medium">PNG, JPG, JPEG up to 10MB</p>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Preview */}
         {preview && (
-          <div className="rounded-lg overflow-hidden border border-slate-200">
+          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg relative group">
             <img
               src={preview}
               alt="Payment screenshot preview"
               className="w-full h-48 object-cover"
             />
+            <div className="absolute inset-0 bg-[#060a14]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm pointer-events-none">
+                <p className="text-sm text-white font-bold tracking-widest uppercase">Screenshot Preview</p>
+            </div>
           </div>
         )}
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-            <p className="text-sm text-red-700">{error}</p>
+          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 flex gap-3 items-center shadow-inner">
+            <Info className="w-5 h-5 text-red-400 flex-shrink-0" />
+            <p className="text-sm font-medium text-red-300">{error}</p>
           </div>
         )}
 
         {/* Submit button */}
-        <Button
-          onClick={handleSubmit}
-          loading={uploading}
-          disabled={!file}
-          className="w-full"
-        >
-          Upload Proof
-        </Button>
+        <div className="pt-2">
+          <Button
+            onClick={handleSubmit}
+            loading={uploading}
+            disabled={!file}
+            variant="primary"
+            size="lg"
+            className="w-full shadow-[0_0_20px_rgba(37,99,235,0.4)] h-14 rounded-2xl text-lg"
+          >
+            Submit Proof for Review
+          </Button>
+        </div>
       </div>
     </Modal>
     
