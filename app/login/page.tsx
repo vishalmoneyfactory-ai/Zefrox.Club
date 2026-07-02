@@ -166,19 +166,25 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4 bg-slate-50 selection:bg-blue-200 selection:text-blue-900 overflow-hidden">
+    <div className="min-h-screen relative flex items-center justify-center p-4 bg-[#060a14] selection:bg-blue-500/30 selection:text-blue-200 overflow-hidden">
       
+      {/* Background effects */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[120px] mix-blend-screen" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[120px] mix-blend-screen" />
+      </div>
+
       <div className="w-full max-w-md relative z-10">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-[0_0_20px_rgba(59,130,246,0.3)] border border-white/10 mb-4">
             <Zap className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">{appName}</h1>
-          <p className="text-slate-600 mt-2 font-medium">
+          <h1 className="text-3xl font-black text-white tracking-tight">{appName}</h1>
+          <p className="text-slate-400 mt-2 font-medium">
             {activeTab === 'login' ? 'Welcome back, trader' : signupStep === 1 ? 'Start your trading journey' : signupStep === 2 ? 'Verify your identity' : 'Secure your account'}
           </p>
         </motion.div>
@@ -187,33 +193,33 @@ export default function LoginPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="bg-white/80 backdrop-blur-xl rounded-[2rem] p-8 shadow-xl relative border border-slate-200 overflow-hidden"
+          className="bg-[#0b1221]/80 backdrop-blur-2xl rounded-[2rem] p-8 shadow-[0_20px_60px_rgba(0,0,0,0.5)] relative border border-white/10 overflow-hidden"
         >
           {/* Subtle inner glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           
           {/* Tabs */}
           {(activeTab === 'login' || signupStep === 1) && (
-            <div className="flex p-1 bg-slate-100/50 rounded-xl mb-8 border border-slate-200 relative z-10 shadow-inner">
+            <div className="flex p-1 bg-[#111827]/80 rounded-xl mb-8 border border-white/5 relative z-10">
               <button
                 onClick={() => setActiveTab('login')}
                 className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300 relative ${
-                  activeTab === 'login' ? 'text-blue-700' : 'text-slate-500 hover:text-slate-700'
+                  activeTab === 'login' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
                 }`}
               >
                 {activeTab === 'login' && (
-                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-white rounded-lg border border-slate-200 shadow-sm" />
+                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-blue-600 rounded-lg shadow-sm" />
                 )}
                 <span className="relative z-10">Log In</span>
               </button>
               <button
                 onClick={() => setActiveTab('signup')}
                 className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300 relative ${
-                  activeTab === 'signup' ? 'text-blue-700' : 'text-slate-500 hover:text-slate-700'
+                  activeTab === 'signup' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
                 }`}
               >
                 {activeTab === 'signup' && (
-                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-white rounded-lg border border-slate-200 shadow-sm" />
+                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-blue-600 rounded-lg shadow-sm" />
                 )}
                 <span className="relative z-10">Sign Up</span>
               </button>
@@ -232,10 +238,10 @@ export default function LoginPage() {
                   className="space-y-5"
                 >
                   <div className="space-y-1">
-                    <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
+                    <label className="text-sm font-semibold text-slate-300 ml-1">Email Address</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Mail className="h-5 w-5 text-slate-400" />
+                        <Mail className="h-5 w-5 text-slate-500" />
                       </div>
                       <input
                         type="email"
@@ -243,15 +249,15 @@ export default function LoginPage() {
                         value={loginEmail}
                         onChange={(e) => setLoginEmail(e.target.value)}
                         placeholder="trader@example.com"
-                        className="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm shadow-sm"
+                        className="w-full pl-10 pr-4 py-3 bg-[#111827]/60 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm"
                       />
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-sm font-semibold text-slate-700 ml-1">Password</label>
+                    <label className="text-sm font-semibold text-slate-300 ml-1">Password</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-slate-400" />
+                        <Lock className="h-5 w-5 text-slate-500" />
                       </div>
                       <input
                         type="password"
@@ -259,7 +265,7 @@ export default function LoginPage() {
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm shadow-sm"
+                        className="w-full pl-10 pr-4 py-3 bg-[#111827]/60 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm"
                       />
                     </div>
                   </div>
@@ -267,7 +273,7 @@ export default function LoginPage() {
                     type="submit"
                     variant="primary"
                     size="lg"
-                    className="w-full mt-6 shadow-md"
+                    className="w-full mt-6 shadow-[0_0_20px_rgba(37,99,235,0.3)] border border-blue-500/50"
                     loading={loading}
                   >
                     Access Platform
@@ -283,67 +289,67 @@ export default function LoginPage() {
                   {signupStep === 1 && (
                     <form onSubmit={handleSignupSubmit(onSendOtp)} className="space-y-5">
                       <div className="space-y-1">
-                        <label className="text-sm font-semibold text-slate-700 ml-1">Full Name</label>
+                        <label className="text-sm font-semibold text-slate-300 ml-1">Full Name</label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <User className="h-5 w-5 text-slate-400" />
+                            <User className="h-5 w-5 text-slate-500" />
                           </div>
                           <input
                             type="text"
                             placeholder="John Doe"
                             {...registerSignup('fullName')}
-                            className={`w-full pl-10 pr-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm shadow-sm ${
-                              signupErrors.fullName ? 'border-red-500/50 focus:ring-red-500' : 'border-slate-200 focus:ring-blue-500/50 focus:border-blue-500/50'
+                            className={`w-full pl-10 pr-4 py-3 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
+                              signupErrors.fullName ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'
                             } focus:outline-none focus:ring-2`}
                           />
                         </div>
                         {signupErrors.fullName && (
-                          <p className="text-red-500 text-xs ml-1 mt-1 font-medium">{signupErrors.fullName.message}</p>
+                          <p className="text-red-400 text-xs ml-1 mt-1 font-medium">{signupErrors.fullName.message}</p>
                         )}
                       </div>
                       <div className="space-y-1">
-                        <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
+                        <label className="text-sm font-semibold text-slate-300 ml-1">Email Address</label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Mail className="h-5 w-5 text-slate-400" />
+                            <Mail className="h-5 w-5 text-slate-500" />
                           </div>
                           <input
                             type="email"
                             placeholder="john@example.com"
                             {...registerSignup('email')}
-                            className={`w-full pl-10 pr-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm shadow-sm ${
-                              signupErrors.email ? 'border-red-500/50 focus:ring-red-500' : 'border-slate-200 focus:ring-blue-500/50 focus:border-blue-500/50'
+                            className={`w-full pl-10 pr-4 py-3 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
+                              signupErrors.email ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'
                             } focus:outline-none focus:ring-2`}
                           />
                         </div>
                         {signupErrors.email && (
-                          <p className="text-red-500 text-xs ml-1 mt-1 font-medium">{signupErrors.email.message}</p>
+                          <p className="text-red-400 text-xs ml-1 mt-1 font-medium">{signupErrors.email.message}</p>
                         )}
                       </div>
                       <div className="space-y-1">
-                        <label className="text-sm font-semibold text-slate-700 ml-1">Phone Number</label>
+                        <label className="text-sm font-semibold text-slate-300 ml-1">Phone Number</label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Phone className="h-5 w-5 text-slate-400" />
+                            <Phone className="h-5 w-5 text-slate-500" />
                           </div>
                           <input
                             type="tel"
                             placeholder="9876543210"
                             {...registerSignup('phone')}
-                            className={`w-full pl-10 pr-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm shadow-sm ${
-                              signupErrors.phone ? 'border-red-500/50 focus:ring-red-500' : 'border-slate-200 focus:ring-blue-500/50 focus:border-blue-500/50'
+                            className={`w-full pl-10 pr-4 py-3 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
+                              signupErrors.phone ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'
                             } focus:outline-none focus:ring-2`}
                           />
                         </div>
                         {signupErrors.phone && (
-                          <p className="text-red-500 text-xs ml-1 mt-1 font-medium">{signupErrors.phone.message}</p>
+                          <p className="text-red-400 text-xs ml-1 mt-1 font-medium">{signupErrors.phone.message}</p>
                         )}
                       </div>
                       <Button
                         type="submit"
                         variant="primary"
                         size="lg"
-                        className="w-full mt-6 shadow-md"
+                        className="w-full mt-6 shadow-[0_0_20px_rgba(37,99,235,0.3)] border border-blue-500/50"
                         loading={loading}
                       >
                         Continue with OTP <ArrowRight className="w-5 h-5 ml-1" />
@@ -358,11 +364,11 @@ export default function LoginPage() {
                       className="animate-fade-in"
                     >
                       <div className="text-center mb-8">
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 border border-blue-100 mb-4 shadow-sm">
-                          <Mail className="w-8 h-8 text-blue-600" />
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/10 border border-blue-500/30 mb-4 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                          <Mail className="w-8 h-8 text-blue-400" />
                         </div>
-                        <p className="text-sm text-slate-500 font-medium">We sent a secure code to</p>
-                        <p className="font-bold text-slate-900 mt-1 text-lg">{email}</p>
+                        <p className="text-sm text-slate-400 font-medium">We sent a secure code to</p>
+                        <p className="font-bold text-white mt-1 text-lg">{email}</p>
                       </div>
                       
                       {/* OTP Input Container */}
@@ -374,13 +380,13 @@ export default function LoginPage() {
                         <button
                           onClick={handleResendOtp}
                           disabled={resendTimer > 0 || loading}
-                          className="text-sm text-blue-600 hover:text-blue-700 disabled:text-slate-400 font-semibold transition-colors"
+                          className="text-sm text-blue-400 hover:text-blue-300 disabled:text-slate-600 font-semibold transition-colors"
                         >
                           {resendTimer > 0 ? `Resend OTP in ${resendTimer}s` : 'Resend OTP'}
                         </button>
                         <button 
                           onClick={() => setSignupStep(1)} 
-                          className="block w-full text-center text-sm text-slate-500 hover:text-slate-700 font-medium transition-colors"
+                          className="block w-full text-center text-sm text-slate-500 hover:text-slate-300 font-medium transition-colors"
                         >
                           ← Back to details
                         </button>
@@ -391,10 +397,10 @@ export default function LoginPage() {
                   {signupStep === 3 && (
                     <form onSubmit={onSetPassword} className="space-y-5 animate-fade-in">
                       <div className="space-y-1">
-                        <label className="text-sm font-semibold text-slate-700 ml-1">Create a Password</label>
+                        <label className="text-sm font-semibold text-slate-300 ml-1">Create a Password</label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Lock className="h-5 w-5 text-slate-400" />
+                            <Lock className="h-5 w-5 text-slate-500" />
                           </div>
                           <input
                             type="password"
@@ -403,7 +409,7 @@ export default function LoginPage() {
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             placeholder="••••••••"
-                            className="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm shadow-sm"
+                            className="w-full pl-10 pr-4 py-3 bg-[#111827]/60 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm"
                           />
                         </div>
                         <p className="text-xs text-slate-500 font-medium ml-1 mt-2">Must be at least 6 characters.</p>
@@ -412,7 +418,7 @@ export default function LoginPage() {
                         type="submit"
                         variant="primary"
                         size="lg"
-                        className="w-full mt-6 shadow-md"
+                        className="w-full mt-6 shadow-[0_0_20px_rgba(37,99,235,0.3)] border border-blue-500/50"
                         disabled={newPassword.length < 6}
                         loading={loading}
                       >

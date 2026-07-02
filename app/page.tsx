@@ -3,61 +3,17 @@
 import Link from 'next/link';
 import { motion, Variants } from 'framer-motion';
 import { ShieldCheck, LineChart, Zap, HeadphonesIcon, ArrowRight, Check, Smartphone, MonitorPlay } from 'lucide-react';
-import TickerTape from '@/components/features/TickerTape';
-import MiniChart from '@/components/features/MiniChart';
-import Button from '@/components/ui/Button';
-import Card from '@/components/ui/Card';
 
-const appName = 'Zerofx.club';
-
-const features = [
-  {
-    icon: <LineChart className="w-8 h-8 text-blue-600" />,
-    title: 'Ultra-Low Spreads',
-    description: 'on XAU EUR',
-  },
-  {
-    icon: <Zap className="w-8 h-8 text-blue-600" />,
-    title: '200+ Instruments',
-    description: 'Forex, Crypto & More',
-  },
-  {
-    icon: <ShieldCheck className="w-8 h-8 text-blue-600" />,
-    title: '$40 Minimum',
-    description: 'Start with just $40',
-  },
-  {
-    icon: <HeadphonesIcon className="w-8 h-8 text-blue-600" />,
-    title: '24/7 Support',
-    description: 'Round-the-clock assistance',
-  },
-];
-
-const accountTypes = [
-  {
-    name: 'Standard',
-    desc: 'Start trading with standard account',
-    deposit: '$40',
-    features: ['Instant credit', 'No hidden fees', 'Trade Immediately', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
-    popular: false,
-  },
-  {
-    name: 'Premium',
-    desc: 'Advanced features for serious traders',
-    deposit: '$100',
-    features: ['100% deposit bonus', 'Priority support', 'Advanced analytics', 'Lower spreads', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
-    popular: true,
-  },
-  {
-    name: 'Platinum',
-    desc: 'Premium trading experience with exclusive benefits',
-    deposit: '$500',
-    features: ['100% deposit bonus', 'Personal account manager', 'VIP support', 'Exclusive market insights', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
-    popular: false,
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
   }
-];
+};
 
-const containerVariants: Variants = {
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -65,339 +21,209 @@ const containerVariants: Variants = {
   }
 };
 
-const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5, ease: "easeOut" }
-  }
-};
+const appName = 'Zerofx.club';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen relative overflow-hidden bg-slate-50 selection:bg-blue-200 selection:text-blue-900">
-      
-      {/* Navigation */}
-      <motion.nav 
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-slate-200 flex flex-col shadow-sm"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center justify-start gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-black tracking-tighter text-slate-900">{appName}</span>
-            </div>
+    <div className="min-h-screen bg-[#060a14] text-slate-200 selection:bg-blue-500/30 selection:text-blue-200 overflow-x-hidden font-sans">
+      {/* Dynamic Background Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Navy Blue Glows */}
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[120px] mix-blend-screen" />
+        <div className="absolute top-[20%] right-[-20%] w-[60%] h-[60%] bg-indigo-600/10 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute bottom-[-20%] left-[20%] w-[50%] h-[50%] bg-blue-500/5 rounded-full blur-[100px] mix-blend-screen" />
+        {/* Noise overlay for texture */}
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      </div>
 
-            <div className="flex items-center justify-end">
-              <Link href="/login">
-                <Button variant="primary" size="sm">
-                  Sign In
-                </Button>
+      {/* Navigation */}
+      <nav className="fixed w-full z-50 top-0 transition-all duration-300 bg-[#060a14]/60 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center space-x-2">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-700 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.3)] border border-white/10">
+                <Zap className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-2xl tracking-tight text-white">{appName}</span>
+            </div>
+            
+            <div className="flex items-center space-x-6">
+              <Link href="/login" className="hidden sm:block text-slate-300 hover:text-white font-medium transition-colors">
+                Sign In
+              </Link>
+              <Link 
+                href="/login" 
+                className="bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 hover:text-white border border-blue-500/30 px-6 py-2.5 rounded-full font-semibold transition-all shadow-[0_0_15px_rgba(59,130,246,0.15)] flex items-center group"
+              >
+                Trade Now
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
-      {/* Hero Section */}
-      <header className="relative pt-20 pb-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Ticker Tape */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="w-full bg-white/80 backdrop-blur-xl border border-slate-200 min-h-[44px] relative z-20 rounded-xl overflow-hidden mb-16 shadow-sm"
-          >
-            <TickerTape theme="light" />
-          </motion.div>
-
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
+      <main className="relative z-10 pt-32 pb-16">
+        
+        {/* Hero Section */}
+        <section className="relative px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-[85vh] flex flex-col justify-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
             
             {/* Left Content */}
             <motion.div 
               initial="hidden"
               animate="visible"
-              variants={containerVariants}
-              className="flex-1 text-center lg:text-left z-10"
+              variants={staggerContainer}
+              className="text-left space-y-8 max-w-2xl"
             >
-              <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-sm font-semibold mb-8 shadow-sm">
-                <ShieldCheck className="w-4 h-4" />
-                Trusted by 12,400+ Traders
+              <motion.div variants={fadeInUp} className="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 backdrop-blur-md rounded-full px-4 py-2 shadow-inner">
+                <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+                <span className="text-sm font-semibold text-blue-300 tracking-wide uppercase">Next-Gen Trading Platform</span>
               </motion.div>
-
-              <motion.h1 variants={itemVariants} className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 mb-6 leading-tight">
-                Trade Smarter<br className="hidden sm:block" />
-                <span className="gradient-text"> Trade Faster</span>
+              
+              <motion.h1 variants={fadeInUp} className="text-5xl lg:text-7xl font-black tracking-tight leading-[1.1] text-white">
+                Master the Markets <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 filter drop-shadow-[0_0_20px_rgba(59,130,246,0.3)]">With Precision.</span>
               </motion.h1>
-
-              <motion.p variants={itemVariants} className="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
-                Claim your 100% deposit bonus and join the ultimate futuristic trading platform built for low latency and extreme liquidity.
+              
+              <motion.p variants={fadeInUp} className="text-lg sm:text-xl text-slate-400 leading-relaxed font-medium max-w-lg">
+                Experience lightning-fast execution, military-grade security, and institutional-grade analytics—all wrapped in a sleek, transparent navy glass interface.
               </motion.p>
-
-              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link href="/login">
-                  <Button variant="primary" size="lg" className="w-full sm:w-auto shadow-md">
-                    Start Trading <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
+              
+              <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Link 
+                  href="/login" 
+                  className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)] flex items-center justify-center group"
+                >
+                  Start Trading
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Link>
+                <div className="flex items-center justify-center sm:justify-start px-4 text-slate-400 font-medium space-x-2">
+                  <ShieldCheck className="w-5 h-5 text-blue-400" />
+                  <span>Secure & Encrypted</span>
+                </div>
               </motion.div>
             </motion.div>
 
-            {/* Right Content (Mini Chart) */}
+            {/* Right Content - Abstract Dashboard Preview */}
             <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="flex-1 w-full max-w-lg lg:max-w-xl z-10"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative hidden lg:block"
             >
-              <div className="bg-white/80 backdrop-blur-xl border border-slate-200 p-4 h-[350px] relative rounded-2xl shadow-xl">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-[20px] blur opacity-20"></div>
-                <div className="relative h-full w-full rounded-xl overflow-hidden bg-white">
-                  <MiniChart symbol="OANDA:EURUSD" theme="light" />
+              <div className="absolute inset-0 bg-blue-500/20 blur-[100px] rounded-full mix-blend-screen"></div>
+              
+              <div className="relative bg-[#0b1221]/80 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] p-6 overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+                
+                {/* Mockup Header */}
+                <div className="flex justify-between items-center mb-6">
+                  <div className="flex space-x-2">
+                    <div className="w-3 h-3 rounded-full bg-slate-700"></div>
+                    <div className="w-3 h-3 rounded-full bg-slate-700"></div>
+                    <div className="w-3 h-3 rounded-full bg-slate-700"></div>
+                  </div>
+                  <div className="h-6 w-24 bg-white/5 rounded-full"></div>
+                </div>
+
+                {/* Mockup Content */}
+                <div className="space-y-4">
+                  <div className="h-32 bg-gradient-to-br from-blue-600/20 to-indigo-900/20 rounded-2xl border border-white/5 p-4 relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]"></div>
+                    <div className="h-4 w-1/3 bg-white/10 rounded mb-2"></div>
+                    <div className="h-8 w-1/2 bg-white/20 rounded"></div>
+                    {/* Simulated chart line */}
+                    <svg className="absolute bottom-0 left-0 w-full h-1/2 text-blue-500/50" preserveAspectRatio="none" viewBox="0 0 100 100">
+                      <path d="M0,100 L0,50 Q25,70 50,40 T100,20 L100,100 Z" fill="currentColor" />
+                      <path d="M0,50 Q25,70 50,40 T100,20" fill="none" stroke="url(#gradient)" strokeWidth="3" className="text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+                      <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#3b82f6" />
+                          <stop offset="100%" stopColor="#818cf8" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="h-24 bg-[#111827]/60 rounded-2xl border border-white/5 p-4 flex flex-col justify-between hover:bg-[#111827]/80 transition-colors">
+                       <div className="h-3 w-1/2 bg-white/10 rounded"></div>
+                       <div className="h-6 w-3/4 bg-blue-500/20 rounded"></div>
+                    </div>
+                    <div className="h-24 bg-[#111827]/60 rounded-2xl border border-white/5 p-4 flex flex-col justify-between hover:bg-[#111827]/80 transition-colors">
+                       <div className="h-3 w-1/2 bg-white/10 rounded"></div>
+                       <div className="h-6 w-3/4 bg-emerald-500/20 rounded"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
-
           </div>
-        </div>
-      </header>
+        </section>
 
-      {/* Live Market Overview */}
-      <section className="py-24 relative border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4 drop-shadow-sm">
-              Live <span className="text-blue-600">Market Overview</span>
-            </h2>
-          </motion.div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="bg-white/70 backdrop-blur-xl border border-slate-200 shadow-sm p-4 h-[400px] relative rounded-2xl"
-            >
-              <div className="relative h-full w-full rounded-xl overflow-hidden bg-white">
-                 <MiniChart symbol="OANDA:EURUSD" theme="light" />
+        {/* Features Section */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Why Trade With Us?</h2>
+            <p className="text-slate-400 font-medium">Built for speed, reliability, and precision. Everything you need to succeed in the modern markets.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="bg-[#0b1221]/60 backdrop-blur-xl rounded-3xl p-8 border border-white/5 hover:bg-[#0b1221]/80 hover:border-blue-500/30 transition-all group shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
+              <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <LineChart className="w-7 h-7 text-blue-400" />
               </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="bg-white/70 backdrop-blur-xl border border-slate-200 shadow-sm p-4 h-[400px] relative rounded-2xl"
-            >
-              <div className="relative h-full w-full rounded-xl overflow-hidden bg-white">
-                 <MiniChart symbol="OANDA:XAUUSD" theme="light" />
+              <h3 className="text-xl font-bold text-white mb-3">Pro Analytics</h3>
+              <p className="text-slate-400 leading-relaxed font-medium">
+                Access advanced charting tools and real-time market data to make informed trading decisions.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-[#0b1221]/60 backdrop-blur-xl rounded-3xl p-8 border border-white/5 hover:bg-[#0b1221]/80 hover:border-blue-500/30 transition-all group shadow-[0_8px_30px_rgba(0,0,0,0.3)] relative overflow-hidden">
+              <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform relative z-10">
+                <ShieldCheck className="w-7 h-7 text-indigo-400" />
               </div>
-            </motion.div>
+              <h3 className="text-xl font-bold text-white mb-3 relative z-10">Ironclad Security</h3>
+              <p className="text-slate-400 leading-relaxed font-medium relative z-10">
+                Your funds and data are protected by military-grade encryption and multi-factor authentication.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-[#0b1221]/60 backdrop-blur-xl rounded-3xl p-8 border border-white/5 hover:bg-[#0b1221]/80 hover:border-blue-500/30 transition-all group shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
+              <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <HeadphonesIcon className="w-7 h-7 text-blue-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">24/7 Support</h3>
+              <p className="text-slate-400 leading-relaxed font-medium">
+                Our dedicated team of experts is available around the clock to assist you with any questions.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Account Types Section */}
-      <section className="py-24 relative border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-           >
-             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4 drop-shadow-sm">Account <span className="text-blue-600">Types</span></h2>
-             <p className="text-lg text-slate-500 max-w-2xl mx-auto font-medium">Choose the account that fits your trading style</p>
-           </motion.div>
-           
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-             {accountTypes.map((acc, index) => (
-               <motion.div
-                 key={acc.name}
-                 initial={{ opacity: 0, y: 30 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ delay: index * 0.1 }}
-                 className={`relative bg-white/70 backdrop-blur-xl rounded-2xl p-8 flex flex-col transition-all duration-300 ${acc.popular ? 'border-blue-300 shadow-[0_8px_30px_rgba(59,130,246,0.15)] scale-105 z-10' : 'border border-slate-200 shadow-sm hover:shadow-md'}`}
-               >
-                 {acc.popular && (
-                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs uppercase tracking-wider font-bold px-4 py-1.5 rounded-full shadow-lg">
-                     Most Popular
-                   </div>
-                 )}
-                 <div className="text-center mb-6">
-                   <h3 className={`text-2xl font-black mb-2 ${acc.popular ? 'text-blue-700' : 'text-slate-800'}`}>{acc.name}</h3>
-                   <p className="text-sm text-slate-500 h-10 font-medium">{acc.desc}</p>
-                 </div>
-                 
-                 <div className="flex justify-between items-center py-4 border-y border-slate-100 mb-6">
-                   <span className="text-slate-500 font-semibold">Min Deposit</span>
-                   <span className="text-xl font-black text-blue-600">{acc.deposit}</span>
-                 </div>
-
-                 <ul className="space-y-4 mb-8 flex-1">
-                   {acc.features.map((feature, i) => (
-                     <li key={i} className="flex items-start gap-3 text-sm text-slate-600 font-medium">
-                       <Check className="w-5 h-5 text-green-500 shrink-0" />
-                       <span>{feature}</span>
-                     </li>
-                   ))}
-                 </ul>
-
-                 <Link href="/login" className="mt-auto">
-                   <Button variant={acc.popular ? 'primary' : 'secondary'} className="w-full shadow-sm">
-                     Trade Now
-                   </Button>
-                 </Link>
-               </motion.div>
-             ))}
-           </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-24 relative border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4 drop-shadow-sm">
-              Why Choose <span className="text-blue-600">{appName}</span>
-            </h2>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto font-medium">
-              A complete trading solution engineered with next-gen technology to give you the competitive edge.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card hover glow className="h-full text-center group border-slate-200 bg-white/70 shadow-sm">
-                  <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-100 transition-colors duration-300">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-500 font-medium">
-                    {feature.description}
-                  </p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Download Section */}
-      <section className="py-24 relative border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-           >
-             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 drop-shadow-sm">Download Our <span className="text-blue-600">Trading Platform</span></h2>
-           </motion.div>
-           <div className="flex flex-col md:flex-row items-center justify-center gap-16 max-w-4xl mx-auto">
-             <motion.div 
-               initial={{ opacity: 0, x: -30 }}
-               whileInView={{ opacity: 1, x: 0 }}
-               viewport={{ once: true }}
-               className="flex-1 w-full bg-white/70 backdrop-blur-xl border border-slate-200 p-8 rounded-2xl shadow-sm"
-             >
-               <h3 className="text-2xl font-bold text-slate-800 mb-6">Trade Anywhere, Anytime</h3>
-               <ul className="space-y-5">
-                 {[
-                   'Real-time market data',
-                   'Advanced charting tools',
-                   'Secure trading environment',
-                   '24/7 customer support'
-                 ].map((item, i) => (
-                   <li key={i} className="flex items-center gap-3">
-                     <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center border border-blue-100">
-                       <Check className="w-3.5 h-3.5 text-blue-600" />
-                     </div>
-                     <span className="text-slate-600 font-medium">{item}</span>
-                   </li>
-                 ))}
-               </ul>
-             </motion.div>
-
-             <motion.div 
-               initial={{ opacity: 0, x: 30 }}
-               whileInView={{ opacity: 1, x: 0 }}
-               viewport={{ once: true }}
-               className="flex-1 w-full text-center md:text-left flex flex-col items-center md:items-start"
-             >
-               <h3 className="text-2xl font-bold text-slate-800 mb-2">Get Started Today</h3>
-               <p className="text-slate-500 font-medium mb-8">Download our app and start trading in minutes</p>
-               
-               <div className="flex flex-col gap-4 w-full max-w-[240px]">
-                 <a href="#" className="flex items-center gap-4 bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all rounded-xl p-3 text-white shadow-md">
-                   <MonitorPlay className="w-8 h-8" />
-                   <div className="flex flex-col items-start leading-tight">
-                     <span className="text-[10px] text-slate-300 font-medium">GET IT ON</span>
-                     <span className="text-lg font-semibold">Google Play</span>
-                   </div>
-                 </a>
-                 <a href="#" className="flex items-center gap-4 bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all rounded-xl p-3 text-white shadow-md">
-                   <Smartphone className="w-8 h-8" />
-                   <div className="flex flex-col items-start leading-tight">
-                     <span className="text-[10px] text-slate-300 font-medium">Download on the</span>
-                     <span className="text-lg font-semibold">App Store</span>
-                   </div>
-                 </a>
-               </div>
-               <p className="text-xs text-slate-400 mt-6 text-center md:text-left w-full max-w-[240px] font-medium">
-                 Available on Google Play and App Store
-               </p>
-             </motion.div>
-           </div>
-        </div>
-      </section>
-
+      </main>
+      
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white">
+      <footer className="border-t border-white/5 bg-[#060a14] relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center">
                 <Zap className="w-4 h-4 text-white" />
               </div>
-              <span className="text-xl font-black text-slate-900">{appName}</span>
+              <span className="text-xl font-black text-white">{appName}</span>
             </div>
             
-            <div className="flex gap-8 text-sm font-semibold text-slate-500">
-              <a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a>
+            <div className="flex gap-8 text-sm font-semibold text-slate-400">
+              <a href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-blue-400 transition-colors">Terms of Service</a>
             </div>
 
-            <p className="text-sm text-slate-400 font-medium">
+            <p className="text-sm text-slate-500 font-medium">
               © {new Date().getFullYear()} {appName}. All rights reserved.
             </p>
           </div>
