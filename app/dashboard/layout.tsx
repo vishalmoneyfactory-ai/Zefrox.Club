@@ -16,10 +16,10 @@ export default function DashboardLayout({
       </div>
 
       <UserNavbar />
-      <div className="flex relative z-10 pt-16">
+      <div className="flex relative z-10 pt-16 w-full max-w-[100vw]">
         <UserSidebar />
-        <main className="flex-1 md:ml-64 relative min-h-[calc(100vh-4rem)]">
-          <div className="p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 min-w-0 md:ml-64 relative min-h-[calc(100vh-4rem)] w-full">
+          <div className="p-4 sm:p-6 lg:p-8 max-w-full">
             {children}
           </div>
         </main>
