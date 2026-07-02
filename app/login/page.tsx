@@ -166,7 +166,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4 selection:bg-aurora-cyan/30 selection:text-aurora-cyan overflow-hidden">
+    <div className="min-h-screen relative flex items-center justify-center p-4 bg-slate-50 selection:bg-blue-200 selection:text-blue-900 overflow-hidden">
       
       <div className="w-full max-w-md relative z-10">
         <motion.div 
@@ -174,11 +174,11 @@ export default function LoginPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-aurora-cyan to-aurora-indigo shadow-[0_0_20px_rgba(34,211,238,0.3)] mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md mb-4">
             <Zap className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-black text-white tracking-tight">{appName}</h1>
-          <p className="text-slate-400 mt-2 font-medium">
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">{appName}</h1>
+          <p className="text-slate-600 mt-2 font-medium">
             {activeTab === 'login' ? 'Welcome back, trader' : signupStep === 1 ? 'Start your trading journey' : signupStep === 2 ? 'Verify your identity' : 'Secure your account'}
           </p>
         </motion.div>
@@ -187,33 +187,33 @@ export default function LoginPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="glass-card rounded-[2rem] p-8 shadow-2xl relative border-aurora-indigo/20 overflow-hidden"
+          className="bg-white/80 backdrop-blur-xl rounded-[2rem] p-8 shadow-xl relative border border-slate-200 overflow-hidden"
         >
           {/* Subtle inner glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-aurora-cyan/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           
           {/* Tabs */}
           {(activeTab === 'login' || signupStep === 1) && (
-            <div className="flex p-1 bg-slate-900/50 rounded-xl mb-8 border border-white/5 relative z-10">
+            <div className="flex p-1 bg-slate-100/50 rounded-xl mb-8 border border-slate-200 relative z-10 shadow-inner">
               <button
                 onClick={() => setActiveTab('login')}
                 className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300 relative ${
-                  activeTab === 'login' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
+                  activeTab === 'login' ? 'text-blue-700' : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
                 {activeTab === 'login' && (
-                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-white/10 rounded-lg border border-white/10 shadow-sm" />
+                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-white rounded-lg border border-slate-200 shadow-sm" />
                 )}
                 <span className="relative z-10">Log In</span>
               </button>
               <button
                 onClick={() => setActiveTab('signup')}
                 className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300 relative ${
-                  activeTab === 'signup' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
+                  activeTab === 'signup' ? 'text-blue-700' : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
                 {activeTab === 'signup' && (
-                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-white/10 rounded-lg border border-white/10 shadow-sm" />
+                  <motion.div layoutId="auth-tab" className="absolute inset-0 bg-white rounded-lg border border-slate-200 shadow-sm" />
                 )}
                 <span className="relative z-10">Sign Up</span>
               </button>
@@ -232,10 +232,10 @@ export default function LoginPage() {
                   className="space-y-5"
                 >
                   <div className="space-y-1">
-                    <label className="text-sm font-semibold text-slate-300 ml-1">Email Address</label>
+                    <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Mail className="h-5 w-5 text-slate-500" />
+                        <Mail className="h-5 w-5 text-slate-400" />
                       </div>
                       <input
                         type="email"
@@ -243,15 +243,15 @@ export default function LoginPage() {
                         value={loginEmail}
                         onChange={(e) => setLoginEmail(e.target.value)}
                         placeholder="trader@example.com"
-                        className="w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50 transition-all text-sm"
+                        className="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm shadow-sm"
                       />
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-sm font-semibold text-slate-300 ml-1">Password</label>
+                    <label className="text-sm font-semibold text-slate-700 ml-1">Password</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-slate-500" />
+                        <Lock className="h-5 w-5 text-slate-400" />
                       </div>
                       <input
                         type="password"
@@ -259,15 +259,15 @@ export default function LoginPage() {
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50 transition-all text-sm"
+                        className="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm shadow-sm"
                       />
                     </div>
                   </div>
                   <Button
                     type="submit"
-                    variant="glow"
+                    variant="primary"
                     size="lg"
-                    className="w-full mt-6"
+                    className="w-full mt-6 shadow-md"
                     loading={loading}
                   >
                     Access Platform
@@ -283,67 +283,67 @@ export default function LoginPage() {
                   {signupStep === 1 && (
                     <form onSubmit={handleSignupSubmit(onSendOtp)} className="space-y-5">
                       <div className="space-y-1">
-                        <label className="text-sm font-semibold text-slate-300 ml-1">Full Name</label>
+                        <label className="text-sm font-semibold text-slate-700 ml-1">Full Name</label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <User className="h-5 w-5 text-slate-500" />
+                            <User className="h-5 w-5 text-slate-400" />
                           </div>
                           <input
                             type="text"
                             placeholder="John Doe"
                             {...registerSignup('fullName')}
-                            className={`w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
-                              signupErrors.fullName ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50'
+                            className={`w-full pl-10 pr-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm shadow-sm ${
+                              signupErrors.fullName ? 'border-red-500/50 focus:ring-red-500' : 'border-slate-200 focus:ring-blue-500/50 focus:border-blue-500/50'
                             } focus:outline-none focus:ring-2`}
                           />
                         </div>
                         {signupErrors.fullName && (
-                          <p className="text-red-400 text-xs ml-1 mt-1">{signupErrors.fullName.message}</p>
+                          <p className="text-red-500 text-xs ml-1 mt-1 font-medium">{signupErrors.fullName.message}</p>
                         )}
                       </div>
                       <div className="space-y-1">
-                        <label className="text-sm font-semibold text-slate-300 ml-1">Email Address</label>
+                        <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Mail className="h-5 w-5 text-slate-500" />
+                            <Mail className="h-5 w-5 text-slate-400" />
                           </div>
                           <input
                             type="email"
                             placeholder="john@example.com"
                             {...registerSignup('email')}
-                            className={`w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
-                              signupErrors.email ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50'
+                            className={`w-full pl-10 pr-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm shadow-sm ${
+                              signupErrors.email ? 'border-red-500/50 focus:ring-red-500' : 'border-slate-200 focus:ring-blue-500/50 focus:border-blue-500/50'
                             } focus:outline-none focus:ring-2`}
                           />
                         </div>
                         {signupErrors.email && (
-                          <p className="text-red-400 text-xs ml-1 mt-1">{signupErrors.email.message}</p>
+                          <p className="text-red-500 text-xs ml-1 mt-1 font-medium">{signupErrors.email.message}</p>
                         )}
                       </div>
                       <div className="space-y-1">
-                        <label className="text-sm font-semibold text-slate-300 ml-1">Phone Number</label>
+                        <label className="text-sm font-semibold text-slate-700 ml-1">Phone Number</label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Phone className="h-5 w-5 text-slate-500" />
+                            <Phone className="h-5 w-5 text-slate-400" />
                           </div>
                           <input
                             type="tel"
                             placeholder="9876543210"
                             {...registerSignup('phone')}
-                            className={`w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
-                              signupErrors.phone ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50'
+                            className={`w-full pl-10 pr-4 py-3 bg-white rounded-xl border text-slate-900 placeholder-slate-400 transition-all text-sm shadow-sm ${
+                              signupErrors.phone ? 'border-red-500/50 focus:ring-red-500' : 'border-slate-200 focus:ring-blue-500/50 focus:border-blue-500/50'
                             } focus:outline-none focus:ring-2`}
                           />
                         </div>
                         {signupErrors.phone && (
-                          <p className="text-red-400 text-xs ml-1 mt-1">{signupErrors.phone.message}</p>
+                          <p className="text-red-500 text-xs ml-1 mt-1 font-medium">{signupErrors.phone.message}</p>
                         )}
                       </div>
                       <Button
                         type="submit"
-                        variant="glow"
+                        variant="primary"
                         size="lg"
-                        className="w-full mt-6"
+                        className="w-full mt-6 shadow-md"
                         loading={loading}
                       >
                         Continue with OTP <ArrowRight className="w-5 h-5 ml-1" />
@@ -358,25 +358,29 @@ export default function LoginPage() {
                       className="animate-fade-in"
                     >
                       <div className="text-center mb-8">
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-900/50 border border-aurora-cyan/30 mb-4 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-                          <Mail className="w-8 h-8 text-aurora-cyan" />
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 border border-blue-100 mb-4 shadow-sm">
+                          <Mail className="w-8 h-8 text-blue-600" />
                         </div>
-                        <p className="text-sm text-slate-400">We sent a secure code to</p>
-                        <p className="font-semibold text-white mt-1 text-lg">{email}</p>
+                        <p className="text-sm text-slate-500 font-medium">We sent a secure code to</p>
+                        <p className="font-bold text-slate-900 mt-1 text-lg">{email}</p>
                       </div>
-                      <OtpInput length={6} onComplete={onVerifyOtp} disabled={loading} />
+                      
+                      {/* OTP Input Container */}
+                      <div className="flex justify-center mb-6">
+                        <OtpInput length={6} onComplete={onVerifyOtp} disabled={loading} />
+                      </div>
                       
                       <div className="mt-8 text-center space-y-4">
                         <button
                           onClick={handleResendOtp}
                           disabled={resendTimer > 0 || loading}
-                          className="text-sm text-aurora-cyan hover:text-aurora-cyan/80 disabled:text-slate-600 font-medium transition-colors"
+                          className="text-sm text-blue-600 hover:text-blue-700 disabled:text-slate-400 font-semibold transition-colors"
                         >
                           {resendTimer > 0 ? `Resend OTP in ${resendTimer}s` : 'Resend OTP'}
                         </button>
                         <button 
                           onClick={() => setSignupStep(1)} 
-                          className="block w-full text-center text-sm text-slate-500 hover:text-slate-300 transition-colors"
+                          className="block w-full text-center text-sm text-slate-500 hover:text-slate-700 font-medium transition-colors"
                         >
                           ← Back to details
                         </button>
@@ -387,10 +391,10 @@ export default function LoginPage() {
                   {signupStep === 3 && (
                     <form onSubmit={onSetPassword} className="space-y-5 animate-fade-in">
                       <div className="space-y-1">
-                        <label className="text-sm font-semibold text-slate-300 ml-1">Create a Password</label>
+                        <label className="text-sm font-semibold text-slate-700 ml-1">Create a Password</label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Lock className="h-5 w-5 text-slate-500" />
+                            <Lock className="h-5 w-5 text-slate-400" />
                           </div>
                           <input
                             type="password"
@@ -399,16 +403,16 @@ export default function LoginPage() {
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             placeholder="••••••••"
-                            className="w-full pl-10 pr-4 py-3 bg-slate-900/50 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-aurora-cyan/50 focus:border-aurora-cyan/50 transition-all text-sm"
+                            className="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-sm shadow-sm"
                           />
                         </div>
-                        <p className="text-xs text-slate-500 ml-1 mt-2">Must be at least 6 characters.</p>
+                        <p className="text-xs text-slate-500 font-medium ml-1 mt-2">Must be at least 6 characters.</p>
                       </div>
                       <Button
                         type="submit"
-                        variant="glow"
+                        variant="primary"
                         size="lg"
-                        className="w-full mt-6"
+                        className="w-full mt-6 shadow-md"
                         disabled={newPassword.length < 6}
                         loading={loading}
                       >
