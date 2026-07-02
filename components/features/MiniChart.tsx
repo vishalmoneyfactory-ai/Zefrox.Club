@@ -2,7 +2,12 @@
 
 import React, { useEffect, useRef } from 'react';
 
-export default function MiniChart() {
+interface MiniChartProps {
+  symbol?: string;
+  theme?: 'light' | 'dark';
+}
+
+export default function MiniChart({ symbol = "OANDA:EURUSD", theme = "light" }: MiniChartProps) {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,19 +20,19 @@ export default function MiniChart() {
     script.async = true;
     script.innerHTML = `
       {
-        "symbol": "OANDA:EURUSD",
+        "symbol": "${symbol}",
         "width": "100%",
         "height": "100%",
         "locale": "en",
         "dateRange": "1M",
-        "colorTheme": "light",
+        "colorTheme": "${theme}",
         "isTransparent": true,
         "autosize": true,
         "largeChartUrl": ""
       }
     `;
     container.current.appendChild(script);
-  }, []);
+  }, [symbol, theme]);
 
   return (
     <div className="tradingview-widget-container h-full w-full" ref={container}>

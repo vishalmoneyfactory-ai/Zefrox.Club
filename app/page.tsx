@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion, Variants } from 'framer-motion';
-import { ShieldCheck, LineChart, Zap, HeadphonesIcon, ArrowRight } from 'lucide-react';
+import { ShieldCheck, LineChart, Zap, HeadphonesIcon, ArrowRight, Check, Apple, Play } from 'lucide-react';
 import TickerTape from '@/components/features/TickerTape';
 import MiniChart from '@/components/features/MiniChart';
 import Button from '@/components/ui/Button';
@@ -31,6 +31,30 @@ const features = [
     title: '24/7 Support',
     description: 'Round-the-clock assistance',
   },
+];
+
+const accountTypes = [
+  {
+    name: 'Standard',
+    desc: 'Start trading with standard account',
+    deposit: '$40',
+    features: ['Instant credit', 'No hidden fees', 'Trade Immediately', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
+    popular: false,
+  },
+  {
+    name: 'Premium',
+    desc: 'Advanced features for serious traders',
+    deposit: '$100',
+    features: ['100% deposit bonus', 'Priority support', 'Advanced analytics', 'Lower spreads', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
+    popular: true,
+  },
+  {
+    name: 'Platinum',
+    desc: 'Premium trading experience with exclusive benefits',
+    deposit: '$500',
+    features: ['100% deposit bonus', 'Personal account manager', 'VIP support', 'Exclusive market insights', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
+    popular: false,
+  }
 ];
 
 const containerVariants: Variants = {
@@ -95,9 +119,9 @@ export default function LandingPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="w-full glass-card h-[44px] relative z-20 rounded-xl overflow-hidden mb-16 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
+            className="w-full glass-card min-h-[44px] relative z-20 rounded-xl overflow-hidden mb-16 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
           >
-            <TickerTape />
+            <TickerTape theme="dark" />
           </motion.div>
 
           <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
@@ -146,8 +170,8 @@ export default function LandingPage() {
             >
               <div className="glass-card p-4 h-[350px] relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-aurora-cyan to-aurora-purple rounded-[20px] blur opacity-20"></div>
-                <div className="relative h-full w-full rounded-xl overflow-hidden">
-                  <MiniChart />
+                <div className="relative h-full w-full rounded-xl overflow-hidden bg-slate-900/50">
+                  <MiniChart symbol="OANDA:EURUSD" theme="dark" />
                 </div>
               </div>
             </motion.div>
@@ -156,8 +180,106 @@ export default function LandingPage() {
         </div>
       </header>
 
+      {/* Live Market Overview */}
+      <section className="py-24 relative border-t border-white/5 bg-slate-900/20 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
+              Live <span className="text-aurora-cyan">Market Overview</span>
+            </h2>
+          </motion.div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="glass-card p-4 h-[400px] relative rounded-2xl"
+            >
+              <div className="relative h-full w-full rounded-xl overflow-hidden bg-slate-900/50">
+                 <MiniChart symbol="OANDA:EURUSD" theme="dark" />
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="glass-card p-4 h-[400px] relative rounded-2xl"
+            >
+              <div className="relative h-full w-full rounded-xl overflow-hidden bg-slate-900/50">
+                 <MiniChart symbol="OANDA:XAUUSD" theme="dark" />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Account Types Section */}
+      <section className="py-24 relative border-t border-white/5 bg-slate-900/40 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+           >
+             <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">Account <span className="text-aurora-cyan">Types</span></h2>
+             <p className="text-lg text-slate-400 max-w-2xl mx-auto">Choose the account that fits your trading style</p>
+           </motion.div>
+           
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+             {accountTypes.map((acc, index) => (
+               <motion.div
+                 key={acc.name}
+                 initial={{ opacity: 0, y: 30 }}
+                 whileInView={{ opacity: 1, y: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ delay: index * 0.1 }}
+                 className={`relative glass-card rounded-2xl p-8 flex flex-col ${acc.popular ? 'border-aurora-cyan/50 shadow-[0_0_30px_rgba(34,211,238,0.15)] scale-105 z-10' : 'border-white/5'}`}
+               >
+                 {acc.popular && (
+                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-aurora-purple text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                     Most Popular
+                   </div>
+                 )}
+                 <div className="text-center mb-6">
+                   <h3 className={`text-2xl font-black mb-2 ${acc.popular ? 'text-aurora-cyan' : 'text-white'}`}>{acc.name}</h3>
+                   <p className="text-sm text-slate-400 h-10">{acc.desc}</p>
+                 </div>
+                 
+                 <div className="flex justify-between items-center py-4 border-y border-white/10 mb-6">
+                   <span className="text-slate-300 font-medium">Min Deposit</span>
+                   <span className="text-xl font-bold text-aurora-cyan">{acc.deposit}</span>
+                 </div>
+
+                 <ul className="space-y-4 mb-8 flex-1">
+                   {acc.features.map((feature, i) => (
+                     <li key={i} className="flex items-start gap-3 text-sm text-slate-300">
+                       <Check className="w-5 h-5 text-emerald-400 shrink-0" />
+                       <span>{feature}</span>
+                     </li>
+                   ))}
+                 </ul>
+
+                 <Link href="/login" className="mt-auto">
+                   <Button variant={acc.popular ? 'glow' : 'secondary'} className="w-full">
+                     Trade Now
+                   </Button>
+                 </Link>
+               </motion.div>
+             ))}
+           </div>
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section className="py-24 relative border-y border-white/5 bg-slate-900/20 backdrop-blur-sm">
+      <section className="py-24 relative border-t border-white/5 bg-slate-900/20 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -200,8 +322,77 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Download Section */}
+      <section className="py-24 relative border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+           >
+             <h2 className="text-3xl sm:text-4xl font-black text-white">Download Our <span className="text-aurora-cyan">Trading Platform</span></h2>
+           </motion.div>
+           <div className="flex flex-col md:flex-row items-center justify-center gap-16 max-w-4xl mx-auto">
+             <motion.div 
+               initial={{ opacity: 0, x: -30 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               className="flex-1 w-full glass-card p-8 rounded-2xl"
+             >
+               <h3 className="text-2xl font-bold text-white mb-6">Trade Anywhere, Anytime</h3>
+               <ul className="space-y-5">
+                 {[
+                   'Real-time market data',
+                   'Advanced charting tools',
+                   'Secure trading environment',
+                   '24/7 customer support'
+                 ].map((item, i) => (
+                   <li key={i} className="flex items-center gap-3">
+                     <div className="w-6 h-6 rounded-full bg-aurora-cyan/20 flex items-center justify-center border border-aurora-cyan/50">
+                       <Check className="w-3.5 h-3.5 text-aurora-cyan" />
+                     </div>
+                     <span className="text-slate-300 font-medium">{item}</span>
+                   </li>
+                 ))}
+               </ul>
+             </motion.div>
+
+             <motion.div 
+               initial={{ opacity: 0, x: 30 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               className="flex-1 w-full text-center md:text-left flex flex-col items-center md:items-start"
+             >
+               <h3 className="text-2xl font-bold text-white mb-2">Get Started Today</h3>
+               <p className="text-slate-400 mb-8">Download our app and start trading in minutes</p>
+               
+               <div className="flex flex-col gap-4 w-full max-w-[240px]">
+                 <a href="#" className="flex items-center gap-4 bg-black border border-white/10 hover:border-white/30 transition-all rounded-xl p-3 text-white">
+                   <Play className="w-8 h-8" />
+                   <div className="flex flex-col items-start leading-tight">
+                     <span className="text-[10px] text-slate-400">GET IT ON</span>
+                     <span className="text-lg font-semibold">Google Play</span>
+                   </div>
+                 </a>
+                 <a href="#" className="flex items-center gap-4 bg-black border border-white/10 hover:border-white/30 transition-all rounded-xl p-3 text-white">
+                   <Apple className="w-8 h-8" />
+                   <div className="flex flex-col items-start leading-tight">
+                     <span className="text-[10px] text-slate-400">Download on the</span>
+                     <span className="text-lg font-semibold">App Store</span>
+                   </div>
+                 </a>
+               </div>
+               <p className="text-xs text-slate-500 mt-6 text-center md:text-left w-full max-w-[240px]">
+                 Available on Google Play and App Store
+               </p>
+             </motion.div>
+           </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
-      <section className="py-24 sm:py-32 relative">
+      <section className="py-24 sm:py-32 relative border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
