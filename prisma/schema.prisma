@@ -30,6 +30,11 @@ enum PaymentStatus {
   REJECTED
 }
 
+enum AccountType {
+  LIVE
+  DEMO
+}
+
 model User {
   id              String           @id @default(cuid())
   fullName        String
@@ -40,10 +45,29 @@ model User {
   totalPaid       Float            @default(0)
   createdAt       DateTime         @default(now())
   kyc             Kyc?
+  tradingAccounts TradingAccount[]
   paymentRequests PaymentRequest[]
   payments        Payment[]
   notifications   Notification[]
   otps            Otp[]
+}
+
+model TradingAccount {
+  id              String           @id @default(cuid())
+  userId          String
+  type            AccountType      @default(LIVE)
+  plan            String
+  balance         Float            @default(0)
+  equity          Float            @default(0)
+  margin          Float            @default(0)
+  mt5Id           String
+  mt5Password     String
+  server          String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  user            User             @relation(fields: [userId], references: [id])
+  paymentRequests PaymentRequest[]
+  payments        Payment[]
 }
 
 model Otp {
@@ -77,16 +101,19 @@ model Kyc {
 model PaymentRequest {
   id        String               @id @default(cuid())
   userId    String
+  accountId String?
   amount    Float
   status    PaymentRequestStatus @default(PENDING)
   createdAt DateTime             @default(now())
   user      User                 @relation(fields: [userId], references: [id])
+  account   TradingAccount?      @relation(fields: [accountId], references: [id])
   payment   Payment?
 }
 
 model Payment {
   id               String        @id @default(cuid())
   userId           String
+  accountId        String?
   paymentRequestId String        @unique
   amount           Float
   screenshotUrl    String
@@ -96,6 +123,7 @@ model Payment {
   reviewedAt       DateTime?
   transactionId    String        @default(cuid())
   user             User          @relation(fields: [userId], references: [id])
+  account          TradingAccount? @relation(fields: [accountId], references: [id])
   paymentRequest   PaymentRequest @relation(fields: [paymentRequestId], references: [id])
 }
 

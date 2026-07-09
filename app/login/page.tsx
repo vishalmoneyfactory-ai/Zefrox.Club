@@ -84,7 +84,7 @@ export default function LoginPage() {
       if (data.user.role === 'ADMIN') {
         router.push('/admin');
       } else {
-        router.push('/dashboard');
+        router.push('/accounts');
       }
     } catch (err: unknown) {
       const error = err as { response?: { data?: { error?: string } } };
@@ -141,7 +141,7 @@ export default function LoginPage() {
       if (data.user.role === 'ADMIN') {
         router.push('/admin');
       } else {
-        router.push('/dashboard');
+        router.push('/accounts');
       }
     } catch (err: unknown) {
       const error = err as { response?: { data?: { error?: string } } };

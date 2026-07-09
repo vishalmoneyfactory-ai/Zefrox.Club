@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
           },
         },
         paymentRequest: true,
+        tradingAccount: true,
       },
       orderBy: { submittedAt: 'asc' },
     });

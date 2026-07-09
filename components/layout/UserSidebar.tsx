@@ -9,14 +9,9 @@ import { LayoutDashboard, History, ShieldCheck, User, X, Zap } from 'lucide-reac
 
 const navLinks = [
   {
-    name: 'Home',
-    href: '/dashboard',
+    name: 'Accounts',
+    href: '/accounts',
     icon: <LayoutDashboard className="w-5 h-5" />,
-  },
-  {
-    name: 'Payment History',
-    href: '/dashboard/history',
-    icon: <History className="w-5 h-5" />,
   },
   {
     name: 'KYC Verification',

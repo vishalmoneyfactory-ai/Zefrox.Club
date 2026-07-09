@@ -41,6 +41,12 @@ export async function POST(
           totalPaid: { increment: payment.amount },
         },
       }),
+      ...(payment.accountId ? [
+        prisma.tradingAccount.update({
+          where: { id: payment.accountId },
+          data: { balance: { increment: payment.amount } },
+        })
+      ] : []),
       prisma.notification.create({
         data: {
           userId: payment.userId,

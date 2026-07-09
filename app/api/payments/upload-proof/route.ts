@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireAuth } from '@/lib/auth';
+import { getAuthUser } from '@/lib/auth';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
-    const authUser = requireAuth(request);
+    const authUser = await getAuthUser();
+    if (!authUser) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
 
     const kyc = await prisma.kyc.findUnique({
-      where: { userId: authUser.userId },
+      where: { userId: authUser.id },
     });
 
     if (!kyc || kyc.status !== 'APPROVED') {
@@ -19,91 +22,64 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData();
-    const paymentRequestId = formData.get('paymentRequestId') as string;
+    const accountId = formData.get('accountId') as string;
+    const amountStr = formData.get('amount') as string;
     const screenshot = formData.get('screenshot') as File | null;
 
-    if (!paymentRequestId) {
-      return NextResponse.json(
-        { error: 'Payment request ID is required' },
-        { status: 400 }
-      );
+    if (!accountId) {
+      return NextResponse.json({ error: 'Account ID is required' }, { status: 400 });
     }
-
+    if (!amountStr || isNaN(Number(amountStr)) || Number(amountStr) <= 0) {
+      return NextResponse.json({ error: 'Valid amount is required' }, { status: 400 });
+    }
     if (!screenshot) {
-      return NextResponse.json(
-        { error: 'Screenshot is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Screenshot is required' }, { status: 400 });
     }
 
+    const amount = Number(amountStr);
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(screenshot.type)) {
-      return NextResponse.json(
-        { error: 'Only JPG, JPEG, and PNG files are allowed' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Only JPG, JPEG, and PNG files are allowed' }, { status: 400 });
+    }
+    if (screenshot.size > 10 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File size must be less than 10MB' }, { status: 400 });
     }
 
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (screenshot.size > maxSize) {
-      return NextResponse.json(
-        { error: 'File size must be less than 10MB' },
-        { status: 400 }
-      );
-    }
-
-    const paymentRequest = await prisma.paymentRequest.findUnique({
-      where: { id: paymentRequestId },
+    const account = await prisma.tradingAccount.findUnique({
+      where: { id: accountId },
     });
 
-    if (!paymentRequest) {
-      return NextResponse.json(
-        { error: 'Payment request not found' },
-        { status: 404 }
-      );
-    }
-
-    if (paymentRequest.userId !== authUser.userId) {
-      return NextResponse.json(
-        { error: 'This payment request does not belong to you' },
-        { status: 403 }
-      );
-    }
-
-    if (paymentRequest.status !== 'PENDING') {
-      return NextResponse.json(
-        { error: 'This payment request is no longer pending' },
-        { status: 400 }
-      );
-    }
-
-    const existingPayment = await prisma.payment.findUnique({
-      where: { paymentRequestId },
-    });
-
-    if (existingPayment) {
-      return NextResponse.json(
-        { error: 'Payment proof already uploaded for this request' },
-        { status: 400 }
-      );
+    if (!account || account.userId !== authUser.id) {
+      return NextResponse.json({ error: 'Account not found' }, { status: 404 });
     }
 
     const arrayBuffer = await screenshot.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const screenshotUrl = await uploadToCloudinary(buffer, 'payment-proofs');
 
+    // Create a PaymentRequest and Payment simultaneously since user is initiating
+    const paymentRequest = await prisma.paymentRequest.create({
+      data: {
+        userId: authUser.id,
+        accountId: account.id,
+        amount,
+        status: 'PENDING',
+      },
+    });
+
     const payment = await prisma.payment.create({
       data: {
-        userId: authUser.userId,
-        paymentRequestId,
-        amount: paymentRequest.amount,
+        userId: authUser.id,
+        accountId: account.id,
+        paymentRequestId: paymentRequest.id,
+        amount,
         screenshotUrl,
+        status: 'PROOF_UPLOADED',
       },
     });
 
     return NextResponse.json(payment, { status: 201 });
   } catch (error) {
-    if (error instanceof Response) return error;
     console.error('Upload proof error:', error);
     return NextResponse.json(
       { error: 'Failed to upload payment proof' },

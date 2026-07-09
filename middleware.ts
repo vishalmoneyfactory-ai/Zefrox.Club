@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
     if (pathname === '/login' && token) {
       const decoded = await verifyTokenEdge(token);
       if (decoded) {
-        const redirectUrl = decoded.role === 'ADMIN' ? '/admin' : '/dashboard';
+        const redirectUrl = decoded.role === 'ADMIN' ? '/admin' : '/accounts';
         return NextResponse.redirect(new URL(redirectUrl, request.url));
       }
     }
@@ -75,15 +75,15 @@ export async function middleware(request: NextRequest) {
     }
 
     if (decoded.role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+      return NextResponse.redirect(new URL('/accounts', request.url));
     }
 
     return NextResponse.next();
   }
 
-  // Protected user routes: /dashboard, /kyc, /profile
+  // Protected user routes: /accounts, /kyc, /profile
   if (
-    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/accounts') ||
     pathname.startsWith('/kyc') ||
     pathname.startsWith('/profile')
   ) {
@@ -108,7 +108,7 @@ export const config = {
   matcher: [
     '/',
     '/login',
-    '/dashboard/:path*',
+    '/accounts/:path*',
     '/kyc/:path*',
     '/profile/:path*',
     '/admin/:path*',

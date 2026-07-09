@@ -16,6 +16,7 @@ export async function GET(
         payments: true,
         paymentRequests: true,
         kyc: true,
+        tradingAccounts: true,
       },
     });
 
@@ -88,6 +89,7 @@ export async function DELETE(
       prisma.payment.deleteMany({ where: { userId: id } }),
       prisma.paymentRequest.deleteMany({ where: { userId: id } }),
       prisma.kyc.deleteMany({ where: { userId: id } }),
+      prisma.tradingAccount.deleteMany({ where: { userId: id } }),
       prisma.otp.deleteMany({ where: { email: user.email } }),
       prisma.user.delete({ where: { id } }),
     ]);

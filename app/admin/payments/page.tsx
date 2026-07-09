@@ -25,6 +25,10 @@ interface Payment {
     email: string;
     totalPaid: number;
   };
+  tradingAccount?: {
+    plan: string;
+    mt5Id: string;
+  };
 }
 
 export default function AdminPaymentsPage() {
@@ -259,6 +263,20 @@ export default function AdminPaymentsPage() {
                          <p className="text-emerald-400 font-bold">₹{viewModal.payment.user.totalPaid.toLocaleString('en-IN')}</p>
                       </div>
                    </div>
+
+                   {viewModal.payment.tradingAccount && (
+                     <div className="bg-[#111827]/40 rounded-2xl p-6 border border-white/5 space-y-5 mt-6">
+                        <h4 className="text-sm font-bold text-white mb-2 border-b border-white/5 pb-2">Account Details</h4>
+                        <div>
+                           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Plan</p>
+                           <p className="text-white font-medium">{viewModal.payment.tradingAccount.plan}</p>
+                        </div>
+                        <div>
+                           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">MT5 ID</p>
+                           <p className="text-white font-mono font-bold">{viewModal.payment.tradingAccount.mt5Id}</p>
+                        </div>
+                     </div>
+                   )}
 
                    <div className="bg-[#111827]/40 rounded-2xl p-6 border border-white/5 space-y-5">
                       <h4 className="text-sm font-bold text-white mb-2 border-b border-white/5 pb-2">Transaction Details</h4>
