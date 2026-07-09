@@ -5,13 +5,13 @@ import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function POST(request: NextRequest) {
   try {
-    const authUser = await getAuthUser();
+    const authUser = getAuthUser(request);
     if (!authUser) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
     const kyc = await prisma.kyc.findUnique({
-      where: { userId: authUser.id },
+      where: { userId: authUser.userId },
     });
 
     if (!kyc || kyc.status !== 'APPROVED') {
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       where: { id: accountId },
     });
 
-    if (!account || account.userId !== authUser.id) {
+    if (!account || account.userId !== authUser.userId) {
       return NextResponse.json({ error: 'Account not found' }, { status: 404 });
     }
 
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     // Create a PaymentRequest and Payment simultaneously since user is initiating
     const paymentRequest = await prisma.paymentRequest.create({
       data: {
-        userId: authUser.id,
+        userId: authUser.userId,
         accountId: account.id,
         amount,
         status: 'PENDING',
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 
     const payment = await prisma.payment.create({
       data: {
-        userId: authUser.id,
+        userId: authUser.userId,
         accountId: account.id,
         paymentRequestId: paymentRequest.id,
         amount,

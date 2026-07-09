@@ -1,7 +1,8 @@
 import React from 'react';
 import UserNavbar from '@/components/layout/UserNavbar';
 import UserSidebar from '@/components/layout/UserSidebar';
-import { getAuthUser } from '@/lib/auth';
+import { cookies } from 'next/headers';
+import { verifyToken } from '@/lib/jwt';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
@@ -10,13 +11,20 @@ export default async function AccountsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getAuthUser();
+  const cookieStore = cookies();
+  const token = cookieStore.get('token')?.value;
+
+  if (!token) {
+    redirect('/login');
+  }
+
+  const user = verifyToken(token);
   if (!user) {
     redirect('/login');
   }
 
   const kyc = await prisma.kyc.findUnique({
-    where: { userId: user.id },
+    where: { userId: user.userId },
   });
 
   if (!kyc) {

@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth(request);
     
     const accounts = await prisma.tradingAccount.findMany({
-      where: { userId: user.id },
+      where: { userId: user.userId },
       orderBy: { createdAt: 'desc' },
     });
     
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     const account = await prisma.tradingAccount.create({
       data: {
-        userId: user.id,
+        userId: user.userId,
         type: 'LIVE',
         plan,
         balance: 0,
