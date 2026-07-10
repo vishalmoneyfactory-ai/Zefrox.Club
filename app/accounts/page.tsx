@@ -214,17 +214,26 @@ export default function AccountsPage() {
               {/* Account Details */}
               <div className="flex flex-col items-center space-y-1 mb-8 text-sm">
                 <p className="text-slate-500">Account: <span className="text-slate-800 font-semibold">{account.plan}</span></p>
-                <p className="text-slate-500">MT5 ID: <span className="text-slate-800 font-semibold">{account.mt5Id}</span></p>
-                <p className="text-slate-500 flex items-center gap-2">
-                  MT5 Password: 
-                  <span className="text-slate-800 font-semibold">
-                    {showPasswords[account.id] ? account.mt5Password : '********'}
-                  </span>
-                  <button onClick={() => togglePassword(account.id)} className="text-blue-500 hover:text-blue-700 p-1">
-                    {showPasswords[account.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </p>
-                <p className="text-slate-500">Server: <span className="text-slate-800 font-semibold">{account.server}</span></p>
+                {account.mt5Id ? (
+                  <>
+                    <p className="text-slate-500">MT5 ID: <span className="text-slate-800 font-semibold">{account.mt5Id}</span></p>
+                    <p className="text-slate-500 flex items-center gap-2">
+                      MT5 Password: 
+                      <span className="text-slate-800 font-semibold">
+                        {showPasswords[account.id] ? account.mt5Password : '********'}
+                      </span>
+                      <button onClick={() => togglePassword(account.id)} className="text-blue-500 hover:text-blue-700 p-1">
+                        {showPasswords[account.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </p>
+                    <p className="text-slate-500">Server: <span className="text-slate-800 font-semibold">{account.server}</span></p>
+                  </>
+                ) : (
+                  <div className="mt-2 py-2 px-4 bg-orange-50 border border-orange-200 rounded-lg text-orange-600 font-semibold text-xs flex items-center gap-2">
+                    <History className="w-4 h-4" />
+                    MT5 Credentials Pending Assignment
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}

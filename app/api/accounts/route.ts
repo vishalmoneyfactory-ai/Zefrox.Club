@@ -41,16 +41,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 });
     }
 
-    // Generate random 6 digit MT5 ID
-    const mt5Id = Math.floor(100000 + Math.random() * 900000).toString();
-    
-    // Generate random 8 char alphanumeric MT5 password
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let mt5Password = '';
-    for (let i = 0; i < 8; i++) {
-      mt5Password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
     const account = await prisma.tradingAccount.create({
       data: {
         userId: user.userId,
@@ -59,9 +49,9 @@ export async function POST(request: NextRequest) {
         balance: 0,
         equity: 0,
         margin: 0,
-        mt5Id,
-        mt5Password,
-        server: 'Alfx Limited'
+        mt5Id: '',
+        mt5Password: '',
+        server: ''
       }
     });
 
