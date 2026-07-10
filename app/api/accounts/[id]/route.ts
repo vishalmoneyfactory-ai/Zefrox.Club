@@ -4,11 +4,11 @@ import { requireAdmin } from '@/lib/auth';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     requireAdmin(request);
-    const { id } = await params;
+    const { id } = params;
     const body = await request.json();
     const { balance, mt5Id, mt5Password, server } = body;
 

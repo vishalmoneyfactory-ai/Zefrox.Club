@@ -5,11 +5,11 @@ import { sendKycApprovedEmail } from '@/lib/email';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     requireAdmin(request);
-    const { id } = await params;
+    const { id } = params;
 
     await prisma.kyc.update({
       where: { id },

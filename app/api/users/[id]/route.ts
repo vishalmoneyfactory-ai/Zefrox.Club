@@ -4,11 +4,11 @@ import { requireAdmin } from '@/lib/auth';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     requireAdmin(request);
-    const { id } = await params;
+    const { id } = params;
 
     const user = await prisma.user.findUnique({
       where: { id },
@@ -40,11 +40,11 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     requireAdmin(request);
-    const { id } = await params;
+    const { id } = params;
     const { fullName, email, phone } = await request.json();
 
     const updatedUser = await prisma.user.update({
@@ -69,11 +69,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
     requireAdmin(request);
-    const { id } = await params;
+    const { id } = params;
 
     const user = await prisma.user.findUnique({ where: { id } });
 

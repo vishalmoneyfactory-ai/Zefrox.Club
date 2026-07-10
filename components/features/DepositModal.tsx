@@ -147,17 +147,12 @@ export default function DepositModal({ isOpen, onClose, accountId, onSuccess }: 
                     Please send the exact amount to the details below, then upload a screenshot of your successful transaction.
                   </p>
                   <div className="mt-3 p-3 bg-[#060a14]/50 rounded-lg font-mono text-sm border border-white/5 flex flex-col items-center">
-                    {selectedMethod === 'ADMIN_QR' ? (
+                    {selectedMethod === 'ADMIN_QR' || selectedMethod === 'UPI' ? (
                       <div className="flex flex-col items-center">
-                        <QrCode className="w-32 h-32 text-slate-300 mb-2" />
-                        <span className="text-slate-400">Scan to pay</span>
+                        <img src="/images/admin-qr.jpeg" alt="QR Code" className="w-48 h-48 rounded-lg mb-2 object-contain bg-white p-2" />
+                        <span className="text-slate-400 font-bold mt-2">Scan to pay via UPI</span>
                       </div>
-                    ) : (
-                      <>
-                        <p className="text-slate-400">UPI ID:</p>
-                        <p className="text-emerald-400 font-bold mt-1 text-lg">admin@payflow</p>
-                      </>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               </div>

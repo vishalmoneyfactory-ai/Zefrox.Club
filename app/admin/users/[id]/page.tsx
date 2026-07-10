@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { User, ShieldCheck, Mail, Phone, Calendar, ArrowLeft, Save, Edit, Trash2 } from 'lucide-react';
@@ -29,9 +29,9 @@ interface TradingAccount {
   server: string;
 }
 
-export default function AdminUserDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function AdminUserDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const { id } = use(params);
+  const { id } = params;
   const { showSuccess, showError } = useToast();
   
   const [user, setUser] = useState<UserDetail | null>(null);
