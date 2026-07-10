@@ -73,6 +73,18 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
     }
   };
 
+  const handleDeleteAccount = async (accountId: string) => {
+    if (!confirm('Are you sure you want to delete this trading account? This action cannot be undone.')) return;
+    
+    try {
+      await api.delete(`/api/accounts/${accountId}`);
+      showSuccess('Trading account deleted successfully');
+      fetchUser();
+    } catch (error) {
+      showError('Failed to delete trading account');
+    }
+  };
+
   const startEditing = (account: TradingAccount) => {
     setEditingAccountId(account.id);
     setEditFormData({
@@ -193,6 +205,9 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
                         <Edit className="w-4 h-4" />
                       </button>
                     )}
+                    <button onClick={() => handleDeleteAccount(account.id)} className="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors opacity-0 group-hover:opacity-100">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
 
                   <div className="flex items-center gap-3 mb-6">

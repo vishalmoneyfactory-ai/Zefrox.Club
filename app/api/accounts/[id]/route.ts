@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireAdmin } from '@/lib/auth';
+import { requireAdmin, requireAuth } from '@/lib/auth';
 
 export async function PATCH(
   request: NextRequest,
@@ -29,6 +29,40 @@ export async function PATCH(
     console.error('Update account error:', error);
     return NextResponse.json(
       { error: 'Failed to update account' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const user = requireAuth(request);
+    const { id } = params;
+
+    const account = await prisma.tradingAccount.findUnique({ where: { id } });
+    if (!account) {
+      return NextResponse.json({ error: 'Account not found' }, { status: 404 });
+    }
+
+    if (account.userId !== user.userId && user.role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
+
+    await prisma.$transaction([
+      prisma.payment.deleteMany({ where: { accountId: id } }),
+      prisma.paymentRequest.deleteMany({ where: { accountId: id } }),
+      prisma.tradingAccount.delete({ where: { id } })
+    ]);
+
+    return NextResponse.json({ message: 'Account deleted successfully' });
+  } catch (error) {
+    if (error instanceof Response) return error;
+    console.error('Delete account error:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete account' },
       { status: 500 }
     );
   }
