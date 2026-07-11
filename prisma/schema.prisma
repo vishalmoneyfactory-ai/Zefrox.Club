@@ -24,6 +24,12 @@ enum PaymentRequestStatus {
   COMPLETED
 }
 
+enum WithdrawalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum PaymentStatus {
   PROOF_UPLOADED
   APPROVED
@@ -48,6 +54,7 @@ model User {
   tradingAccounts TradingAccount[]
   paymentRequests PaymentRequest[]
   payments        Payment[]
+  withdrawals     Withdrawal[]
   notifications   Notification[]
   otps            Otp[]
 }
@@ -68,6 +75,7 @@ model TradingAccount {
   user            User             @relation(fields: [userId], references: [id])
   paymentRequests PaymentRequest[]
   payments        Payment[]
+  withdrawals     Withdrawal[]
 }
 
 model Otp {
@@ -136,4 +144,23 @@ model Notification {
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model Withdrawal {
+  id              String           @id @default(cuid())
+  userId          String
+  accountId       String
+  amount          Float
+  method          String           // e.g. 'Bank Transfer' or 'UPI Transfer'
+  bankAccount     String?
+  bankName        String?
+  ifscCode        String?
+  upiId           String?
+  status          WithdrawalStatus @default(PENDING)
+  rejectionReason String?
+  createdAt       DateTime         @default(now())
+  reviewedAt      DateTime?
+  
+  user            User           @relation(fields: [userId], references: [id])
+  account         TradingAccount @relation(fields: [accountId], references: [id])
 }

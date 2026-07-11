@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { User, ShieldCheck, Mail, Phone, Calendar, ArrowLeft, Save, Edit, Trash2 } from 'lucide-react';
+import { User, ShieldCheck, Mail, Phone, Calendar, ArrowLeft, Save, Edit, Trash2, Banknote, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
 import Button from '@/components/ui/Button';
@@ -17,6 +17,7 @@ interface UserDetail {
   createdAt: string;
   kyc?: { id: string; status: string };
   tradingAccounts: TradingAccount[];
+  withdrawals?: any[];
 }
 
 interface TradingAccount {
@@ -277,6 +278,85 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
               ))
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Withdrawals Section */}
+      <div className="bg-[#0b1221] border border-white/10 rounded-3xl p-6 shadow-lg">
+        <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+          <Banknote className="w-5 h-5 text-red-400" />
+          Withdrawal Requests
+        </h3>
+
+        <div className="space-y-4">
+          {!user.withdrawals || user.withdrawals.length === 0 ? (
+            <div className="text-center py-12 bg-[#111827] rounded-2xl border border-dashed border-white/10">
+              <p className="text-slate-400">No withdrawal requests found for this user.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto custom-scrollbar">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/5">
+                    <th className="p-4 text-sm font-semibold text-slate-400">Account</th>
+                    <th className="p-4 text-sm font-semibold text-slate-400">Amount / Method</th>
+                    <th className="p-4 text-sm font-semibold text-slate-400">Details</th>
+                    <th className="p-4 text-sm font-semibold text-slate-400">Status</th>
+                    <th className="p-4 text-sm font-semibold text-slate-400">Date</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {user.withdrawals.map((w: any) => (
+                    <tr key={w.id} className="hover:bg-white/5 transition-colors">
+                      <td className="p-4">
+                        <span className="inline-block px-2 py-0.5 bg-blue-500/10 text-blue-400 rounded text-xs font-bold border border-blue-500/20">
+                          {user.tradingAccounts.find(a => a.id === w.accountId)?.mt5Id || 'Unknown MT5'}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-lg font-black text-white">₹{w.amount.toLocaleString()}</p>
+                        <p className="text-xs text-slate-400 font-semibold">{w.method}</p>
+                      </td>
+                      <td className="p-4">
+                        {w.method === 'UPI Transfer' ? (
+                          <div className="bg-[#0b1221] p-3 rounded-lg border border-white/5 inline-block">
+                            <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">UPI ID</p>
+                            <p className="text-sm text-emerald-400 font-bold">{w.upiId}</p>
+                          </div>
+                        ) : (
+                          <div className="bg-[#0b1221] p-3 rounded-lg border border-white/5 inline-block">
+                            <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Account Number</p>
+                            <p className="text-sm text-blue-400 font-bold mb-1">{w.bankAccount}</p>
+                            <p className="text-xs text-white">IFSC: {w.ifscCode}</p>
+                          </div>
+                        )}
+                      </td>
+                      <td className="p-4">
+                        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${
+                          w.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                          w.status === 'REJECTED' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
+                          'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                        }`}>
+                          {w.status === 'APPROVED' ? <CheckCircle2 className="w-3.5 h-3.5" /> : 
+                           w.status === 'REJECTED' ? <XCircle className="w-3.5 h-3.5" /> : 
+                           <Clock className="w-3.5 h-3.5" />}
+                          {w.status}
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-sm text-slate-300 font-medium">
+                          {new Date(w.createdAt).toLocaleDateString()}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {new Date(w.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>

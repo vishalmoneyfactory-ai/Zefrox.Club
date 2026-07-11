@@ -7,6 +7,7 @@ import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
 import Button from '@/components/ui/Button';
 import DepositModal from '@/components/features/DepositModal';
+import WithdrawalModal from '@/components/features/WithdrawalModal';
 import Link from 'next/link';
 
 interface TradingAccount {
@@ -61,6 +62,7 @@ export default function AccountsPage() {
   const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>({});
   
   const [depositModalOpen, setDepositModalOpen] = useState(false);
+  const [withdrawalModalOpen, setWithdrawalModalOpen] = useState(false);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -95,10 +97,18 @@ export default function AccountsPage() {
   const fetchPayments = async (accountId: string) => {
     setLoadingPayments(true);
     try {
-      const { data } = await api.get(`/api/payments?accountId=${accountId}`);
-      setAccountPayments(data);
+      const [paymentsRes, withdrawalsRes] = await Promise.all([
+        api.get(`/api/payments?accountId=${accountId}`),
+        api.get(`/api/withdrawals?accountId=${accountId}`)
+      ]);
+      const payments = paymentsRes.data.map((p: any) => ({ ...p, type: 'DEPOSIT' }));
+      const withdrawals = withdrawalsRes.data.map((w: any) => ({ ...w, type: 'WITHDRAWAL' }));
+      const merged = [...payments, ...withdrawals].sort((a, b) => 
+        new Date(b.createdAt || b.submittedAt).getTime() - new Date(a.createdAt || a.submittedAt).getTime()
+      );
+      setAccountPayments(merged);
     } catch (error) {
-      showError('Failed to load payment history');
+      showError('Failed to load transaction history');
     } finally {
       setLoadingPayments(false);
     }
@@ -258,7 +268,10 @@ export default function AccountsPage() {
               >
                 Deposit
               </button>
-              <button className="px-8 py-2.5 border border-red-500/50 text-red-400 font-bold rounded-lg hover:bg-red-500/10 transition-all">
+              <button 
+                onClick={() => { setSelectedAccountId(viewingAccountId); setWithdrawalModalOpen(true); }}
+                className="px-8 py-2.5 border border-red-500/50 text-red-400 font-bold rounded-lg hover:bg-red-500/10 transition-all"
+              >
                 Withdraw
               </button>
               <button className="px-8 py-2.5 border border-slate-600 text-slate-300 font-bold rounded-lg hover:bg-slate-800 transition-all">
@@ -292,15 +305,21 @@ export default function AccountsPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {accountPayments.map((payment) => (
+                  {accountPayments.map((payment) => {
+                    const isDeposit = payment.type === 'DEPOSIT';
+                    return (
                     <div key={payment.id} className="bg-[#1f2937] rounded-xl p-5 border border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
                       <div>
                         <div className="flex items-center gap-2 mb-2">
-                          <div className="w-2 h-2 rounded-full bg-teal-400"></div>
-                          <span className="text-teal-400 text-xs font-bold tracking-wider">DEPOSIT</span>
+                          <div className={`w-2 h-2 rounded-full ${isDeposit ? 'bg-teal-400' : 'bg-rose-400'}`}></div>
+                          <span className={`${isDeposit ? 'text-teal-400' : 'text-rose-400'} text-xs font-bold tracking-wider`}>
+                            {isDeposit ? 'DEPOSIT' : 'WITHDRAWAL'}
+                          </span>
                         </div>
                         <p className="text-slate-400 text-xs font-semibold mb-1">Amount:</p>
-                        <p className="text-teal-400 font-bold text-lg">₹{payment.amount.toLocaleString()}</p>
+                        <p className={`${isDeposit ? 'text-teal-400' : 'text-rose-400'} font-bold text-lg`}>
+                          {isDeposit ? '+' : '-'}₹{payment.amount.toLocaleString()}
+                        </p>
                       </div>
                       <div>
                         <p className="text-slate-400 text-xs font-semibold mb-1">Status:</p>
@@ -310,11 +329,11 @@ export default function AccountsPage() {
                       </div>
                       <div>
                         <p className="text-slate-400 text-xs font-semibold mb-1">Date:</p>
-                        <p className="text-white font-bold">{new Date(payment.submittedAt).toLocaleDateString()}</p>
+                        <p className="text-white font-bold">{new Date(payment.submittedAt || payment.createdAt).toLocaleDateString()}</p>
                       </div>
                       <div>
-                        <p className="text-slate-400 text-xs font-semibold mb-1">{payment.upiApp ? 'UPI App:' : 'Transaction ID:'}</p>
-                        <p className="text-white font-bold truncate">{payment.upiApp || payment.transactionId}</p>
+                        <p className="text-slate-400 text-xs font-semibold mb-1">{isDeposit ? (payment.upiApp ? 'UPI App:' : 'Transaction ID:') : 'Method:'}</p>
+                        <p className="text-white font-bold truncate">{isDeposit ? (payment.upiApp || payment.transactionId) : payment.method}</p>
                       </div>
                       {payment.status === 'REJECTED' && payment.rejectionReason && (
                         <div className="col-span-2 md:col-span-4 mt-2 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
@@ -323,7 +342,7 @@ export default function AccountsPage() {
                         </div>
                       )}
                     </div>
-                  ))}
+                  )})}
                 </div>
               )}
             </div>
@@ -452,7 +471,10 @@ export default function AccountsPage() {
                 >
                   DEPOSIT
                 </button>
-                <button className="w-full py-3 bg-white text-red-500 border border-red-200 font-bold rounded-xl hover:bg-red-50 transition-all">
+                <button 
+                  onClick={() => { setSelectedAccountId(account.id); setWithdrawalModalOpen(true); }}
+                  className="w-full py-3 bg-white text-red-500 border border-red-200 font-bold rounded-xl hover:bg-red-50 transition-all"
+                >
                   WITHDRAW
                 </button>
                 <button 
@@ -491,6 +513,18 @@ export default function AccountsPage() {
         onSuccess={() => {
            setDepositModalOpen(false);
            fetchAccounts();
+           if (selectedAccountId) fetchPayments(selectedAccountId);
+        }}
+      />
+      
+      <WithdrawalModal
+        isOpen={withdrawalModalOpen}
+        onClose={() => { setWithdrawalModalOpen(false); setSelectedAccountId(null); }}
+        accountId={selectedAccountId || ''}
+        onSuccess={() => {
+           setWithdrawalModalOpen(false);
+           fetchAccounts();
+           if (selectedAccountId) fetchPayments(selectedAccountId);
         }}
       />
     </div>

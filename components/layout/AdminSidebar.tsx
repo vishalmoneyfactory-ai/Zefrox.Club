@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUIStore } from '@/store/uiStore';
-import { LayoutDashboard, Users, FileCheck, Receipt, FileBarChart, X, ShieldAlert } from 'lucide-react';
+import { LayoutDashboard, Users, FileCheck, Receipt, FileBarChart, X, ShieldAlert, Banknote } from 'lucide-react';
 
 const adminNavLinks = [
   {
@@ -17,6 +17,11 @@ const adminNavLinks = [
     name: 'Manage Users',
     href: '/admin/users',
     icon: <Users className="w-5 h-5" />,
+  },
+  {
+    name: 'Withdrawal Requests',
+    href: '/admin/withdrawals',
+    icon: <Banknote className="w-5 h-5" />,
   },
   {
     name: 'KYC Verification',
