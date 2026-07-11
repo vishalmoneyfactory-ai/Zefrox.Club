@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, Variants } from 'framer-motion';
 import { ShieldCheck, LineChart, Zap, HeadphonesIcon, ArrowRight, Check, Smartphone, MonitorPlay } from 'lucide-react';
@@ -7,6 +8,7 @@ import TickerTape from '@/components/features/TickerTape';
 import MiniChart from '@/components/features/MiniChart';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import api from '@/lib/axios';
 
 const appName = 'Zerofx.club';
 
@@ -75,6 +77,14 @@ const itemVariants: Variants = {
 };
 
 export default function LandingPage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    api.get('/api/users/me')
+      .then(() => setIsLoggedIn(true))
+      .catch(() => setIsLoggedIn(false));
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#060a14] text-slate-200 selection:bg-blue-500/30 selection:text-blue-200 overflow-x-hidden font-sans">
       
@@ -107,9 +117,9 @@ export default function LandingPage() {
             </div>
 
             <div className="flex items-center justify-end">
-              <Link href="/login">
+              <Link href={isLoggedIn ? "/accounts" : "/login"}>
                 <Button variant="primary" size="sm" className="shadow-[0_0_15px_rgba(59,130,246,0.15)] border border-blue-500/30">
-                  Sign In
+                  {isLoggedIn ? "Accounts" : "Sign In"}
                 </Button>
               </Link>
             </div>
@@ -155,9 +165,9 @@ export default function LandingPage() {
               </motion.p>
 
               <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link href="/login">
+                <Link href={isLoggedIn ? "/accounts" : "/login"}>
                   <Button variant="primary" size="lg" className="w-full sm:w-auto shadow-[0_0_30px_rgba(37,99,235,0.4)]">
-                    Start Trading <ArrowRight className="w-5 h-5 ml-2" />
+                    {isLoggedIn ? 'Go to Accounts' : 'Start Trading'} <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </Link>
                 <Link href="/about">
@@ -274,9 +284,9 @@ export default function LandingPage() {
                    ))}
                  </ul>
 
-                 <Link href="/login" className="mt-auto">
+                 <Link href={isLoggedIn ? "/accounts" : "/login"} className="mt-auto">
                    <Button variant="primary" className={`w-full ${acc.popular ? 'shadow-[0_0_20px_rgba(37,99,235,0.3)] border border-blue-500/50' : 'bg-[#111827]/60 hover:bg-[#111827]/80 border border-white/10'}`}>
-                     Trade Now
+                     {isLoggedIn ? 'Go to Accounts' : 'Trade Now'}
                    </Button>
                  </Link>
                </motion.div>
@@ -415,9 +425,9 @@ export default function LandingPage() {
               <p className="text-lg sm:text-xl text-slate-300 font-medium max-w-2xl mx-auto mb-10">
                 Join our secure {appName} platform today. Quick registration, instant KYC verification, and lightning-fast execution.
               </p>
-              <Link href="/login">
+              <Link href={isLoggedIn ? "/accounts" : "/login"}>
                 <Button variant="primary" size="lg" className="shadow-[0_0_30px_rgba(37,99,235,0.4)] border border-blue-500/50">
-                  Create Your Account
+                  {isLoggedIn ? 'View Your Accounts' : 'Create Your Account'}
                 </Button>
               </Link>
             </div>
