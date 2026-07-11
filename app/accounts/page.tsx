@@ -42,6 +42,13 @@ const plans = [
     leverage: '1:500',
     description: 'Premium Account',
     iconColor: 'text-red-400',
+  },
+  {
+    name: 'Platinum +',
+    deposit: '$1000 (₹90000)',
+    leverage: '1:500',
+    description: 'Platinum + Account',
+    iconColor: 'text-yellow-400',
   }
 ];
 
@@ -57,6 +64,10 @@ export default function AccountsPage() {
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  
+  const [viewingAccountId, setViewingAccountId] = useState<string | null>(null);
+  const [accountPayments, setAccountPayments] = useState<any[]>([]);
+  const [loadingPayments, setLoadingPayments] = useState(false);
 
   const { showSuccess, showError } = useToast();
 
@@ -72,6 +83,24 @@ export default function AccountsPage() {
       showError('Failed to load accounts');
     } finally {
       setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (viewingAccountId) {
+      fetchPayments(viewingAccountId);
+    }
+  }, [viewingAccountId]);
+
+  const fetchPayments = async (accountId: string) => {
+    setLoadingPayments(true);
+    try {
+      const { data } = await api.get(`/api/payments?accountId=${accountId}`);
+      setAccountPayments(data);
+    } catch (error) {
+      showError('Failed to load payment history');
+    } finally {
+      setLoadingPayments(false);
     }
   };
 
@@ -113,19 +142,21 @@ export default function AccountsPage() {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="flex justify-center items-center mb-8 relative">
-        {showPlans && (
-          <button 
-            onClick={() => setShowPlans(false)}
-            className="absolute left-0 flex items-center gap-2 px-4 py-2 bg-[#111827]/80 rounded-lg text-sm font-semibold hover:bg-[#1f2937] transition-all"
-          >
-            ← Back to Accounts
-          </button>
-        )}
-        <h1 className="text-3xl font-black tracking-tight text-white">
-          {showPlans ? 'Offers' : 'Accounts'}
-        </h1>
-      </div>
+      {!viewingAccountId && (
+        <div className="flex justify-center items-center mb-8 relative">
+          {showPlans && (
+            <button 
+              onClick={() => setShowPlans(false)}
+              className="absolute left-0 flex items-center gap-2 px-4 py-2 bg-[#111827]/80 rounded-lg text-sm font-semibold hover:bg-[#1f2937] transition-all"
+            >
+              ← Back to Accounts
+            </button>
+          )}
+          <h1 className="text-3xl font-black tracking-tight text-white">
+            {showPlans ? 'Offers' : 'Accounts'}
+          </h1>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex justify-center mb-12">
@@ -163,6 +194,141 @@ export default function AccountsPage() {
         <div className="flex justify-center py-20">
           <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
         </div>
+      ) : viewingAccountId ? (
+        /* Account Detail View */
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-5xl mx-auto space-y-8"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <button 
+              onClick={() => setViewingAccountId(null)}
+              className="p-2 bg-white/5 rounded-xl hover:bg-white/10 transition-colors text-slate-300"
+            >
+              ←
+            </button>
+            <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-bold border border-emerald-500/20">
+              <Shield className="w-3 h-3" />
+              VERIFIED
+            </div>
+          </div>
+
+          {/* Account Detail Card */}
+          <div className="bg-[#111827] rounded-3xl p-8 border border-white/5 shadow-2xl relative overflow-hidden">
+            <div className="flex flex-col items-center mb-8">
+              <span className="text-slate-400 font-semibold mb-2">BALANCE</span>
+              <h2 className="text-5xl font-black text-white mb-6">₹{accounts.find(a => a.id === viewingAccountId)?.balance.toLocaleString('en-IN') || 0}</h2>
+              <div className="flex gap-6 text-sm font-semibold">
+                <span className="text-slate-400">Equity: <span className="text-white">₹{accounts.find(a => a.id === viewingAccountId)?.equity || 0}</span></span>
+                <span className="text-slate-600">|</span>
+                <span className="text-slate-400">Margin: <span className="text-white">₹{accounts.find(a => a.id === viewingAccountId)?.margin || 0}</span></span>
+              </div>
+            </div>
+
+            <div className="bg-slate-800/50 rounded-2xl p-6 mb-8 text-center">
+              <h3 className="text-white font-bold mb-6">MT5 Trading Platform</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <p className="text-xs text-slate-400 font-semibold mb-2">MT5 ID</p>
+                  <p className="text-white font-bold">{accounts.find(a => a.id === viewingAccountId)?.mt5Id || 'Not assigned'}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400 font-semibold mb-2">Password</p>
+                  <p className="text-white font-bold">{accounts.find(a => a.id === viewingAccountId)?.mt5Password || 'Not assigned'}</p>
+                  {!accounts.find(a => a.id === viewingAccountId)?.mt5Password && (
+                    <p className="text-[10px] text-slate-500 mt-2">Contact admin to update your MT5 credentials</p>
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400 font-semibold mb-2">Server</p>
+                  <p className="text-white font-bold">{accounts.find(a => a.id === viewingAccountId)?.server || 'Not assigned'}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center mb-8 text-sm font-semibold">
+              <span className="text-slate-400">ACCOUNT: <span className="text-white">{accounts.find(a => a.id === viewingAccountId)?.plan}</span> | LEVERAGE: <span className="text-white">1:500</span></span>
+            </div>
+
+            <div className="flex justify-center gap-4">
+              <button 
+                onClick={() => { setSelectedAccountId(viewingAccountId); setDepositModalOpen(true); }}
+                className="px-8 py-2.5 bg-gradient-to-r from-teal-400 to-blue-500 text-white font-bold rounded-lg hover:shadow-lg transition-all"
+              >
+                Deposit
+              </button>
+              <button className="px-8 py-2.5 border border-red-500/50 text-red-400 font-bold rounded-lg hover:bg-red-500/10 transition-all">
+                Withdraw
+              </button>
+              <button className="px-8 py-2.5 border border-slate-600 text-slate-300 font-bold rounded-lg hover:bg-slate-800 transition-all">
+                Change Password
+              </button>
+            </div>
+          </div>
+
+          {/* Payment History Section */}
+          <div>
+            <div className="flex gap-4 border-b border-white/10 mb-6">
+              <button className="px-4 py-2 text-white font-bold border-b-2 border-blue-500">
+                Payment History
+              </button>
+              <button className="px-4 py-2 text-slate-500 font-bold hover:text-slate-300 transition-colors">
+                Trading History
+              </button>
+            </div>
+
+            <div className="bg-[#111827] rounded-3xl p-6 border border-white/5 shadow-xl min-h-[300px]">
+              {loadingPayments ? (
+                <div className="flex justify-center py-10">
+                  <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+                </div>
+              ) : accountPayments.length === 0 ? (
+                <div className="text-center py-20">
+                  <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
+                    <History className="w-8 h-8 text-slate-600" />
+                  </div>
+                  <p className="text-slate-400 font-semibold">No payment history found for this account.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {accountPayments.map((payment) => (
+                    <div key={payment.id} className="bg-[#1f2937] rounded-xl p-5 border border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-2 h-2 rounded-full bg-teal-400"></div>
+                          <span className="text-teal-400 text-xs font-bold tracking-wider">DEPOSIT</span>
+                        </div>
+                        <p className="text-slate-400 text-xs font-semibold mb-1">Amount:</p>
+                        <p className="text-teal-400 font-bold text-lg">₹{payment.amount.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-400 text-xs font-semibold mb-1">Status:</p>
+                        <p className={`font-bold ${payment.status === 'APPROVED' ? 'text-emerald-400' : payment.status === 'REJECTED' ? 'text-red-400' : 'text-yellow-400'}`}>
+                          {payment.status}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-slate-400 text-xs font-semibold mb-1">Date:</p>
+                        <p className="text-white font-bold">{new Date(payment.submittedAt).toLocaleDateString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-400 text-xs font-semibold mb-1">Transaction ID:</p>
+                        <p className="text-white font-bold truncate">{payment.transactionId}</p>
+                      </div>
+                      {payment.status === 'REJECTED' && payment.rejectionReason && (
+                        <div className="col-span-2 md:col-span-4 mt-2 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+                          <p className="text-slate-400 text-xs font-semibold mb-1">Rejection Reason:</p>
+                          <p className="text-red-400 text-sm">{payment.rejectionReason}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
       ) : showPlans ? (
         /* Plans View */
         <motion.div 
@@ -289,7 +455,10 @@ export default function AccountsPage() {
                 <button className="w-full py-3 bg-white text-red-500 border border-red-200 font-bold rounded-xl hover:bg-red-50 transition-all">
                   WITHDRAW
                 </button>
-                <button className="w-full py-3 bg-teal-50 text-teal-700 font-bold rounded-xl hover:bg-teal-100 transition-all">
+                <button 
+                  onClick={() => setViewingAccountId(account.id)}
+                  className="w-full py-3 bg-teal-50 text-teal-700 font-bold rounded-xl hover:bg-teal-100 transition-all"
+                >
                   SHOW ACCOUNT DETAILS
                 </button>
               </div>

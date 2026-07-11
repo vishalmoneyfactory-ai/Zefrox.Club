@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid account type' }, { status: 400 });
     }
 
-    if (!['Standard', 'Premium', 'Platinum'].includes(plan)) {
+    if (!['Standard', 'Premium', 'Platinum', 'Platinum +'].includes(plan)) {
       return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 });
     }
 

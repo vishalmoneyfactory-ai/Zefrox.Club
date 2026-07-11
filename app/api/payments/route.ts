@@ -62,8 +62,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(payments);
     }
 
+    const { searchParams } = new URL(request.url);
+    const accountId = searchParams.get('accountId');
+
+    const userWhere: Record<string, unknown> = { userId: authUser.userId };
+    if (accountId) {
+      userWhere.accountId = accountId;
+    }
+
     const payments = await prisma.payment.findMany({
-      where: { userId: authUser.userId },
+      where: userWhere,
       include: {
         paymentRequest: true,
       },
