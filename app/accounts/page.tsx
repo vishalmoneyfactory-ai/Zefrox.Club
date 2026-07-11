@@ -313,8 +313,8 @@ export default function AccountsPage() {
                         <p className="text-white font-bold">{new Date(payment.submittedAt).toLocaleDateString()}</p>
                       </div>
                       <div>
-                        <p className="text-slate-400 text-xs font-semibold mb-1">Transaction ID:</p>
-                        <p className="text-white font-bold truncate">{payment.transactionId}</p>
+                        <p className="text-slate-400 text-xs font-semibold mb-1">{payment.upiApp ? 'UPI App:' : 'Transaction ID:'}</p>
+                        <p className="text-white font-bold truncate">{payment.upiApp || payment.transactionId}</p>
                       </div>
                       {payment.status === 'REJECTED' && payment.rejectionReason && (
                         <div className="col-span-2 md:col-span-4 mt-2 p-3 bg-red-500/10 rounded-lg border border-red-500/20">

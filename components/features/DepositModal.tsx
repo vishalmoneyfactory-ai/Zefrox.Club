@@ -25,8 +25,16 @@ const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string }[] = [
   { id: 'ADMIN_QR', label: 'Manual Admin QR', icon: '📷' }
 ];
 
+const UPI_APPS = [
+  { id: 'PhonePe', label: 'PhonePe', color: 'bg-purple-500 hover:bg-purple-400', icon: 'pe' },
+  { id: 'Google Pay', label: 'Google Pay', color: 'bg-blue-500 hover:bg-blue-400', icon: 'G' },
+  { id: 'Paytm', label: 'Paytm', color: 'bg-blue-600 hover:bg-blue-500', icon: 'paytm' },
+  { id: 'BharatPe', label: 'BharatPe', color: 'bg-emerald-500 hover:bg-emerald-400', icon: 'bharat' }
+];
+
 export default function DepositModal({ isOpen, onClose, accountId, onSuccess }: DepositModalProps) {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
+  const [selectedUpiApp, setSelectedUpiApp] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>('');
@@ -69,6 +77,9 @@ export default function DepositModal({ isOpen, onClose, accountId, onSuccess }: 
     formData.append('accountId', accountId);
     formData.append('amount', amount);
     formData.append('screenshot', file);
+    if (selectedUpiApp) {
+      formData.append('upiApp', selectedUpiApp);
+    }
 
     try {
       await api.post('/api/payments/upload-proof', formData, {
@@ -85,6 +96,7 @@ export default function DepositModal({ isOpen, onClose, accountId, onSuccess }: 
 
   const resetState = () => {
     setSelectedMethod(null);
+    setSelectedUpiApp(null);
     setAmount('');
     setFile(null);
     setPreview('');
@@ -136,6 +148,38 @@ export default function DepositModal({ isOpen, onClose, accountId, onSuccess }: 
                   </span>
                 </button>
               ))}
+            </div>
+          ) : selectedMethod === 'UPI' && !selectedUpiApp ? (
+            <div className="space-y-6">
+              <div className="text-center">
+                <h3 className="text-white font-bold text-lg mb-2">Select UPI App</h3>
+                <p className="text-slate-400 text-sm">Choose your preferred UPI app for payment</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {UPI_APPS.map((app) => (
+                  <button
+                    key={app.id}
+                    onClick={() => setSelectedUpiApp(app.id)}
+                    className={`h-24 ${app.color} rounded-2xl flex flex-col items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg border border-white/10`}
+                  >
+                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center mb-2 shadow-inner">
+                      {app.icon === 'G' ? (
+                        <span className="text-xl font-bold text-blue-500">G</span>
+                      ) : app.icon === 'pe' ? (
+                        <span className="text-xl font-bold text-purple-600">पे</span>
+                      ) : app.icon === 'paytm' ? (
+                        <span className="text-sm font-black text-[#002e6e]">Paytm</span>
+                      ) : (
+                        <span className="text-xs font-black text-emerald-600">Bharat</span>
+                      )}
+                    </div>
+                    <span className="text-white font-bold text-sm tracking-wide">{app.label}</span>
+                  </button>
+                ))}
+              </div>
+              <Button type="button" variant="ghost" className="w-full mt-4 border border-white/10" onClick={() => setSelectedMethod(null)}>
+                Back
+              </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -200,7 +244,13 @@ export default function DepositModal({ isOpen, onClose, accountId, onSuccess }: 
               </div>
 
               <div className="flex gap-3 pt-2">
-                <Button type="button" variant="ghost" className="flex-1 border border-white/10" onClick={() => setSelectedMethod(null)}>
+                <Button type="button" variant="ghost" className="flex-1 border border-white/10" onClick={() => {
+                  if (selectedMethod === 'UPI') {
+                    setSelectedUpiApp(null);
+                  } else {
+                    setSelectedMethod(null);
+                  }
+                }}>
                   Back
                 </Button>
                 <Button type="submit" variant="primary" className="flex-1 shadow-lg shadow-blue-500/20" loading={loading}>

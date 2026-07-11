@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
     const accountId = formData.get('accountId') as string;
     const amountStr = formData.get('amount') as string;
     const screenshot = formData.get('screenshot') as File | null;
+    const upiApp = formData.get('upiApp') as string | null;
 
     if (!accountId) {
       return NextResponse.json({ error: 'Account ID is required' }, { status: 400 });
@@ -74,6 +75,7 @@ export async function POST(request: NextRequest) {
         paymentRequestId: paymentRequest.id,
         amount,
         screenshotUrl,
+        upiApp,
         status: 'PROOF_UPLOADED',
       },
     });
