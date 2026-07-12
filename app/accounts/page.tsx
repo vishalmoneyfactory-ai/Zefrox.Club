@@ -356,28 +356,28 @@ export default function AccountsPage() {
           className="flex flex-wrap justify-center gap-6"
         >
           {plans.map((plan, i) => (
-            <div key={i} className="bg-white rounded-3xl p-6 w-full max-w-sm flex flex-col items-center shadow-xl">
+            <div key={i} className="bg-[#111827] border border-white/5 rounded-3xl p-6 w-full max-w-sm flex flex-col items-center shadow-xl">
               <div className="flex justify-between w-full items-center mb-4">
-                <h3 className="text-xl font-bold text-slate-800">{plan.name}</h3>
-                <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">Live</span>
+                <h3 className="text-xl font-bold text-white">{plan.name}</h3>
+                <span className="bg-rose-500/20 border border-rose-500/20 text-rose-400 text-xs font-bold px-2 py-1 rounded-md">Live</span>
               </div>
               
-              <div className={`w-16 h-16 rounded-full mb-6 flex items-center justify-center bg-slate-50 ${plan.iconColor}`}>
+              <div className={`w-16 h-16 rounded-full mb-6 flex items-center justify-center bg-[#0b1221] ${plan.iconColor}`}>
                 <Shield className="w-8 h-8" />
               </div>
               
               <div className="w-full space-y-3 mb-8">
-                <div className="flex justify-between p-3 bg-teal-50/50 rounded-lg border border-teal-100/50">
-                  <span className="text-slate-500 text-sm">Initial deposit:</span>
-                  <span className="text-slate-800 font-bold text-sm">{plan.deposit}</span>
+                <div className="flex justify-between p-3 bg-[#0b1221] rounded-lg border border-white/5">
+                  <span className="text-slate-400 text-sm">Initial deposit:</span>
+                  <span className="text-white font-bold text-sm">{plan.deposit}</span>
                 </div>
-                <div className="flex justify-between p-3 bg-teal-50/50 rounded-lg border border-teal-100/50">
-                  <span className="text-slate-500 text-sm">Leverage:</span>
-                  <span className="text-slate-800 font-bold text-sm">{plan.leverage}</span>
+                <div className="flex justify-between p-3 bg-[#0b1221] rounded-lg border border-white/5">
+                  <span className="text-slate-400 text-sm">Leverage:</span>
+                  <span className="text-white font-bold text-sm">{plan.leverage}</span>
                 </div>
-                <div className="flex justify-between p-3 bg-teal-50/50 rounded-lg border border-teal-100/50">
-                  <span className="text-slate-500 text-sm">Description:</span>
-                  <span className="text-slate-800 font-bold text-sm">{plan.description}</span>
+                <div className="flex justify-between p-3 bg-[#0b1221] rounded-lg border border-white/5">
+                  <span className="text-slate-400 text-sm">Description:</span>
+                  <span className="text-white font-bold text-sm">{plan.description}</span>
                 </div>
               </div>
 
@@ -399,12 +399,12 @@ export default function AccountsPage() {
           className="flex flex-wrap gap-6 justify-center"
         >
           {filteredAccounts.map(account => (
-            <div key={account.id} className="bg-[#f8f9fa] rounded-3xl p-6 w-full max-w-sm flex flex-col shadow-lg relative border border-slate-200">
+            <div key={account.id} className="bg-[#111827] rounded-3xl p-6 w-full max-w-sm flex flex-col shadow-lg relative border border-white/5">
               {/* Card Header Menu */}
               <div className="absolute top-4 right-4 z-20">
                 <button 
                   onClick={() => setActiveMenuId(activeMenuId === account.id ? null : account.id)}
-                  className="text-slate-400 p-2 hover:bg-slate-200/50 rounded-full transition-colors"
+                  className="text-slate-400 p-2 hover:bg-white/5 rounded-full transition-colors"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
                 </button>
@@ -415,12 +415,12 @@ export default function AccountsPage() {
                       initial={{ opacity: 0, scale: 0.95, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                      className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 z-30"
+                      className="absolute right-0 top-full mt-2 w-48 bg-[#0b1221] border border-white/10 rounded-xl shadow-xl overflow-hidden py-1 z-30"
                     >
                       <button
                         onClick={() => handleDeleteAccount(account.id)}
                         disabled={deletingId === account.id}
-                        className="w-full text-left px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 flex items-center gap-2 disabled:opacity-50"
+                        className="w-full text-left px-4 py-2.5 text-sm font-semibold text-red-400 hover:bg-red-500/10 flex items-center gap-2 disabled:opacity-50"
                       >
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                         {deletingId === account.id ? 'Deleting...' : 'Delete Account'}
@@ -435,28 +435,28 @@ export default function AccountsPage() {
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mb-4 shadow-md text-white">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 </div>
-                <h2 className="text-3xl font-black text-slate-800 tracking-tight">₹{account.balance.toLocaleString('en-IN')}</h2>
+                <h2 className="text-3xl font-black text-white tracking-tight">₹{account.balance.toLocaleString('en-IN')}</h2>
               </div>
               
               {/* Account Details */}
               <div className="flex flex-col items-center space-y-1 mb-8 text-sm">
-                <p className="text-slate-500">Account: <span className="text-slate-800 font-semibold">{account.plan}</span></p>
+                <p className="text-slate-400">Account: <span className="text-white font-semibold">{account.plan}</span></p>
                 {account.mt5Id ? (
                   <>
-                    <p className="text-slate-500">MT5 ID: <span className="text-slate-800 font-semibold">{account.mt5Id}</span></p>
-                    <p className="text-slate-500 flex items-center gap-2">
+                    <p className="text-slate-400">MT5 ID: <span className="text-white font-semibold">{account.mt5Id}</span></p>
+                    <p className="text-slate-400 flex items-center gap-2">
                       MT5 Password: 
-                      <span className="text-slate-800 font-semibold">
+                      <span className="text-white font-semibold">
                         {showPasswords[account.id] ? account.mt5Password : '********'}
                       </span>
                       <button onClick={() => togglePassword(account.id)} className="text-blue-500 hover:text-blue-700 p-1">
                         {showPasswords[account.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </p>
-                    <p className="text-slate-500">Server: <span className="text-slate-800 font-semibold">{account.server}</span></p>
+                    <p className="text-slate-400">Server: <span className="text-white font-semibold">{account.server}</span></p>
                   </>
                 ) : (
-                  <div className="mt-2 py-2 px-4 bg-orange-50 border border-orange-200 rounded-lg text-orange-600 font-semibold text-xs flex items-center gap-2">
+                  <div className="mt-2 py-2 px-4 bg-orange-500/10 border border-orange-500/20 rounded-lg text-orange-400 font-semibold text-xs flex items-center gap-2">
                     <History className="w-4 h-4" />
                     MT5 Credentials Pending Assignment
                   </div>
@@ -473,13 +473,13 @@ export default function AccountsPage() {
                 </button>
                 <button 
                   onClick={() => { setSelectedAccountId(account.id); setWithdrawalModalOpen(true); }}
-                  className="w-full py-3 bg-white text-red-500 border border-red-200 font-bold rounded-xl hover:bg-red-50 transition-all"
+                  className="w-full py-3 bg-[#0b1221] text-red-400 border border-red-500/30 font-bold rounded-xl hover:bg-red-500/10 transition-all"
                 >
                   WITHDRAW
                 </button>
                 <button 
                   onClick={() => setViewingAccountId(account.id)}
-                  className="w-full py-3 bg-teal-50 text-teal-700 font-bold rounded-xl hover:bg-teal-100 transition-all"
+                  className="w-full py-3 bg-[#0b1221] text-teal-400 border border-teal-500/30 font-bold rounded-xl hover:bg-teal-500/10 transition-all"
                 >
                   SHOW ACCOUNT DETAILS
                 </button>

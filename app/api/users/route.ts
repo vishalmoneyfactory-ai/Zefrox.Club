@@ -36,6 +36,12 @@ export async function GET(request: NextRequest) {
           },
         },
         tradingAccounts: true,
+        _count: {
+          select: {
+            payments: { where: { status: 'PROOF_UPLOADED' } },
+            withdrawals: { where: { status: 'PENDING' } },
+          },
+        },
       },
     });
 

@@ -17,6 +17,10 @@ interface UserData {
   createdAt: string;
   kyc?: { id: string; status: string };
   tradingAccounts: { id: string; type: string; plan: string; balance: number }[];
+  _count?: {
+    payments: number;
+    withdrawals: number;
+  };
 }
 
 export default function AdminUsersPage() {
@@ -72,47 +76,47 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Stats and Search Card */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-[#f8f9fa] rounded-2xl p-2 border border-slate-100">
+      <div className="bg-[#0b1221] border border-white/10 rounded-3xl p-6 shadow-lg flex flex-col gap-6">
+        <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-[#111827] rounded-2xl p-2 border border-white/5">
           <div className="relative flex-1 w-full flex items-center">
-            <Search className="w-5 h-5 text-slate-400 absolute left-4" />
+            <Search className="w-5 h-5 text-slate-500 absolute left-4" />
             <input
               type="text"
               placeholder="Search users by name or email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-transparent border-none focus:ring-0 text-slate-800 placeholder-slate-400 font-medium"
+              className="w-full pl-12 pr-4 py-3 bg-transparent border-none focus:ring-0 text-white placeholder-slate-500 font-medium"
             />
           </div>
-          <div className="flex items-center px-4 py-3 bg-white rounded-xl shadow-sm border border-slate-200 gap-2 cursor-pointer w-full md:w-auto">
-            <span className="text-slate-700 font-semibold text-sm">All Users</span>
-            <Filter className="w-4 h-4 text-slate-400" />
+          <div className="flex items-center px-4 py-3 bg-[#060a14] rounded-xl border border-white/10 gap-2 cursor-pointer w-full md:w-auto">
+            <span className="text-slate-300 font-semibold text-sm">All Users</span>
+            <Filter className="w-4 h-4 text-slate-500" />
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-teal-50/50 rounded-2xl p-6 text-center border border-teal-100/50">
-            <h3 className="text-3xl font-black text-slate-800 mb-1">{users.length}</h3>
+          <div className="bg-[#111827] rounded-2xl p-6 text-center border border-white/5">
+            <h3 className="text-3xl font-black text-white mb-1">{users.length}</h3>
             <p className="text-slate-500 text-sm font-semibold">Total Users</p>
           </div>
-          <div className="bg-blue-50/50 rounded-2xl p-6 text-center border border-blue-100/50">
-            <h3 className="text-3xl font-black text-emerald-500 mb-1">{pendingDeposits}</h3>
+          <div className="bg-[#111827] rounded-2xl p-6 text-center border border-white/5">
+            <h3 className="text-3xl font-black text-emerald-400 mb-1">{pendingDeposits}</h3>
             <p className="text-slate-500 text-sm font-semibold">Pending Deposits</p>
           </div>
-          <div className="bg-purple-50/50 rounded-2xl p-6 text-center border border-purple-100/50">
-            <h3 className="text-3xl font-black text-purple-500 mb-1">{pendingWithdrawals}</h3>
+          <div className="bg-[#111827] rounded-2xl p-6 text-center border border-white/5">
+            <h3 className="text-3xl font-black text-purple-400 mb-1">{pendingWithdrawals}</h3>
             <p className="text-slate-500 text-sm font-semibold">Pending Withdrawals</p>
           </div>
-          <div className="bg-orange-50/50 rounded-2xl p-6 text-center border border-orange-100/50">
-            <h3 className="text-3xl font-black text-orange-500 mb-1">{pendingDeposits + pendingWithdrawals}</h3>
+          <div className="bg-[#111827] rounded-2xl p-6 text-center border border-white/5">
+            <h3 className="text-3xl font-black text-orange-400 mb-1">{pendingDeposits + pendingWithdrawals}</h3>
             <p className="text-slate-500 text-sm font-semibold">Total Pending</p>
           </div>
         </div>
       </div>
 
       {/* Users List */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm">
-        <h2 className="text-xl font-bold text-slate-800 mb-6 px-2">Users List</h2>
+      <div className="bg-[#0b1221] border border-white/10 rounded-3xl p-6 shadow-lg">
+        <h2 className="text-xl font-bold text-white mb-6 px-2">Users List</h2>
         
         {loading ? (
           <div className="flex justify-center py-10">
@@ -126,47 +130,52 @@ export default function AdminUsersPage() {
               const primaryPlan = liveAccounts.length > 0 ? liveAccounts[0].plan : 'None';
 
               return (
-                <div key={user.id} className="bg-[#f8f9fa] border border-slate-100 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:shadow-md transition-shadow">
+                <div key={user.id} className="bg-[#111827] border border-white/5 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:bg-white/5 transition-colors">
                   {/* User Info */}
                   <div className="flex-1">
-                    <p className="text-xs text-slate-400 font-semibold mb-1 uppercase tracking-wider">User Information</p>
+                    <p className="text-xs text-slate-500 font-semibold mb-1 uppercase tracking-wider">User Information</p>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold shrink-0">
                         {user.fullName.charAt(0)}
                       </div>
                       <div>
-                        <h4 className="text-slate-800 font-bold">{user.fullName}</h4>
-                        <p className="text-sm text-slate-500">{user.email}</p>
+                        <h4 className="text-white font-bold">{user.fullName}</h4>
+                        <p className="text-sm text-slate-400">{user.email}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Account Details */}
                   <div className="flex-1">
-                    <p className="text-xs text-slate-400 font-semibold mb-1 uppercase tracking-wider">Account Details</p>
-                    <p className="text-slate-800 font-bold">{user.tradingAccounts?.length || 0} Accounts</p>
-                    <p className="text-sm text-slate-500">Primary: {primaryPlan}</p>
+                    <p className="text-xs text-slate-500 font-semibold mb-1 uppercase tracking-wider">Account Details</p>
+                    <p className="text-white font-bold">{user.tradingAccounts?.length || 0} Accounts</p>
+                    <p className="text-sm text-slate-400">Primary: {primaryPlan}</p>
                   </div>
 
                   {/* Status & Balance */}
                   <div className="flex-1">
-                    <p className="text-xs text-slate-400 font-semibold mb-1 uppercase tracking-wider">Status & Balance</p>
+                    <p className="text-xs text-slate-500 font-semibold mb-1 uppercase tracking-wider">Status & Balance</p>
                     <div className="flex items-center gap-1.5 mb-0.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                      <span className="text-slate-800 font-bold">Active</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                      <span className="text-white font-bold">Active</span>
                     </div>
-                    <p className="text-sm font-bold text-emerald-500">₹{totalBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                    <p className="text-sm font-bold text-emerald-400">₹{totalBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                   </div>
 
                   {/* Last Login & Action */}
                   <div className="flex items-center gap-6">
                     <div className="hidden sm:block text-right">
-                      <p className="text-xs text-slate-400 font-semibold mb-1 uppercase tracking-wider">Last Login</p>
-                      <p className="text-sm text-slate-800 font-medium">{new Date(user.createdAt).toLocaleDateString('en-GB')}</p>
+                      <p className="text-xs text-slate-500 font-semibold mb-1 uppercase tracking-wider">Last Login</p>
+                      <p className="text-sm text-slate-300 font-medium">{new Date(user.createdAt).toLocaleDateString('en-GB')}</p>
                     </div>
                     <Link href={`/admin/users/${user.id}`}>
-                      <button className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-teal-400 to-indigo-500 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all hover:scale-105">
+                      <button className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-teal-400 to-indigo-500 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all hover:scale-105">
                         Manage <ArrowRight className="w-4 h-4" />
+                        {((user._count?.payments ?? 0) + (user._count?.withdrawals ?? 0)) > 0 && (
+                          <span className="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center text-[11px] font-black border-2 border-white shadow-md animate-pulse">
+                            {(user._count?.payments ?? 0) + (user._count?.withdrawals ?? 0)}
+                          </span>
+                        )}
                       </button>
                     </Link>
                   </div>
