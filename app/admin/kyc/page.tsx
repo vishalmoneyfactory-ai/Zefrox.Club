@@ -99,23 +99,24 @@ export default function AdminKycPage() {
         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] mix-blend-screen -translate-y-1/2 -translate-x-1/4" />
       </div>
 
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
             <span className="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
                <ShieldCheck className="w-6 h-6 text-indigo-400" />
             </span>
             KYC Verification
           </h1>
-          <p className="text-slate-400 mt-2 font-medium">Review and verify user identity documents.</p>
+          <p className="text-slate-400 mt-1 font-medium text-sm">Review and verify user identity documents.</p>
         </div>
         
-        <div className="flex bg-[#111827]/60 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md shadow-inner">
-          {['ALL', 'PENDING', 'APPROVED', 'REJECTED'].map((f) => (
+        {/* Scrollable filter tabs */}
+        <div className="flex bg-[#111827]/60 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md shadow-inner overflow-x-auto max-w-full">
+          {(['ALL', 'PENDING', 'APPROVED', 'REJECTED'] as const).map((f) => (
             <button
               key={f}
-              onClick={() => setFilter(f as any)}
-              className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${
+              onClick={() => setFilter(f)}
+              className={`px-3 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap ${
                 filter === f
                   ? 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white'
                   : 'text-slate-400 hover:text-white hover:bg-white/5'
@@ -134,7 +135,7 @@ export default function AdminKycPage() {
               <Spinner size="lg" className="text-blue-500" />
             </div>
           ) : kycRecords.length === 0 ? (
-            <div className="p-20 text-center">
+            <div className="p-16 text-center">
                <div className="w-20 h-20 mx-auto bg-[#111827] rounded-full flex items-center justify-center mb-6 border border-white/5">
                  <ShieldCheck className="w-8 h-8 text-slate-500" />
                </div>
@@ -142,56 +143,47 @@ export default function AdminKycPage() {
                <p className="text-slate-400 font-medium">All caught up!</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-white/10 bg-[#111827]/60 backdrop-blur-md">
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">User</th>
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Submitted</th>
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Aadhaar</th>
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5 text-slate-300">
-                  {kycRecords.map((record) => (
-                    <tr key={record.id} className="hover:bg-white/[0.02] transition-colors group">
-                      <td className="px-6 py-4">
-                        <div className="font-bold text-white mb-0.5">{record.fullName}</div>
-                        <div className="text-xs text-slate-500 font-medium">{record.user.email}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm font-medium">
-                          {new Date(record.submittedAt).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="font-mono text-sm bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-white/5 inline-block">
-                           {record.aadhaarNumber || 'N/A'}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <Badge variant={
-                          record.status === 'APPROVED' ? 'approved' : 
-                          record.status === 'REJECTED' ? 'rejected' : 'pending'
-                        }>
-                          {record.status}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => setViewModal({ open: true, record })}
-                          className="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          Review <Eye className="w-4 h-4 ml-2 inline" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="divide-y divide-white/5">
+              {kycRecords.map((record) => (
+                <div key={record.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4 hover:bg-white/[0.02] transition-colors">
+                  {/* Left: user info */}
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold shrink-0">
+                      {record.fullName.charAt(0)}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-bold text-white truncate">{record.fullName}</p>
+                      <p className="text-xs text-slate-500 truncate">{record.user.email}</p>
+                    </div>
+                  </div>
+
+                  {/* Middle: metadata */}
+                  <div className="flex flex-wrap gap-2 sm:gap-4 items-center">
+                    <div className="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg border border-white/5 font-mono">
+                      {record.aadhaarNumber || 'N/A'}
+                    </div>
+                    <p className="text-xs text-slate-400 font-medium hidden sm:block">
+                      {new Date(record.submittedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    </p>
+                    <Badge variant={
+                      record.status === 'APPROVED' ? 'approved' : 
+                      record.status === 'REJECTED' ? 'rejected' : 'pending'
+                    }>
+                      {record.status}
+                    </Badge>
+                  </div>
+
+                  {/* Right: action */}
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setViewModal({ open: true, record })}
+                    className="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 w-full sm:w-auto"
+                  >
+                    Review <Eye className="w-4 h-4 ml-1.5 inline" />
+                  </Button>
+                </div>
+              ))}
             </div>
           )}
         </Card>

@@ -227,20 +227,20 @@ export default function AccountsPage() {
           </div>
 
           {/* Account Detail Card */}
-          <div className="bg-[#111827] rounded-3xl p-8 border border-white/5 shadow-2xl relative overflow-hidden">
+          <div className="bg-[#111827] rounded-3xl p-4 sm:p-8 border border-white/5 shadow-2xl relative overflow-hidden">
             <div className="flex flex-col items-center mb-8">
               <span className="text-slate-400 font-semibold mb-2">BALANCE</span>
-              <h2 className="text-5xl font-black text-white mb-6">₹{accounts.find(a => a.id === viewingAccountId)?.balance.toLocaleString('en-IN') || 0}</h2>
-              <div className="flex gap-6 text-sm font-semibold">
+              <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">₹{accounts.find(a => a.id === viewingAccountId)?.balance.toLocaleString('en-IN') || 0}</h2>
+              <div className="flex flex-wrap gap-4 sm:gap-6 text-sm font-semibold justify-center">
                 <span className="text-slate-400">Equity: <span className="text-white">₹{accounts.find(a => a.id === viewingAccountId)?.equity || 0}</span></span>
                 <span className="text-slate-600">|</span>
                 <span className="text-slate-400">Margin: <span className="text-white">₹{accounts.find(a => a.id === viewingAccountId)?.margin || 0}</span></span>
               </div>
             </div>
 
-            <div className="bg-slate-800/50 rounded-2xl p-6 mb-8 text-center">
+            <div className="bg-slate-800/50 rounded-2xl p-4 sm:p-6 mb-8 text-center">
               <h3 className="text-white font-bold mb-6">MT5 Trading Platform</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left sm:text-center">
                 <div>
                   <p className="text-xs text-slate-400 font-semibold mb-2">MT5 ID</p>
                   <p className="text-white font-bold">{accounts.find(a => a.id === viewingAccountId)?.mt5Id || 'Not assigned'}</p>
@@ -263,20 +263,20 @@ export default function AccountsPage() {
               <span className="text-slate-400">ACCOUNT: <span className="text-white">{accounts.find(a => a.id === viewingAccountId)?.plan}</span> | LEVERAGE: <span className="text-white">1:500</span></span>
             </div>
 
-            <div className="flex justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
               <button 
                 onClick={() => { setSelectedAccountId(viewingAccountId); setDepositModalOpen(true); }}
-                className="px-8 py-2.5 bg-gradient-to-r from-teal-400 to-blue-500 text-white font-bold rounded-lg hover:shadow-lg transition-all"
+                className="px-6 sm:px-8 py-2.5 bg-gradient-to-r from-teal-400 to-blue-500 text-white font-bold rounded-lg hover:shadow-lg transition-all"
               >
                 Deposit
               </button>
               <button 
                 onClick={() => { setSelectedAccountId(viewingAccountId); setWithdrawalModalOpen(true); }}
-                className="px-8 py-2.5 border border-red-500/50 text-red-400 font-bold rounded-lg hover:bg-red-500/10 transition-all"
+                className="px-6 sm:px-8 py-2.5 border border-red-500/50 text-red-400 font-bold rounded-lg hover:bg-red-500/10 transition-all"
               >
                 Withdraw
               </button>
-              <button className="px-8 py-2.5 border border-slate-600 text-slate-300 font-bold rounded-lg hover:bg-slate-800 transition-all">
+              <button className="px-6 sm:px-8 py-2.5 border border-slate-600 text-slate-300 font-bold rounded-lg hover:bg-slate-800 transition-all">
                 Change Password
               </button>
             </div>
@@ -310,7 +310,7 @@ export default function AccountsPage() {
                   {accountPayments.map((payment) => {
                     const isDeposit = payment.type === 'DEPOSIT';
                     return (
-                    <div key={payment.id} className="bg-[#1f2937] rounded-xl p-5 border border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
+                    <div key={payment.id} className="bg-[#1f2937] rounded-xl p-5 border border-white/5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-center">
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <div className={`w-2 h-2 rounded-full ${isDeposit ? 'bg-teal-400' : 'bg-rose-400'}`}></div>
@@ -338,7 +338,7 @@ export default function AccountsPage() {
                         <p className="text-white font-bold truncate">{isDeposit ? (payment.upiApp || payment.transactionId) : payment.method}</p>
                       </div>
                       {payment.status === 'REJECTED' && payment.rejectionReason && (
-                        <div className="col-span-2 md:col-span-4 mt-2 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+                        <div className="col-span-1 sm:col-span-2 md:col-span-4 mt-2 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
                           <p className="text-slate-400 text-xs font-semibold mb-1">Rejection Reason:</p>
                           <p className="text-red-400 text-sm">{payment.rejectionReason}</p>
                         </div>
@@ -401,7 +401,7 @@ export default function AccountsPage() {
           className="flex flex-wrap gap-6 justify-center"
         >
           {filteredAccounts.map(account => (
-            <div key={account.id} className="bg-[#111827] rounded-3xl p-6 w-full max-w-sm flex flex-col shadow-lg relative border border-white/5">
+            <div key={account.id} className="bg-[#111827] rounded-3xl p-4 sm:p-6 w-full max-w-sm flex flex-col shadow-lg relative border border-white/5">
               {/* Card Header Menu */}
               <div className="absolute top-4 right-4 z-20">
                 <button 
@@ -498,7 +498,7 @@ export default function AccountsPage() {
                 setShowPlans(true);
               }
             }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 border-dashed rounded-3xl p-6 w-full max-w-sm flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-all min-h-[480px] group"
+            className="bg-white/5 backdrop-blur-sm border border-white/10 border-dashed rounded-3xl p-4 sm:p-6 w-full max-w-sm flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-all min-h-[300px] sm:min-h-[480px] group"
           >
             <div className="w-16 h-16 rounded-full bg-gradient-to-r from-teal-400 to-blue-500 flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform shadow-lg">
               <Plus className="w-8 h-8" />

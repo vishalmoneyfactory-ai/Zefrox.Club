@@ -139,7 +139,7 @@ export default function AdminDashboardPage() {
 
       <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-8">
         <motion.div variants={itemVariants} className="mb-4">
-          <h1 className="text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
             <Activity className="w-8 h-8 text-blue-500" /> Command Center
           </h1>
           <p className="text-slate-400 mt-2 font-medium">Overview of platform activity and management</p>
@@ -157,7 +157,7 @@ export default function AdminDashboardPage() {
 
         {/* Create Payment Request - ADDED relative z-50 HERE TO FIX DROPDOWN ISSUE */}
         <motion.div variants={itemVariants} className="relative z-50">
-          <Card glass glow className="p-6 border-white/5 bg-[#0b1221]/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] rounded-2xl relative">
+          <Card glass glow className="p-4 sm:p-6 border-white/5 bg-[#0b1221]/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] rounded-2xl relative">
             <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
               <PlusCircle className="w-5 h-5 text-blue-400" /> Create Payment Request
             </h2>

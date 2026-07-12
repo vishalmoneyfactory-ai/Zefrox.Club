@@ -156,7 +156,7 @@ export default function AdminPaymentsPage() {
               <Spinner size="lg" className="text-blue-500" />
             </div>
           ) : payments.length === 0 ? (
-            <div className="p-20 text-center">
+            <div className="p-16 text-center">
                <div className="w-20 h-20 mx-auto bg-[#111827] rounded-full flex items-center justify-center mb-6 border border-white/5">
                  <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                </div>
@@ -164,53 +164,43 @@ export default function AdminPaymentsPage() {
                <p className="text-slate-400 font-medium">All deposits have been verified!</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-white/10 bg-[#111827]/60 backdrop-blur-md">
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">User</th>
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Amount</th>
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Transaction ID</th>
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-5 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5 text-slate-300">
-                  {payments.map((payment) => (
-                    <tr key={payment.id} className="hover:bg-white/[0.02] transition-colors group">
-                      <td className="px-6 py-4">
-                        <div className="font-bold text-white mb-0.5">{payment.user.fullName}</div>
-                        <div className="text-xs text-slate-500 font-medium">{payment.user.email}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-lg font-black text-emerald-400">
-                           ₹{payment.amount.toLocaleString('en-IN')}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="font-mono text-sm bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-white/5 inline-block">
-                           {payment.transactionId}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm font-medium">
-                          {new Date(payment.submittedAt).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => setViewModal({ open: true, payment })}
-                          className="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          Verify <Eye className="w-4 h-4 ml-2 inline" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="divide-y divide-white/5">
+              {payments.map((payment) => (
+                <div key={payment.id} className="p-4 sm:p-5 hover:bg-white/[0.02] transition-colors">
+                  {/* Top row */}
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold shrink-0 text-sm">
+                        {payment.user.fullName.charAt(0)}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-white truncate">{payment.user.fullName}</p>
+                        <p className="text-xs text-slate-500 truncate">{payment.user.email}</p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-lg font-black text-emerald-400">₹{payment.amount.toLocaleString('en-IN')}</p>
+                      <p className="text-[10px] text-slate-500">{new Date(payment.submittedAt).toLocaleDateString('en-IN')}</p>
+                    </div>
+                  </div>
+
+                  {/* Transaction ID */}
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">TXN:</span>
+                    <span className="text-xs font-mono text-slate-300 bg-slate-800 px-2 py-0.5 rounded border border-white/5 truncate max-w-[180px] sm:max-w-full">{payment.transactionId}</span>
+                  </div>
+
+                  {/* Action button — always visible */}
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setViewModal({ open: true, payment })}
+                    className="w-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20"
+                  >
+                    Verify & Review <Eye className="w-4 h-4 ml-1.5 inline" />
+                  </Button>
+                </div>
+              ))}
             </div>
           )}
         </Card>

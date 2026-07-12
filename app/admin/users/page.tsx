@@ -68,11 +68,11 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-8">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-black text-white">
+      <div className="text-center mb-6 px-2">
+        <h1 className="text-2xl sm:text-3xl font-black text-white">
           User <span className="text-blue-500">Management</span>
         </h1>
-        <p className="text-slate-400 mt-2">Select a user to manage their accounts</p>
+        <p className="text-slate-400 mt-2 text-sm sm:text-base">Select a user to manage their accounts</p>
       </div>
 
       {/* Stats and Search Card */}
@@ -130,54 +130,45 @@ export default function AdminUsersPage() {
               const primaryPlan = liveAccounts.length > 0 ? liveAccounts[0].plan : 'None';
 
               return (
-                <div key={user.id} className="bg-[#111827] border border-white/5 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:bg-white/5 transition-colors">
-                  {/* User Info */}
-                  <div className="flex-1">
-                    <p className="text-xs text-slate-500 font-semibold mb-1 uppercase tracking-wider">User Information</p>
-                    <div className="flex items-center gap-3">
+                <div key={user.id} className="bg-[#111827] border border-white/5 rounded-2xl p-4 sm:p-5 flex flex-col gap-4 hover:bg-white/5 transition-colors">
+                  {/* Top row: avatar + name + manage button */}
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
                       <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold shrink-0">
                         {user.fullName.charAt(0)}
                       </div>
-                      <div>
-                        <h4 className="text-white font-bold">{user.fullName}</h4>
-                        <p className="text-sm text-slate-400">{user.email}</p>
+                      <div className="min-w-0">
+                        <h4 className="text-white font-bold truncate">{user.fullName}</h4>
+                        <p className="text-xs text-slate-400 truncate">{user.email}</p>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Account Details */}
-                  <div className="flex-1">
-                    <p className="text-xs text-slate-500 font-semibold mb-1 uppercase tracking-wider">Account Details</p>
-                    <p className="text-white font-bold">{user.tradingAccounts?.length || 0} Accounts</p>
-                    <p className="text-sm text-slate-400">Primary: {primaryPlan}</p>
-                  </div>
-
-                  {/* Status & Balance */}
-                  <div className="flex-1">
-                    <p className="text-xs text-slate-500 font-semibold mb-1 uppercase tracking-wider">Status & Balance</p>
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                      <span className="text-white font-bold">Active</span>
-                    </div>
-                    <p className="text-sm font-bold text-emerald-400">₹{totalBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-                  </div>
-
-                  {/* Last Login & Action */}
-                  <div className="flex items-center gap-6">
-                    <div className="hidden sm:block text-right">
-                      <p className="text-xs text-slate-500 font-semibold mb-1 uppercase tracking-wider">Last Login</p>
-                      <p className="text-sm text-slate-300 font-medium">{new Date(user.createdAt).toLocaleDateString('en-GB')}</p>
-                    </div>
-                    <Link href={`/admin/users/${user.id}`}>
-                      <button className="relative flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-teal-400 to-indigo-500 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all hover:scale-105">
+                    <Link href={`/admin/users/${user.id}`} className="shrink-0">
+                      <button className="relative flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-400 to-indigo-500 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-sm">
                         Manage <ArrowRight className="w-4 h-4" />
                         {((user._count?.payments ?? 0) + (user._count?.withdrawals ?? 0)) > 0 && (
-                          <span className="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center text-[11px] font-black border-2 border-white shadow-md animate-pulse">
+                          <span className="absolute -top-2 -right-2 w-5 h-5 bg-rose-500 text-white rounded-full flex items-center justify-center text-[10px] font-black border-2 border-[#111827] shadow-md animate-pulse">
                             {(user._count?.payments ?? 0) + (user._count?.withdrawals ?? 0)}
                           </span>
                         )}
                       </button>
                     </Link>
+                  </div>
+
+                  {/* Bottom row: account + balance + status */}
+                  <div className="grid grid-cols-3 gap-3 pt-3 border-t border-white/5">
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Accounts</p>
+                      <p className="text-white font-bold text-sm">{user.tradingAccounts?.length || 0}</p>
+                      <p className="text-xs text-slate-400">{primaryPlan}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Balance</p>
+                      <p className="text-sm font-bold text-emerald-400">₹{totalBalance.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Joined</p>
+                      <p className="text-xs text-slate-300 font-medium">{new Date(user.createdAt).toLocaleDateString('en-GB')}</p>
+                    </div>
                   </div>
                 </div>
               );

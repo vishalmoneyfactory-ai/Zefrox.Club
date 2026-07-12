@@ -131,14 +131,14 @@ export default function ProfilePage() {
       </div>
 
       <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-6">
-        <motion.div variants={itemVariants} className="mb-8">
-          <h1 className="text-3xl font-black text-white drop-shadow-sm flex items-center gap-4">
-            <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl">
-              <User className="w-8 h-8 text-indigo-400" /> 
+        <motion.div variants={itemVariants} className="mb-6">
+          <h1 className="text-2xl sm:text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
+            <div className="p-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl shrink-0">
+              <User className="w-6 h-6 text-indigo-400" /> 
             </div>
             User Profile
           </h1>
-          <p className="text-slate-400 mt-3 font-medium">Manage your personal information and view statistics</p>
+          <p className="text-slate-400 mt-2 font-medium text-sm">Manage your personal information and view statistics</p>
         </motion.div>
 
         {/* Personal Information */}
@@ -285,29 +285,29 @@ export default function ProfilePage() {
 
         {/* Payment Statistics */}
         <motion.div variants={itemVariants}>
-          <Card glass className="p-6 sm:p-10 border-white/10 bg-[#0b1221]/80 shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
-            <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3 border-b border-white/5 pb-6">
-              <div className="p-2.5 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+          <Card glass className="p-4 sm:p-8 border-white/10 bg-[#0b1221]/80 shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
+            <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-3 border-b border-white/5 pb-5">
+              <div className="p-2 bg-blue-500/10 border border-blue-500/20 rounded-xl">
                 <Hash className="w-5 h-5 text-blue-400" /> 
               </div>
               Trading Statistics
             </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="p-6 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
-                <p className="text-3xl font-black text-emerald-400">₹{user.totalPaid.toLocaleString('en-IN')}</p>
-                <p className="text-[10px] font-bold text-emerald-500/80 uppercase tracking-widest mt-3">Total Paid</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+              <div className="p-4 sm:p-5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
+                <p className="text-xl sm:text-3xl font-black text-emerald-400">₹{user.totalPaid.toLocaleString('en-IN')}</p>
+                <p className="text-[10px] font-bold text-emerald-500/80 uppercase tracking-widest mt-2">Total Paid</p>
               </div>
-              <div className="p-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
-                <p className="text-3xl font-black text-blue-400">{approvedCount}</p>
-                <p className="text-[10px] font-bold text-blue-500/80 uppercase tracking-widest mt-3">Approved</p>
+              <div className="p-4 sm:p-5 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
+                <p className="text-2xl sm:text-3xl font-black text-blue-400">{approvedCount}</p>
+                <p className="text-[10px] font-bold text-blue-500/80 uppercase tracking-widest mt-2">Approved</p>
               </div>
-              <div className="p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
-                <p className="text-3xl font-black text-yellow-400">{pendingCount}</p>
-                <p className="text-[10px] font-bold text-yellow-500/80 uppercase tracking-widest mt-3">Pending Req</p>
+              <div className="p-4 sm:p-5 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
+                <p className="text-2xl sm:text-3xl font-black text-yellow-400">{pendingCount}</p>
+                <p className="text-[10px] font-bold text-yellow-500/80 uppercase tracking-widest mt-2">Pending</p>
               </div>
-              <div className="p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
-                <p className="text-3xl font-black text-indigo-400">₹{pendingAmount.toLocaleString('en-IN')}</p>
-                <p className="text-[10px] font-bold text-indigo-500/80 uppercase tracking-widest mt-3">Pending Amt</p>
+              <div className="p-4 sm:p-5 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex flex-col items-center justify-center text-center shadow-inner">
+                <p className="text-xl sm:text-3xl font-black text-indigo-400">₹{pendingAmount.toLocaleString('en-IN')}</p>
+                <p className="text-[10px] font-bold text-indigo-500/80 uppercase tracking-widest mt-2">Pending Amt</p>
               </div>
             </div>
           </Card>

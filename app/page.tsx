@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, Variants } from 'framer-motion';
-import { ShieldCheck, LineChart, Zap, HeadphonesIcon, ArrowRight, Check, Smartphone, MonitorPlay } from 'lucide-react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { ShieldCheck, LineChart, Zap, HeadphonesIcon, ArrowRight, Check, Smartphone, MonitorPlay, Menu, X } from 'lucide-react';
 import TickerTape from '@/components/features/TickerTape';
 import MiniChart from '@/components/features/MiniChart';
 import Button from '@/components/ui/Button';
@@ -44,17 +44,24 @@ const accountTypes = [
     popular: false,
   },
   {
-    name: 'Premium',
+    name: 'Platinum',
     desc: 'Advanced features for serious traders',
     deposit: '$100',
     features: ['100% deposit bonus', 'Priority support', 'Advanced analytics', 'Lower spreads', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
-    popular: true,
+    popular: false,
   },
   {
-    name: 'Platinum',
+    name: 'Premium',
     desc: 'Premium trading experience with exclusive benefits',
     deposit: '$500',
     features: ['100% deposit bonus', 'Personal account manager', 'VIP support', 'Exclusive market insights', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
+    popular: true,
+  },
+  {
+    name: 'Platinum +',
+    desc: 'The ultimate trading experience for VIPs',
+    deposit: '$1000',
+    features: ['100% deposit bonus', 'Dedicated account manager', '24/7 VIP support', 'Premium market insights', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
     popular: false,
   }
 ];
@@ -78,6 +85,7 @@ const itemVariants: Variants = {
 
 export default function LandingPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     api.get('/api/users/me')
@@ -106,9 +114,9 @@ export default function LandingPage() {
         className="fixed w-full z-50 top-0 transition-all duration-300 bg-[#060a14]/60 backdrop-blur-xl border-b border-white/5 flex flex-col"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16 sm:h-20">
             <div className="flex items-center justify-start gap-3">
-              <span className="text-2xl font-black tracking-tighter text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">{appName}</span>
+              <span className="text-xl sm:text-2xl font-black tracking-tighter text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">{appName}</span>
             </div>
             
             <div className="hidden md:flex items-center justify-center space-x-8">
@@ -116,19 +124,43 @@ export default function LandingPage() {
               <Link href="/about" className="text-slate-400 font-medium hover:text-white transition-colors pb-1">About Us</Link>
             </div>
 
-            <div className="flex items-center justify-end">
+            <div className="flex items-center gap-3">
               <Link href={isLoggedIn ? "/accounts" : "/login"}>
                 <Button variant="primary" size="sm" className="shadow-[0_0_15px_rgba(59,130,246,0.15)] border border-blue-500/30">
                   {isLoggedIn ? "Accounts" : "Sign In"}
                 </Button>
               </Link>
+              {/* Mobile hamburger */}
+              <button
+                className="md:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Mobile menu dropdown */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden overflow-hidden border-t border-white/10 bg-[#060a14]/90 backdrop-blur-xl"
+            >
+              <div className="flex flex-col px-4 py-4 gap-2">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-xl text-blue-400 font-bold bg-blue-500/10 border border-blue-500/20">Home</Link>
+                <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-xl text-slate-300 font-semibold hover:bg-white/5 transition-colors">About Us</Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
 
       {/* Hero Section */}
-      <header className="relative pt-32 pb-32 z-10">
+      <header className="relative pt-24 pb-16 sm:pt-32 sm:pb-32 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Ticker Tape */}
@@ -183,7 +215,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="flex-1 w-full max-w-lg lg:max-w-xl z-10"
+              className="flex-1 w-full max-w-lg lg:max-w-xl z-10 mt-8 lg:mt-0"
             >
               <div className="bg-[#0b1221]/80 backdrop-blur-2xl border border-white/10 p-4 h-[350px] relative rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-[2rem] blur opacity-10"></div>
@@ -250,7 +282,7 @@ export default function LandingPage() {
              <p className="text-lg text-slate-400 font-medium max-w-2xl mx-auto">Choose the account that fits your trading style</p>
            </motion.div>
            
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto px-2">
              {accountTypes.map((acc, index) => (
                <motion.div
                  key={acc.name}
@@ -258,7 +290,7 @@ export default function LandingPage() {
                  whileInView={{ opacity: 1, y: 0 }}
                  viewport={{ once: true }}
                  transition={{ delay: index * 0.1 }}
-                 className={`relative bg-[#060a14]/80 backdrop-blur-xl border rounded-3xl p-8 flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.3)] ${acc.popular ? 'border-blue-500/50 scale-105 z-10' : 'border-white/5'}`}
+                 className={`relative bg-[#060a14]/80 backdrop-blur-xl border rounded-3xl p-6 sm:p-8 flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.3)] ${acc.popular ? 'border-blue-500/50 scale-105 z-10' : 'border-white/5'}`}
                >
                  {acc.popular && (
                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
@@ -322,7 +354,7 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="bg-[#0b1221]/60 backdrop-blur-xl border border-white/5 hover:border-blue-500/30 hover:bg-[#0b1221]/80 h-full text-center group rounded-[2rem] p-8 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
+                <div className="bg-[#0b1221]/60 backdrop-blur-xl border border-white/5 hover:border-blue-500/30 hover:bg-[#0b1221]/80 h-full text-center group rounded-[2rem] p-6 sm:p-8 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
                   <div className="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
                     {feature.icon}
                   </div>
