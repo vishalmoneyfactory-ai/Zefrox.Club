@@ -353,10 +353,10 @@ export default function AccountsPage() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-wrap justify-center gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full max-w-7xl mx-auto"
         >
           {plans.map((plan, i) => (
-            <div key={i} className="bg-[#111827] border border-white/5 rounded-3xl p-6 w-full max-w-sm flex flex-col items-center shadow-xl">
+            <div key={i} className="bg-[#111827] border border-white/5 rounded-3xl p-6 w-full flex flex-col items-center shadow-xl">
               <div className="flex justify-between w-full items-center mb-4">
                 <h3 className="text-xl font-bold text-white">{plan.name}</h3>
                 <span className="bg-rose-500/20 border border-rose-500/20 text-rose-400 text-xs font-bold px-2 py-1 rounded-md">Live</span>
