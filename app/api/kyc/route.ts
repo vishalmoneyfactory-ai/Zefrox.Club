@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth, requireAdmin } from '@/lib/auth';
 import { uploadToCloudinary } from '@/lib/cloudinary';
+import { notifyAdmins } from '@/lib/notifications';
 
 export async function POST(request: NextRequest) {
   try {
@@ -86,6 +87,9 @@ export async function POST(request: NextRequest) {
         },
       });
     }
+
+    const user = await prisma.user.findUnique({ where: { id: authUser.userId } });
+    await notifyAdmins('NEW_KYC', `New KYC submission from ${user?.fullName || 'a user'}`);
 
     return NextResponse.json({ message: 'KYC submitted successfully' });
   } catch (error) {

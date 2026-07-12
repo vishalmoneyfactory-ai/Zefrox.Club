@@ -37,6 +37,14 @@ export async function POST(
       },
     });
 
+    await prisma.notification.create({
+      data: {
+        userId: withdrawal.userId,
+        type: 'WITHDRAWAL_REJECTED',
+        message: `Your withdrawal request of ₹${withdrawal.amount} has been rejected. Reason: ${reason}`,
+      },
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof Response) return error;

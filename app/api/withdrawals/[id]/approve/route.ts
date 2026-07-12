@@ -43,6 +43,13 @@ export async function POST(
           margin: { decrement: withdrawal.amount },
         },
       }),
+      prisma.notification.create({
+        data: {
+          userId: withdrawal.userId,
+          type: 'WITHDRAWAL_APPROVED',
+          message: `Your withdrawal request of ₹${withdrawal.amount} has been approved`,
+        },
+      }),
     ]);
 
     return NextResponse.json({ success: true });

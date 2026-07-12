@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser } from '@/lib/auth';
 import { uploadToCloudinary } from '@/lib/cloudinary';
+import { notifyAdmins } from '@/lib/notifications';
 
 export async function POST(request: NextRequest) {
   try {
@@ -79,6 +80,9 @@ export async function POST(request: NextRequest) {
         status: 'PROOF_UPLOADED',
       },
     });
+
+    const user = await prisma.user.findUnique({ where: { id: authUser.userId } });
+    await notifyAdmins('NEW_DEPOSIT', `New deposit proof of ₹${amount} uploaded by ${user?.fullName || 'a user'}`);
 
     return NextResponse.json(payment, { status: 201 });
   } catch (error) {

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useUIStore } from '@/store/uiStore';
 import { Menu, LogOut, ShieldAlert } from 'lucide-react';
+import NotificationBell from '@/components/features/NotificationBell';
 
 interface AdminNavbarProps {
   adminName?: string;
@@ -59,6 +60,10 @@ export default function AdminNavbar({ adminName = 'Admin' }: AdminNavbarProps) {
 
         {/* Right */}
         <div className="flex items-center gap-4">
+          <div className="p-1.5 rounded-full hover:bg-white/5 transition-colors cursor-pointer">
+            <NotificationBell />
+          </div>
+
           <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-white/10 h-8">
             <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-sm border border-red-500/30 shadow-sm ring-1 ring-white/10">
               {adminName.charAt(0).toUpperCase()}

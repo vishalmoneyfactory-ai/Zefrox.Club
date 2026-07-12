@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAuthUser, requireAuth } from '@/lib/auth';
+import { notifyAdmins } from '@/lib/notifications';
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,6 +46,9 @@ export async function POST(request: NextRequest) {
         status: 'PENDING',
       },
     });
+
+    const user = await prisma.user.findUnique({ where: { id: authUser.userId } });
+    await notifyAdmins('NEW_WITHDRAWAL', `New withdrawal request of ₹${amount} from ${user?.fullName || 'a user'}`);
 
     return NextResponse.json(withdrawal, { status: 201 });
   } catch (error) {

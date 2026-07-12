@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useUIStore } from '@/store/uiStore';
-import api from '@/lib/axios';
+import { useNotifications } from '@/hooks/useNotifications';
 
 function timeAgo(dateString: string): string {
   const now = Date.now();
@@ -23,6 +23,10 @@ function timeAgo(dateString: string): string {
 export default function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // This hook handles fetching, polling, and syncing to the uiStore
+  const { markAllRead } = useNotifications();
+
   const notifications = useUIStore((s) => s.notifications);
   const unreadCount = useUIStore((s) => s.unreadCount);
 
@@ -42,11 +46,7 @@ export default function NotificationBell() {
   }, []);
 
   const handleMarkAllRead = async () => {
-    try {
-      await api.patch('/api/users/notifications');
-    } catch {
-      // Ignore errors
-    }
+    await markAllRead();
   };
 
   return (
