@@ -23,10 +23,13 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [pendingDeposits, setPendingDeposits] = useState(0);
+  const [pendingWithdrawals, setPendingWithdrawals] = useState(0);
   const { showError } = useToast();
 
   useEffect(() => {
     fetchUsers();
+    fetchStats();
   }, []);
 
   const fetchUsers = async () => {
@@ -37,6 +40,19 @@ export default function AdminUsersPage() {
       showError('Failed to load users');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const [paymentsRes, withdrawalsRes] = await Promise.all([
+        api.get('/api/payments?status=PROOF_UPLOADED'),
+        api.get('/api/withdrawals')
+      ]);
+      setPendingDeposits(paymentsRes.data.length);
+      setPendingWithdrawals(withdrawalsRes.data.filter((w: any) => w.status === 'PENDING').length);
+    } catch (error) {
+      console.error('Failed to load stats');
     }
   };
 
@@ -80,15 +96,15 @@ export default function AdminUsersPage() {
             <p className="text-slate-500 text-sm font-semibold">Total Users</p>
           </div>
           <div className="bg-blue-50/50 rounded-2xl p-6 text-center border border-blue-100/50">
-            <h3 className="text-3xl font-black text-emerald-500 mb-1">102</h3>
+            <h3 className="text-3xl font-black text-emerald-500 mb-1">{pendingDeposits}</h3>
             <p className="text-slate-500 text-sm font-semibold">Pending Deposits</p>
           </div>
           <div className="bg-purple-50/50 rounded-2xl p-6 text-center border border-purple-100/50">
-            <h3 className="text-3xl font-black text-purple-500 mb-1">365</h3>
+            <h3 className="text-3xl font-black text-purple-500 mb-1">{pendingWithdrawals}</h3>
             <p className="text-slate-500 text-sm font-semibold">Pending Withdrawals</p>
           </div>
           <div className="bg-orange-50/50 rounded-2xl p-6 text-center border border-orange-100/50">
-            <h3 className="text-3xl font-black text-orange-500 mb-1">467</h3>
+            <h3 className="text-3xl font-black text-orange-500 mb-1">{pendingDeposits + pendingWithdrawals}</h3>
             <p className="text-slate-500 text-sm font-semibold">Total Pending</p>
           </div>
         </div>
