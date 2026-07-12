@@ -157,7 +157,7 @@ export default function AccountsPage() {
           {showPlans && (
             <button 
               onClick={() => setShowPlans(false)}
-              className="absolute left-0 flex items-center gap-2 px-4 py-2 bg-[#111827]/80 rounded-lg text-sm font-semibold hover:bg-[#1f2937] transition-all"
+              className="absolute left-0 flex items-center gap-2 px-4 py-2 bg-[#111827]/80 border border-white/5 rounded-lg text-sm font-semibold text-white hover:bg-[#1f2937] transition-all z-10"
             >
               ← Back to Accounts
             </button>
@@ -216,9 +216,9 @@ export default function AccountsPage() {
           <div className="flex items-center gap-4 mb-6">
             <button 
               onClick={() => setViewingAccountId(null)}
-              className="p-2 bg-white/5 rounded-xl hover:bg-white/10 transition-colors text-slate-300"
+              className="flex items-center gap-2 px-4 py-2 bg-[#111827] border border-white/5 rounded-lg text-sm font-semibold text-white hover:bg-[#1f2937] transition-colors shadow-md"
             >
-              ←
+              ← Back
             </button>
             <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-bold border border-emerald-500/20">
               <Shield className="w-3 h-3" />
