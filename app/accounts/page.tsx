@@ -169,36 +169,38 @@ export default function AccountsPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex justify-center mb-12">
-        <div className="flex bg-[#0b1221]/80 rounded-xl p-1 border border-white/10 backdrop-blur-md">
-          <button
-            onClick={() => setActiveTab('LIVE')}
-            className={`px-8 py-2.5 rounded-lg text-sm font-bold transition-all relative ${
-              activeTab === 'LIVE' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
-            }`}
-          >
-            {activeTab === 'LIVE' && (
-              <motion.div layoutId="tab" className="absolute inset-0 bg-blue-600 rounded-lg shadow-lg" />
-            )}
-            <span className="relative z-10">LIVE</span>
-          </button>
-          <button
-            onClick={() => {
-              if (!showPlans) {
-                setActiveTab('DEMO');
-              }
-            }}
-            className={`px-8 py-2.5 rounded-lg text-sm font-bold transition-all relative ${
-              activeTab === 'DEMO' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
-            }`}
-          >
-            {activeTab === 'DEMO' && (
-              <motion.div layoutId="tab" className="absolute inset-0 bg-blue-600 rounded-lg shadow-lg" />
-            )}
-            <span className="relative z-10">DEMO</span>
-          </button>
+      {!viewingAccountId && (
+        <div className="flex justify-center mb-12">
+          <div className="flex bg-[#0b1221]/80 rounded-xl p-1 border border-white/10 backdrop-blur-md">
+            <button
+              onClick={() => setActiveTab('LIVE')}
+              className={`px-8 py-2.5 rounded-lg text-sm font-bold transition-all relative ${
+                activeTab === 'LIVE' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              {activeTab === 'LIVE' && (
+                <motion.div layoutId="tab" className="absolute inset-0 bg-blue-600 rounded-lg shadow-lg" />
+              )}
+              <span className="relative z-10">LIVE</span>
+            </button>
+            <button
+              onClick={() => {
+                if (!showPlans) {
+                  setActiveTab('DEMO');
+                }
+              }}
+              className={`px-8 py-2.5 rounded-lg text-sm font-bold transition-all relative ${
+                activeTab === 'DEMO' ? 'text-white' : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              {activeTab === 'DEMO' && (
+                <motion.div layoutId="tab" className="absolute inset-0 bg-blue-600 rounded-lg shadow-lg" />
+              )}
+              <span className="relative z-10">DEMO</span>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {loading ? (
         <div className="flex justify-center py-20">
