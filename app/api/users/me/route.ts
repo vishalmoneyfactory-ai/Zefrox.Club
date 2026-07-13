@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             status: true,
+            selfieUrl: true,
+            rejectionReason: true,
           },
         },
       },

@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { ShieldCheck, LineChart, Zap, HeadphonesIcon, ArrowRight, Check, Smartphone, MonitorPlay, Menu, X } from 'lucide-react';
+import { ShieldCheck, LineChart, Zap, HeadphonesIcon, ArrowRight, Check, Smartphone, MonitorPlay, Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import TickerTape from '@/components/features/TickerTape';
 import MiniChart from '@/components/features/MiniChart';
 import Button from '@/components/ui/Button';
@@ -83,9 +83,21 @@ const itemVariants: Variants = {
   }
 };
 
-export default function LandingPage() {
+export default function LandingPage() {     
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth } = scrollRef.current;
+      const scrollAmount = clientWidth * 0.8;
+      scrollRef.current.scrollTo({
+        left: direction === 'left' ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   useEffect(() => {
     api.get('/api/users/me')
@@ -282,48 +294,73 @@ export default function LandingPage() {
              <p className="text-lg text-slate-400 font-medium max-w-2xl mx-auto">Choose the account that fits your trading style</p>
            </motion.div>
            
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto px-2">
-             {accountTypes.map((acc, index) => (
-               <motion.div
-                 key={acc.name}
-                 initial={{ opacity: 0, y: 30 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ delay: index * 0.1 }}
-                 className={`relative bg-[#060a14]/80 backdrop-blur-xl border rounded-3xl p-6 sm:p-8 flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.3)] ${acc.popular ? 'border-blue-500/50 scale-105 z-10' : 'border-white/5'}`}
-               >
-                 {acc.popular && (
-                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
-                     Most Popular
-                   </div>
-                 )}
-                 <div className="text-center mb-6">
-                   <h3 className={`text-2xl font-black mb-2 ${acc.popular ? 'text-blue-400' : 'text-white'}`}>{acc.name}</h3>
-                   <p className="text-sm text-slate-400 h-10 font-medium">{acc.desc}</p>
-                 </div>
-                 
-                 <div className="flex justify-between items-center py-4 border-y border-white/10 mb-6">
-                   <span className="text-slate-300 font-semibold">Min Deposit</span>
-                   <span className="text-xl font-bold text-blue-400">{acc.deposit}</span>
-                 </div>
+           <div className="relative max-w-7xl mx-auto px-2 group">
+             {/* Left Arrow */}
+             <button 
+               onClick={() => scroll('left')}
+               className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-[#111827] border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-[#1f2937] transition-all shadow-xl opacity-0 group-hover:opacity-100"
+             >
+               <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+             </button>
 
-                 <ul className="space-y-4 mb-8 flex-1">
-                   {acc.features.map((feature, i) => (
-                     <li key={i} className="flex items-start gap-3 text-sm text-slate-300 font-medium">
-                       <Check className="w-5 h-5 text-emerald-400 shrink-0" />
-                       <span>{feature}</span>
-                     </li>
-                   ))}
-                 </ul>
+             {/* Right Arrow */}
+             <button 
+               onClick={() => scroll('right')}
+               className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-[#111827] border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-[#1f2937] transition-all shadow-xl opacity-0 group-hover:opacity-100"
+             >
+               <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+             </button>
 
-                 <Link href={isLoggedIn ? "/accounts" : "/login"} className="mt-auto">
-                   <Button variant="primary" className={`w-full ${acc.popular ? 'shadow-[0_0_20px_rgba(37,99,235,0.3)] border border-blue-500/50' : 'bg-[#111827]/60 hover:bg-[#111827]/80 border border-white/10'}`}>
-                     {isLoggedIn ? 'Go to Accounts' : 'Trade Now'}
-                   </Button>
-                 </Link>
-               </motion.div>
-             ))}
-           </div>
+             <div
+               ref={scrollRef}
+               className="flex overflow-x-auto gap-6 pb-12 pt-4 px-4 snap-x snap-mandatory scroll-smooth"
+               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+             >
+               {accountTypes.map((acc, index) => {
+                 return (
+                   <motion.div
+                     key={acc.name}
+                     initial={{ opacity: 0, y: 30 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: index * 0.1 }}
+                     className={`snap-center shrink-0 w-[85vw] sm:w-[320px] relative bg-[#060a14]/80 backdrop-blur-xl border rounded-3xl p-6 sm:p-8 flex flex-col shadow-[0_8px_30px_rgba(0,0,0,0.3)] ${acc.popular ? 'border-blue-500/50 lg:scale-105 z-10' : 'border-white/5'}`}
+                   >
+                     {acc.popular && (
+                       <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                         Most Popular
+                       </div>
+                     )}
+
+                     <div className="text-center mb-6">
+                       <h3 className={`text-2xl font-black mb-2 ${acc.popular ? 'text-blue-400' : 'text-white'}`}>{acc.name}</h3>
+                       <p className="text-sm text-slate-400 h-10 font-medium">{acc.desc}</p>
+                     </div>
+
+                     <div className="flex justify-between items-center py-4 border-y border-white/10 mb-6">
+                       <span className="text-slate-300 font-semibold">Min Deposit</span>
+                       <span className="text-xl font-bold text-blue-400">{acc.deposit}</span>
+                     </div>
+
+                     <ul className="space-y-4 mb-8 flex-1">
+                       {acc.features.map((feature, i) => (
+                         <li key={i} className="flex items-start gap-3 text-sm text-slate-300 font-medium">
+                           <Check className="w-5 h-5 text-emerald-400 shrink-0" />
+                           <span>{feature}</span>
+                         </li>
+                       ))}
+                     </ul>
+
+                     <Link href={isLoggedIn ? "/accounts" : "/login"} className="mt-auto">
+                       <Button variant="primary" className={`w-full ${acc.popular ? 'shadow-[0_0_20px_rgba(37,99,235,0.3)] border border-blue-500/50' : 'bg-[#111827]/60 hover:bg-[#111827]/80 border border-white/10'}`}>
+                         {isLoggedIn ? 'Go to Accounts' : 'Trade Now'}
+                       </Button>
+                     </Link>
+                   </motion.div>
+                 );
+               })}
+              </div>
+            </div>
         </div>
       </section>
 

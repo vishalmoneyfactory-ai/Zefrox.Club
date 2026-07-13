@@ -257,7 +257,7 @@ export default function ProfilePage() {
               <div className="flex flex-col sm:flex-row gap-6 sm:items-center mt-6">
                 {user.kyc?.selfieUrl && (
                   <div className="relative group cursor-pointer w-24 h-24 rounded-2xl overflow-hidden border border-white/10 shadow-xl" onClick={() => setImageModal({ open: true, url: user.kyc!.selfieUrl!, title: 'Your KYC Selfie' })}>
-                    <img src={user.kyc.selfieUrl} alt="KYC selfie" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <img src={user.kyc!.selfieUrl} alt="KYC selfie" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-[#060a14]/60 backdrop-blur-sm">
                       <Camera className="w-8 h-8 text-white drop-shadow-md" />
                     </div>
@@ -269,7 +269,7 @@ export default function ProfilePage() {
                   </Badge>
                   {user.kyc?.rejectionReason && (
                     <p className="text-red-300 text-sm mt-3 font-medium bg-red-500/10 px-4 py-3 rounded-xl border border-red-500/20 backdrop-blur-md shadow-inner">
-                      <span className="font-bold text-red-400">Reason:</span> {user.kyc.rejectionReason}
+                      <span className="font-bold text-red-400">Reason:</span> {user.kyc!.rejectionReason}
                     </p>
                   )}
                   {(user.kycStatus === 'REJECTED' || !user.kycStatus) && (
