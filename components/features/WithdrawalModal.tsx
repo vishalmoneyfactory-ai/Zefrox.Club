@@ -11,13 +11,14 @@ interface WithdrawalModalProps {
   isOpen: boolean;
   onClose: () => void;
   accountId: string;
+  plan: string;
   onSuccess: () => void;
 }
 
 type WithdrawalStep = 'AMOUNT' | 'METHOD_AND_DETAILS' | 'CONFIRM';
 type WithdrawalMethod = 'Bank Transfer' | 'UPI Transfer';
 
-export default function WithdrawalModal({ isOpen, onClose, accountId, onSuccess }: WithdrawalModalProps) {
+export default function WithdrawalModal({ isOpen, onClose, accountId, plan, onSuccess }: WithdrawalModalProps) {
   const [step, setStep] = useState<WithdrawalStep>('AMOUNT');
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState<WithdrawalMethod | null>(null);
@@ -126,7 +127,14 @@ export default function WithdrawalModal({ isOpen, onClose, accountId, onSuccess 
         className="relative w-full max-w-lg bg-[#0b1221] border border-white/10 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[90vh]"
       >
         <div className="flex justify-between items-center p-6 border-b border-white/10 bg-[#111827] shrink-0">
-          <h2 className="text-xl font-bold text-white">Withdrawal will be in 3-5 min</h2>
+          <h2 className="text-xl font-bold text-white">
+            Withdrawal will be in {
+              plan?.toLowerCase().includes('platinum +') ? '5-10 min' :
+              plan?.toLowerCase().includes('platinum') ? '30-40 min' :
+              plan?.toLowerCase().includes('premium') ? '1-2 hrs' :
+              '2-3 hrs'
+            }
+          </h2>
           <button onClick={handleClose} className="text-slate-400 hover:text-white transition-colors">
             <X className="w-5 h-5" />
           </button>
@@ -151,7 +159,14 @@ export default function WithdrawalModal({ isOpen, onClose, accountId, onSuccess 
                 className="space-y-6"
               >
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-2">Withdrawal Amount (₹)</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">
+                    Withdrawal Amount (₹) 
+                    {amount && !isNaN(Number(amount)) && (
+                      <span className="text-blue-400 ml-2">
+                        (~${(Number(amount) / 97).toFixed(2)})
+                      </span>
+                    )}
+                  </label>
                   <input
                     type="number"
                     required
@@ -300,7 +315,9 @@ export default function WithdrawalModal({ isOpen, onClose, accountId, onSuccess 
                 <div className="bg-[#111827]/80 rounded-xl p-5 border border-white/5 space-y-3">
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-slate-400">Amount:</span>
-                    <span className="text-teal-400 font-bold text-lg">₹{amount}</span>
+                    <span className="text-teal-400 font-bold text-lg">
+                      ₹{amount} <span className="text-sm text-teal-500/70">(${(Number(amount) / 97).toFixed(2)})</span>
+                    </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-slate-400">Method:</span>

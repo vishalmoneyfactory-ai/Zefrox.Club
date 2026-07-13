@@ -40,28 +40,28 @@ const accountTypes = [
     name: 'Standard',
     desc: 'Start trading with standard account',
     deposit: '$40',
-    features: ['Instant credit', 'No hidden fees', 'Trade Immediately', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
+    features: ['Instant credit', 'No hidden fees', 'Trade Immediately', 'Deposit in 2 mins, Withdrawal in 2-3 hrs', 'MT5'],
     popular: false,
   },
   {
     name: 'Platinum',
     desc: 'Advanced features for serious traders',
     deposit: '$100',
-    features: ['100% deposit bonus', 'Priority support', 'Advanced analytics', 'Lower spreads', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
+    features: ['100% deposit bonus', 'Priority support', 'Advanced analytics', 'Lower spreads', 'Deposit in 2 mins, Withdrawal in 30-40 mins', 'MT5'],
     popular: false,
   },
   {
     name: 'Premium',
     desc: 'Premium trading experience with exclusive benefits',
     deposit: '$500',
-    features: ['100% deposit bonus', 'Personal account manager', 'VIP support', 'Exclusive market insights', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
+    features: ['100% deposit bonus', 'Personal account manager', 'VIP support', 'Exclusive market insights', 'Deposit in 2 mins, Withdrawal in 1-2 hrs', 'MT5'],
     popular: true,
   },
   {
     name: 'Platinum +',
     desc: 'The ultimate trading experience for VIPs',
     deposit: '$1000',
-    features: ['100% deposit bonus', 'Dedicated account manager', '24/7 VIP support', 'Premium market insights', 'Deposit & Withdrawal in 2 minutes', 'MT5'],
+    features: ['100% deposit bonus', 'Dedicated account manager', '24/7 VIP support', 'Premium market insights', 'Deposit in 2 mins, Withdrawal in 5-10 mins', 'MT5'],
     popular: false,
   }
 ];

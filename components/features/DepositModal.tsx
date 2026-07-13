@@ -202,7 +202,14 @@ export default function DepositModal({ isOpen, onClose, accountId, onSuccess }: 
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-2">Amount to Deposit (₹)</label>
+                <label className="block text-sm font-semibold text-slate-300 mb-2">
+                  Amount to Deposit (₹)
+                  {amount && !isNaN(Number(amount)) && (
+                    <span className="text-blue-400 ml-2">
+                      (~${(Number(amount) / 97).toFixed(2)})
+                    </span>
+                  )}
+                </label>
                 <input
                   type="number"
                   required

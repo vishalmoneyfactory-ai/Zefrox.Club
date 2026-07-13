@@ -230,11 +230,12 @@ export default function AccountsPage() {
           <div className="bg-[#111827] rounded-3xl p-4 sm:p-8 border border-white/5 shadow-2xl relative overflow-hidden">
             <div className="flex flex-col items-center mb-8">
               <span className="text-slate-400 font-semibold mb-2">BALANCE</span>
-              <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">₹{accounts.find(a => a.id === viewingAccountId)?.balance.toLocaleString('en-IN') || 0}</h2>
+              <h2 className="text-4xl sm:text-5xl font-black text-white mb-2">₹{accounts.find(a => a.id === viewingAccountId)?.balance.toLocaleString('en-IN') || 0}</h2>
+              <p className="text-xl text-slate-400 font-bold mb-6">${((accounts.find(a => a.id === viewingAccountId)?.balance || 0) / 97).toFixed(2)}</p>
               <div className="flex flex-wrap gap-4 sm:gap-6 text-sm font-semibold justify-center">
-                <span className="text-slate-400">Equity: <span className="text-white">₹{accounts.find(a => a.id === viewingAccountId)?.equity || 0}</span></span>
+                <span className="text-slate-400">Equity: <span className="text-white">₹{accounts.find(a => a.id === viewingAccountId)?.equity || 0}</span> <span className="text-slate-500 text-[10px]">(${( (accounts.find(a => a.id === viewingAccountId)?.equity || 0) / 97).toFixed(2)})</span></span>
                 <span className="text-slate-600">|</span>
-                <span className="text-slate-400">Margin: <span className="text-white">₹{accounts.find(a => a.id === viewingAccountId)?.margin || 0}</span></span>
+                <span className="text-slate-400">Margin: <span className="text-white">₹{accounts.find(a => a.id === viewingAccountId)?.margin || 0}</span> <span className="text-slate-500 text-[10px]">(${( (accounts.find(a => a.id === viewingAccountId)?.margin || 0) / 97).toFixed(2)})</span></span>
               </div>
             </div>
 
@@ -398,10 +399,11 @@ export default function AccountsPage() {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex flex-wrap gap-6 justify-center"
+          className="flex overflow-x-auto sm:flex-wrap gap-6 justify-start sm:justify-center pb-8 snap-x snap-mandatory"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {filteredAccounts.map(account => (
-            <div key={account.id} className="bg-[#111827] rounded-3xl p-4 sm:p-6 w-full max-w-sm flex flex-col shadow-lg relative border border-white/5">
+            <div key={account.id} className="snap-center shrink-0 w-[85vw] sm:w-full bg-[#111827] rounded-3xl p-4 sm:p-6 max-w-sm flex flex-col shadow-lg relative border border-white/5">
               {/* Card Header Menu */}
               <div className="absolute top-4 right-4 z-20">
                 <button 
@@ -438,6 +440,7 @@ export default function AccountsPage() {
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 </div>
                 <h2 className="text-3xl font-black text-white tracking-tight">₹{account.balance.toLocaleString('en-IN')}</h2>
+                <p className="text-sm text-slate-400 font-bold mt-1">${(account.balance / 97).toFixed(2)}</p>
               </div>
               
               {/* Account Details */}
@@ -458,9 +461,9 @@ export default function AccountsPage() {
                     <p className="text-slate-400">Server: <span className="text-white font-semibold">{account.server}</span></p>
                   </>
                 ) : (
-                  <div className="mt-2 py-2 px-4 bg-orange-500/10 border border-orange-500/20 rounded-lg text-orange-400 font-semibold text-xs flex items-center gap-2">
-                    <History className="w-4 h-4" />
-                    MT5 Credentials Pending Assignment
+                  <div className="mt-2 py-3 px-4 bg-orange-500/10 border border-orange-500/20 rounded-lg text-orange-400 font-semibold text-xs flex flex-col items-center gap-1.5 text-center">
+                    <div className="flex items-center gap-2"><History className="w-4 h-4" /> MT5 Credentials Pending Assignment</div>
+                    <div className="text-[10px] text-orange-300/80 uppercase tracking-wide">MT5 assignment takes 3-5 hours</div>
                   </div>
                 )}
               </div>
@@ -498,7 +501,7 @@ export default function AccountsPage() {
                 setShowPlans(true);
               }
             }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 border-dashed rounded-3xl p-4 sm:p-6 w-full max-w-sm flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-all min-h-[300px] sm:min-h-[480px] group"
+            className="snap-center shrink-0 w-[85vw] bg-white/5 backdrop-blur-sm border border-white/10 border-dashed rounded-3xl p-4 sm:p-6 max-w-sm flex flex-col items-center justify-center cursor-pointer hover:bg-white/10 transition-all min-h-[300px] sm:min-h-[480px] group"
           >
             <div className="w-16 h-16 rounded-full bg-gradient-to-r from-teal-400 to-blue-500 flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform shadow-lg">
               <Plus className="w-8 h-8" />
@@ -523,6 +526,7 @@ export default function AccountsPage() {
         isOpen={withdrawalModalOpen}
         onClose={() => { setWithdrawalModalOpen(false); setSelectedAccountId(null); }}
         accountId={selectedAccountId || ''}
+        plan={accounts.find(a => a.id === selectedAccountId)?.plan || ''}
         onSuccess={() => {
            setWithdrawalModalOpen(false);
            fetchAccounts();
