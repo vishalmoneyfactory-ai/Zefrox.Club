@@ -13,7 +13,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
-        window.location.href = '/login';
+        const publicPaths = ['/', '/login', '/about'];
+        if (!publicPaths.includes(window.location.pathname)) {
+          window.location.href = '/login';
+        }
       }
     }
     return Promise.reject(error);
