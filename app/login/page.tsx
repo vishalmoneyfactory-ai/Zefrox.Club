@@ -17,7 +17,7 @@ const appName = 'Zerofx.club';
 const signupSchema = z.object({
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Enter a valid email address'),
-  phone: z.string().min(10, 'Phone must be at least 10 digits').max(15, 'Phone too long'),
+  phone: z.string().regex(/^\d{10}$/, 'Phone must be exactly 10 digits'),
 });
 
 type SignupForm = z.infer<typeof signupSchema>;
@@ -331,8 +331,12 @@ export default function LoginPage() {
                           </div>
                           <input
                             type="tel"
+                            maxLength={10}
                             placeholder="9876543210"
                             {...registerSignup('phone')}
+                            onInput={(e) => {
+                              e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '');
+                            }}
                             className={`w-full pl-10 pr-4 py-3 bg-[#111827]/60 rounded-xl border text-white placeholder-slate-600 transition-all text-sm ${
                               signupErrors.phone ? 'border-red-500/50 focus:ring-red-500' : 'border-white/10 focus:ring-blue-500/50 focus:border-blue-500/50'
                             } focus:outline-none focus:ring-2`}

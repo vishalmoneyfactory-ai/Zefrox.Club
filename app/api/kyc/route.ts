@@ -10,15 +10,15 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const fullName = formData.get('fullName') as string;
-    const address = formData.get('address') as string;
+    const address = (formData.get('address') as string) || '';
     const upiId = formData.get('upiId') as string;
-    const bankAccount = formData.get('bankAccount') as string;
-    const ifscCode = formData.get('ifscCode') as string;
+    const bankAccount = (formData.get('bankAccount') as string) || '';
+    const ifscCode = (formData.get('ifscCode') as string) || '';
     const aadhaarNumber = formData.get('aadhaarNumber') as string;
     const aadhaarPhoto = formData.get('aadhaarPhoto') as File | null;
     const selfie = formData.get('selfie') as File | null;
 
-    if (!fullName || !address || !upiId || !bankAccount || !ifscCode || !aadhaarNumber) {
+    if (!fullName || !upiId || !aadhaarNumber) {
       return NextResponse.json(
         { error: 'All required text fields must be provided' },
         { status: 400 }

@@ -15,10 +15,10 @@ import Button from '@/components/ui/Button';
 
 const kycSchema = z.object({
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
-  address: z.string().min(10, 'Address must be at least 10 characters'),
+  address: z.string().optional(),
   upiId: z.string().min(3, 'Enter a valid UPI ID'),
-  bankAccount: z.string().min(8, 'Enter a valid bank account number'),
-  ifscCode: z.string().regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, 'Enter a valid IFSC code (e.g., SBIN0001234)'),
+  bankAccount: z.string().optional(),
+  ifscCode: z.string().optional(),
   aadhaarNumber: z.string().min(12, 'Aadhaar number must be exactly 12 digits').max(12, 'Aadhaar number must be exactly 12 digits'),
 });
 
@@ -140,10 +140,10 @@ export default function KycPage() {
     try {
       const data = new FormData();
       data.append('fullName', formData.fullName);
-      data.append('address', formData.address);
+      data.append('address', formData.address || '');
       data.append('upiId', formData.upiId);
-      data.append('bankAccount', formData.bankAccount);
-      data.append('ifscCode', formData.ifscCode);
+      data.append('bankAccount', formData.bankAccount || '');
+      data.append('ifscCode', formData.ifscCode || '');
       data.append('aadhaarNumber', formData.aadhaarNumber);
       
       if (selfieFile) {
@@ -298,7 +298,7 @@ export default function KycPage() {
                 </div>
 
                 <div className="sm:col-span-2 space-y-2">
-                  <label htmlFor="kyc-address" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Residential Address *</label>
+                  <label htmlFor="kyc-address" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Residential Address (Optional)</label>
                   <textarea
                     id="kyc-address"
                     {...register('address')}
@@ -322,7 +322,7 @@ export default function KycPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="kyc-bankAccount" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Bank Account Number *</label>
+                  <label htmlFor="kyc-bankAccount" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">Bank Account Number (Optional)</label>
                   <input
                     id="kyc-bankAccount"
                     type="text"
@@ -334,7 +334,7 @@ export default function KycPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="kyc-ifscCode" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">IFSC Code *</label>
+                  <label htmlFor="kyc-ifscCode" className="text-sm font-bold text-slate-300 ml-1 uppercase tracking-wider">IFSC Code (Optional)</label>
                   <input
                     id="kyc-ifscCode"
                     type="text"

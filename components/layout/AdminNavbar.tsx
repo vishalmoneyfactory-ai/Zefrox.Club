@@ -45,7 +45,7 @@ export default function AdminNavbar({ adminName = 'Admin' }: AdminNavbarProps) {
             <Menu className="w-6 h-6" />
           </button>
 
-          <Link href="/admin" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center shadow-[0_4px_10px_rgba(239,68,68,0.3)] border border-white/10 group-hover:shadow-[0_4px_15px_rgba(239,68,68,0.5)] group-hover:scale-105 transition-all duration-300">
               <ShieldAlert className="w-5 h-5 text-white drop-shadow-md" />
             </div>

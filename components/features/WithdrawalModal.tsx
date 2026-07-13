@@ -54,8 +54,8 @@ export default function WithdrawalModal({ isOpen, onClose, accountId, plan, onSu
   const handleAmountSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const val = Number(amount);
-    if (!val || val < 100) {
-      showError('Minimum withdrawal amount is ₹100');
+    if (!val || val <= 1000) {
+      showError('Withdrawal amount must be more than ₹1000');
       return;
     }
     setStep('METHOD_AND_DETAILS');
@@ -144,7 +144,8 @@ export default function WithdrawalModal({ isOpen, onClose, accountId, plan, onSu
           <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl text-center mb-6">
             <p className="text-sm text-amber-200/80 leading-relaxed font-medium">
               This balance will be updated after withdrawal and deposit request<br />
-              For 2 minute instant withdrawal please take MT5/ odd-hub amount
+              For 2 minute instant withdrawal please take MT5/ odd-hub amount<br />
+              <span className="text-amber-400 font-bold mt-2 block">Note: If you want full withdrawal, please email us for closing the account.</span>
             </p>
           </div>
 
@@ -170,11 +171,11 @@ export default function WithdrawalModal({ isOpen, onClose, accountId, plan, onSu
                   <input
                     type="number"
                     required
-                    min="100"
+                    min="1001"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     className="w-full px-4 py-3 bg-[#111827]/60 border border-white/10 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                    placeholder="Enter amount (Min ₹100)"
+                    placeholder="Enter amount (More than ₹1000)"
                   />
                 </div>
                 <Button type="submit" variant="primary" className="w-full shadow-lg shadow-blue-500/20">

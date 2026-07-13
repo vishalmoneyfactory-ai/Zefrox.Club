@@ -92,10 +92,10 @@ model Kyc {
   id              String    @id @default(cuid())
   userId          String    @unique
   fullName        String
-  address         String
+  address         String?
   upiId           String
-  bankAccount     String
-  ifscCode        String
+  bankAccount     String?
+  ifscCode        String?
   aadhaarNumber   String
   aadhaarPhotoUrl String
   selfieUrl       String

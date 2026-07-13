@@ -45,7 +45,7 @@ export default function UserNavbar({ userName }: UserNavbarProps) {
             <Menu className="w-6 h-6" />
           </button>
 
-          <Link href="/dashboard" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-3 group">
             <span className="text-2xl font-black tracking-tighter text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)] hidden sm:block transition-all duration-300 group-hover:text-emerald-300">
               {appName}
             </span>
