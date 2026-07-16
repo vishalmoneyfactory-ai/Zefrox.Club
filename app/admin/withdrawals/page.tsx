@@ -122,7 +122,7 @@ export default function AdminWithdrawalsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full sm:w-auto pl-11 pr-8 py-3 bg-[#111827] border border-white/10 rounded-xl text-slate-800 appearance-none focus:outline-none focus:border-blue-500/50 transition-colors cursor-pointer text-sm"
+            className="w-full sm:w-auto pl-11 pr-8 py-3 bg-white/70 border border-slate-200 rounded-xl text-slate-800 appearance-none focus:outline-none focus:border-blue-500/50 transition-colors cursor-pointer text-sm"
           >
             <option value="ALL">All Status</option>
             <option value="PENDING">Pending</option>
@@ -135,7 +135,7 @@ export default function AdminWithdrawalsPage() {
 
       {/* Cards List */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <div className="bg-[#0b1221] border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xl">
           {loading ? (
             <div className="flex justify-center p-16">
               <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
@@ -173,21 +173,21 @@ export default function AdminWithdrawalsPage() {
 
                   {/* Row 2: Details Grid */}
                   <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
-                    <div className="bg-[#111827] rounded-lg p-2.5 border border-white/5">
+                    <div className="bg-slate-50 rounded-lg p-2.5 border border-slate-100">
                       <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Method</p>
-                      <p className="text-slate-300 font-semibold">{w.method}</p>
+                      <p className="text-slate-700 font-semibold">{w.method}</p>
                     </div>
-                    <div className="bg-[#111827] rounded-lg p-2.5 border border-white/5">
+                    <div className="bg-slate-50 rounded-lg p-2.5 border border-slate-100">
                       <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">MT5 Account</p>
                       <p className="text-blue-400 font-bold">{w.account.mt5Id || 'N/A'}</p>
                     </div>
                     {w.method === 'UPI Transfer' ? (
-                      <div className="col-span-2 bg-[#111827] rounded-lg p-2.5 border border-white/5">
+                      <div className="col-span-2 bg-slate-50 rounded-lg p-2.5 border border-slate-100">
                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">UPI ID</p>
                         <p className="text-emerald-400 font-bold">{w.upiId}</p>
                       </div>
                     ) : (
-                      <div className="col-span-2 bg-[#111827] rounded-lg p-2.5 border border-white/5">
+                      <div className="col-span-2 bg-slate-50 rounded-lg p-2.5 border border-slate-100">
                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Bank Account</p>
                         <p className="text-blue-400 font-bold">{w.bankAccount}</p>
                         <p className="text-slate-600 mt-0.5">IFSC: {w.ifscCode} · {w.bankName}</p>

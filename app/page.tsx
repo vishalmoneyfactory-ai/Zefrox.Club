@@ -478,32 +478,63 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Promotional Banners */}
       <section className="py-24 sm:py-32 relative border-t border-slate-200/60 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-indigo-600 to-violet-700 px-8 py-16 sm:px-16 sm:py-24 text-center shadow-[0_20px_60px_rgba(99,102,241,0.35)]"
-          >
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04]"></div>
-            <div className="absolute top-[-30%] right-[-10%] w-[50%] h-[70%] bg-violet-400/20 rounded-full blur-[80px]" />
-            <div className="absolute bottom-[-20%] left-[-10%] w-[40%] h-[60%] bg-indigo-400/20 rounded-full blur-[60px]" />
-            <div className="relative z-10">
-              <h2 className="text-3xl sm:text-5xl font-black text-white mb-6 drop-shadow-md">
-                Ready to Get Started?
-              </h2>
-              <p className="text-lg sm:text-xl text-white/80 font-medium max-w-2xl mx-auto mb-10">
-                Join our secure {appName} platform today. Quick registration, instant KYC verification, and lightning-fast execution.
-              </p>
-              <Link href={isLoggedIn ? "/accounts" : "/login"}>
-                <Button variant="primary" size="lg" className="bg-white text-indigo-600 hover:bg-indigo-50 font-bold shadow-[0_4px_20px_rgba(0,0,0,0.2)] border-0">
-                  {isLoggedIn ? 'View Your Accounts' : 'Create Your Account'}
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            {/* Banner 1: Spreads */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-slate-900 to-slate-800 p-8 sm:p-12 shadow-[0_20px_40px_rgba(15,23,42,0.2)] flex flex-col justify-between group min-h-[400px]"
+            >
+              <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-l from-indigo-900/40 to-transparent pointer-events-none" />
+              {/* Graphic elements */}
+              <div className="absolute right-0 bottom-0 opacity-10 transform translate-x-1/4 translate-y-1/4 group-hover:scale-110 group-hover:-translate-y-4 transition-all duration-700">
+                <LineChart className="w-80 h-80 text-white" />
+              </div>
+              
+              <div className="relative z-10 max-w-sm flex-1 flex flex-col justify-center">
+                <h3 className="text-3xl sm:text-4xl font-black text-white mb-4 leading-tight">Trade With our Best Spreads</h3>
+                <p className="text-slate-300 text-lg font-medium mb-10 leading-relaxed">Trade Gold with 2.0 pips spreads and reduce costs on other popular instruments with the Ultra Low account.</p>
+                <Link href={isLoggedIn ? "/accounts" : "/login"} className="inline-flex items-center gap-2 text-white font-bold hover:text-indigo-300 transition-colors text-lg w-max mt-auto">
+                  Start Trading <ArrowRight className="w-6 h-6" />
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Banner 2: Bonus */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-indigo-600 to-blue-700 p-8 sm:p-12 shadow-[0_20px_40px_rgba(79,70,229,0.3)] flex flex-col justify-between group min-h-[400px]"
+            >
+              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04]"></div>
+              {/* Graphic elements */}
+              <div className="absolute top-8 right-8 transform group-hover:rotate-12 group-hover:scale-110 transition-transform duration-500 shadow-xl rounded-full">
+                <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
+                  <span className="text-white text-2xl font-black">%</span>
+                </div>
+              </div>
+
+              <div className="relative z-10 mt-auto flex-1 flex flex-col justify-center pt-12">
+                <h3 className="text-4xl sm:text-5xl font-black text-white mb-4 drop-shadow-md">100% Bonus</h3>
+                <p className="text-blue-100 text-lg font-medium mb-4 leading-relaxed">Use our funds to trade more, reduce your risk, and boost your returns.</p>
+                <p className="text-white font-bold text-xl mb-10 drop-shadow-sm">Get a 100% Bonus up to $100</p>
+                
+                <Link href={isLoggedIn ? "/accounts" : "/login"} className="mt-auto">
+                  <Button variant="primary" size="lg" className="bg-white text-indigo-700 border-0 hover:bg-indigo-50 hover:text-indigo-800 font-black px-8 shadow-[0_8px_20px_rgba(255,255,255,0.3)] hover:shadow-[0_12px_25px_rgba(255,255,255,0.5)] transition-all w-max rounded-xl">
+                    Claim Bonus
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
