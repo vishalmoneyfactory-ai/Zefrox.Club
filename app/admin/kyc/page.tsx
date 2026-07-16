@@ -94,32 +94,28 @@ export default function AdminKycPage() {
   };
 
   return (
-    <div className="space-y-8 relative z-10 selection:bg-blue-500/30 selection:text-white pb-12">
-      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] mix-blend-screen -translate-y-1/2 -translate-x-1/4" />
-      </div>
-
+    <div className="space-y-8 relative z-10 pb-12">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
-            <span className="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-               <ShieldCheck className="w-6 h-6 text-indigo-400" />
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-3">
+            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white shadow-md">
+              <ShieldCheck className="w-5 h-5" />
             </span>
             KYC Verification
           </h1>
-          <p className="text-slate-400 mt-1 font-medium text-sm">Review and verify user identity documents.</p>
+          <p className="text-slate-600 mt-1 font-medium text-sm">Review and verify user identity documents.</p>
         </div>
         
         {/* Scrollable filter tabs */}
-        <div className="flex bg-[#111827]/60 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md shadow-inner overflow-x-auto max-w-full">
+        <div className="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 overflow-x-auto max-w-full gap-1">
           {(['ALL', 'PENDING', 'APPROVED', 'REJECTED'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className={`px-3 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all whitespace-nowrap ${
                 filter === f
-                  ? 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-indigo-500 text-white shadow-md'
+                  : 'text-slate-500 hover:text-slate-800 hover:bg-white'
               }`}
             >
               {f}
@@ -129,37 +125,37 @@ export default function AdminKycPage() {
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-        <Card glass className="p-0 overflow-hidden bg-[#0b1221]/80 border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200/70 shadow-[0_4px_24px_rgba(99,102,241,0.08)] rounded-2xl overflow-hidden">
           {loading ? (
             <div className="flex justify-center p-20">
-              <Spinner size="lg" className="text-blue-500" />
+              <Spinner size="lg" className="text-indigo-500" />
             </div>
           ) : kycRecords.length === 0 ? (
-            <div className="p-16 text-center">
-               <div className="w-20 h-20 mx-auto bg-[#111827] rounded-full flex items-center justify-center mb-6 border border-white/5">
-                 <ShieldCheck className="w-8 h-8 text-slate-500" />
-               </div>
-               <p className="text-white font-bold text-lg mb-2">No {filter.toLowerCase()} KYC records found</p>
-               <p className="text-slate-400 font-medium">All caught up!</p>
+            <div className="bg-slate-50 border border-dashed border-slate-200 rounded-xl py-10 text-center text-slate-400 m-6">
+              <div className="w-20 h-20 mx-auto bg-white border border-slate-200 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <ShieldCheck className="w-8 h-8 text-slate-400" />
+              </div>
+              <p className="text-slate-800 font-bold text-lg mb-2">No {filter.toLowerCase()} KYC records found</p>
+              <p className="text-slate-400 font-medium">All caught up!</p>
             </div>
           ) : (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-slate-100">
               {kycRecords.map((record) => (
-                <div key={record.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4 hover:bg-white/[0.02] transition-colors">
+                <div key={record.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4 bg-white hover:bg-indigo-50/30 transition-colors border-b border-slate-100">
                   {/* Left: user info */}
                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white font-bold shrink-0">
                       {record.fullName.charAt(0)}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-bold text-white truncate">{record.fullName}</p>
-                      <p className="text-xs text-slate-500 truncate">{record.user.email}</p>
+                      <p className="font-bold text-slate-800 truncate">{record.fullName}</p>
+                      <p className="text-xs text-slate-400 truncate">{record.user.email}</p>
                     </div>
                   </div>
 
                   {/* Middle: metadata */}
                   <div className="flex flex-wrap gap-2 sm:gap-4 items-center">
-                    <div className="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg border border-white/5 font-mono">
+                    <div className="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg border border-slate-200 font-mono">
                       {record.aadhaarNumber || 'N/A'}
                     </div>
                     <p className="text-xs text-slate-400 font-medium hidden sm:block">
@@ -178,7 +174,7 @@ export default function AdminKycPage() {
                     variant="secondary"
                     size="sm"
                     onClick={() => setViewModal({ open: true, record })}
-                    className="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 w-full sm:w-auto"
+                    className="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 w-full sm:w-auto"
                   >
                     Review <Eye className="w-4 h-4 ml-1.5 inline" />
                   </Button>
@@ -186,7 +182,7 @@ export default function AdminKycPage() {
               ))}
             </div>
           )}
-        </Card>
+        </div>
       </motion.div>
 
       {/* Review Modal */}
@@ -200,10 +196,10 @@ export default function AdminKycPage() {
           <div className="space-y-8">
              
              {/* Header */}
-             <div className="flex justify-between items-start pb-6 border-b border-white/10">
+             <div className="flex justify-between items-start pb-6 border-b border-slate-200">
                <div>
-                  <h3 className="text-2xl font-black text-white mb-2">{viewModal.record.fullName}</h3>
-                  <p className="text-slate-400 font-medium">User ID: <span className="font-mono text-slate-300">{viewModal.record.userId}</span></p>
+                  <h3 className="text-2xl font-black text-slate-800 mb-2">{viewModal.record.fullName}</h3>
+                  <p className="text-slate-400 font-medium">User ID: <span className="font-mono text-slate-600">{viewModal.record.userId}</span></p>
                </div>
                <Badge variant={
                   viewModal.record.status === 'APPROVED' ? 'approved' : 
@@ -216,22 +212,22 @@ export default function AdminKycPage() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Images */}
                 <div className="space-y-6">
-                   <div className="bg-[#111827] rounded-2xl p-4 border border-white/5 shadow-inner">
-                      <p className="text-xs uppercase tracking-widest font-bold text-slate-500 mb-4">Selfie</p>
+                   <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                      <p className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4">Selfie</p>
                       <a href={viewModal.record.selfieUrl} target="_blank" rel="noreferrer" className="block relative group rounded-xl overflow-hidden">
                         <img src={viewModal.record.selfieUrl} alt="Selfie" className="w-full aspect-square object-cover" />
-                        <div className="absolute inset-0 bg-[#060a14]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                        <div className="absolute inset-0 bg-slate-800/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
                            <Eye className="w-8 h-8 text-white" />
                         </div>
                       </a>
                    </div>
                    
                    {viewModal.record.aadhaarPhotoUrl && (
-                    <div className="bg-[#111827] rounded-2xl p-4 border border-white/5 shadow-inner">
-                        <p className="text-xs uppercase tracking-widest font-bold text-slate-500 mb-4">Aadhaar Document</p>
+                    <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                        <p className="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4">Aadhaar Document</p>
                         <a href={viewModal.record.aadhaarPhotoUrl} target="_blank" rel="noreferrer" className="block relative group rounded-xl overflow-hidden">
-                          <img src={viewModal.record.aadhaarPhotoUrl} alt="Aadhaar" className="w-full h-48 object-contain bg-slate-900" />
-                          <div className="absolute inset-0 bg-[#060a14]/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                          <img src={viewModal.record.aadhaarPhotoUrl} alt="Aadhaar" className="w-full h-48 object-contain bg-slate-100" />
+                          <div className="absolute inset-0 bg-slate-800/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
                              <Eye className="w-8 h-8 text-white" />
                           </div>
                         </a>
@@ -241,37 +237,37 @@ export default function AdminKycPage() {
 
                 {/* Details */}
                 <div className="space-y-6">
-                   <div className="bg-[#111827]/40 rounded-2xl p-6 border border-white/5 space-y-5">
+                   <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-5">
                       <div>
-                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Email</p>
-                         <p className="text-white font-medium">{viewModal.record.user.email}</p>
+                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Email</p>
+                         <p className="text-slate-700 font-medium">{viewModal.record.user.email}</p>
                       </div>
                       <div>
-                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Phone</p>
-                         <p className="text-white font-medium">{viewModal.record.user.phone}</p>
+                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Phone</p>
+                         <p className="text-slate-700 font-medium">{viewModal.record.user.phone}</p>
                       </div>
                       <div>
-                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">Address</p>
-                         <p className="text-white font-medium leading-relaxed">{viewModal.record.address}</p>
+                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Address</p>
+                         <p className="text-slate-700 font-medium leading-relaxed">{viewModal.record.address}</p>
                       </div>
                    </div>
 
-                   <div className="bg-[#111827]/40 rounded-2xl p-6 border border-white/5 space-y-5">
-                      <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Aadhaar No.</p>
-                         <p className="text-white font-mono font-bold">{viewModal.record.aadhaarNumber}</p>
+                   <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-5">
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Aadhaar No.</p>
+                         <p className="text-slate-800 font-mono font-bold">{viewModal.record.aadhaarNumber}</p>
                       </div>
-                      <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">UPI ID</p>
-                         <p className="text-blue-400 font-bold">{viewModal.record.upiId}</p>
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">UPI ID</p>
+                         <p className="text-indigo-600 font-bold">{viewModal.record.upiId}</p>
                       </div>
-                      <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Bank Account</p>
-                         <p className="text-white font-bold">{viewModal.record.bankAccount}</p>
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Bank Account</p>
+                         <p className="text-slate-800 font-bold">{viewModal.record.bankAccount}</p>
                       </div>
                       <div className="flex items-center justify-between">
-                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">IFSC Code</p>
-                         <p className="text-white font-bold uppercase">{viewModal.record.ifscCode}</p>
+                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">IFSC Code</p>
+                         <p className="text-slate-800 font-bold uppercase">{viewModal.record.ifscCode}</p>
                       </div>
                    </div>
                 </div>
@@ -279,10 +275,10 @@ export default function AdminKycPage() {
 
              {/* Actions */}
              {viewModal.record.status === 'PENDING' && (
-                <div className="pt-6 border-t border-white/10 flex gap-4">
+                <div className="pt-6 border-t border-slate-200 flex gap-4">
                   <Button
                     variant="danger"
-                    className="flex-1 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+                    className="flex-1"
                     onClick={() => setRejectModal({ open: true, id: viewModal.record!.id })}
                     disabled={actionLoading}
                   >
@@ -290,7 +286,7 @@ export default function AdminKycPage() {
                   </Button>
                   <Button
                     variant="primary"
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                    className="flex-1 bg-emerald-500 hover:bg-emerald-600"
                     onClick={() => handleApprove(viewModal.record!.id)}
                     loading={actionLoading}
                   >
@@ -310,23 +306,23 @@ export default function AdminKycPage() {
         size="sm"
       >
         <div className="space-y-6">
-           <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex gap-4 items-start text-red-300 text-sm">
-             <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
+           <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex gap-4 items-start text-red-600 text-sm">
+             <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
              <p>Rejection will notify the user and require them to resubmit their application.</p>
            </div>
            
            <div className="space-y-2">
-             <label className="text-sm font-bold text-slate-300">Reason for Rejection *</label>
+             <label className="text-sm font-bold text-slate-700">Reason for Rejection *</label>
              <textarea
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
                 placeholder="e.g., Image is blurry, name mismatch..."
-                className="w-full px-4 py-3 bg-[#111827]/60 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 min-h-[120px] resize-none"
+                className="w-full px-4 py-3 bg-white/80 border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-red-400 focus:ring-1 focus:ring-red-400/20 rounded-xl outline-none min-h-[120px] resize-none"
              />
            </div>
 
            <div className="flex gap-4">
-              <Button variant="ghost" onClick={() => setRejectModal({ open: false, id: '' })} className="flex-1 bg-slate-800 text-white" disabled={actionLoading}>Cancel</Button>
+              <Button variant="ghost" onClick={() => setRejectModal({ open: false, id: '' })} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200" disabled={actionLoading}>Cancel</Button>
               <Button variant="danger" onClick={handleReject} loading={actionLoading} className="flex-1">Confirm Reject</Button>
            </div>
         </div>

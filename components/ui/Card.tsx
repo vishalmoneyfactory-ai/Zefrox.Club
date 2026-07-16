@@ -24,12 +24,14 @@ export default function Card({
   return (
     <motion.div
       onClick={onClick}
-      whileHover={hover ? { y: -5, scale: 1.01 } : undefined}
+      whileHover={hover ? { y: -4, scale: 1.01 } : undefined}
       className={cn(
-        'rounded-[2rem] p-6 transition-all duration-300',
-        glass ? 'bg-[#0b1221]/80 backdrop-blur-2xl border border-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.3)]' : 'bg-[#060a14] border border-white/10',
-        hover && 'hover:border-blue-500/30 hover:shadow-[0_8px_30px_rgba(59,130,246,0.15)] hover:bg-[#0b1221]',
-        glow && 'shadow-[0_0_20px_rgba(59,130,246,0.15)] border-blue-500/30',
+        'rounded-2xl p-6 transition-all duration-300',
+        glass
+          ? 'bg-white/80 backdrop-blur-xl border border-white/70 shadow-[0_4px_24px_rgba(99,102,241,0.08),0_1px_4px_rgba(0,0,0,0.04)]'
+          : 'bg-white border border-slate-200 shadow-sm',
+        hover && 'hover:border-indigo-300/60 hover:shadow-[0_8px_30px_rgba(99,102,241,0.15)] cursor-pointer',
+        glow && 'shadow-[0_0_24px_rgba(99,102,241,0.15)] border-indigo-300/40',
         onClick && 'cursor-pointer',
         className
       )}

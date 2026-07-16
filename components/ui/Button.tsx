@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 interface ButtonProps extends Omit<HTMLMotionProps<"button">, "disabled"> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'glow';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'glow' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   disabled?: boolean;
@@ -18,15 +18,17 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "disabled"> {
 
 const variantStyles: Record<string, string> = {
   primary:
-    'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] border border-blue-500/50',
+    'bg-gradient-to-r from-indigo-500 to-violet-600 text-white shadow-[0_4px_14px_rgba(99,102,241,0.4)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.55)] hover:from-indigo-600 hover:to-violet-700 border-0',
   secondary:
-    'bg-[#111827]/60 hover:bg-[#111827]/80 text-white border border-white/10 backdrop-blur-md',
+    'bg-white/80 hover:bg-white text-slate-700 hover:text-slate-900 border border-slate-200 hover:border-indigo-300 shadow-sm backdrop-blur-sm',
   danger:
-    'bg-red-600 hover:bg-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)] border border-red-500/50',
+    'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-[0_4px_14px_rgba(239,68,68,0.35)] hover:shadow-[0_6px_20px_rgba(239,68,68,0.5)] border-0',
   ghost:
-    'bg-transparent hover:bg-white/5 text-slate-300 hover:text-white border border-transparent',
+    'bg-transparent hover:bg-indigo-50 text-slate-600 hover:text-indigo-700 border border-transparent hover:border-indigo-200',
   glow:
-    'bg-blue-500/10 text-blue-400 border border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:shadow-[0_0_25px_rgba(59,130,246,0.4)] hover:bg-blue-500/20 backdrop-blur-md',
+    'bg-indigo-50 text-indigo-600 border border-indigo-200 shadow-[0_0_12px_rgba(99,102,241,0.15)] hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:bg-indigo-100',
+  outline:
+    'bg-transparent text-indigo-600 border-2 border-indigo-400 hover:bg-indigo-50 hover:border-indigo-500',
 };
 
 const sizeStyles: Record<string, string> = {
@@ -53,7 +55,7 @@ export default function Button({
       disabled={isDisabled}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-xl font-bold transition-all duration-300',
-        'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-[#060a14]',
+        'focus:outline-none focus:ring-2 focus:ring-indigo-400/50 focus:ring-offset-2 focus:ring-offset-white',
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none',
         variantStyles[variant],
         sizeStyles[size],

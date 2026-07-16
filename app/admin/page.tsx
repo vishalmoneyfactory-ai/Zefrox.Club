@@ -114,7 +114,7 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Spinner size="lg" className="text-blue-500" />
+        <Spinner size="lg" className="text-indigo-500" />
       </div>
     );
   }
@@ -133,16 +133,15 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="relative z-10 space-y-8 animate-fade-in pb-12">
-      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] mix-blend-screen -translate-y-1/2 translate-x-1/4" />
-      </div>
-
       <motion.div initial="hidden" animate="visible" variants={containerVariants} className="space-y-8">
         <motion.div variants={itemVariants} className="mb-4">
-          <h1 className="text-2xl sm:text-3xl font-black text-white drop-shadow-sm flex items-center gap-3">
-            <Activity className="w-8 h-8 text-blue-500" /> Command Center
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-3">
+            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white shadow-md">
+              <Activity className="w-5 h-5" />
+            </span>
+            Command Center
           </h1>
-          <p className="text-slate-400 mt-2 font-medium">Overview of platform activity and management</p>
+          <p className="text-slate-600 mt-2 font-medium">Overview of platform activity and management</p>
         </motion.div>
 
         {/* Stats Grid */}
@@ -155,22 +154,25 @@ export default function AdminDashboardPage() {
           <StatsCard title="Pending Amt" value={`₹${data.pendingRequestsAmount.toLocaleString('en-IN')}`} color="yellow" icon={<Activity className="w-6 h-6" />} />
         </motion.div>
 
-        {/* Create Payment Request - ADDED relative z-50 HERE TO FIX DROPDOWN ISSUE */}
+        {/* Create Payment Request */}
         <motion.div variants={itemVariants} className="relative z-50">
-          <Card glass glow className="p-4 sm:p-6 border-white/5 bg-[#0b1221]/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] rounded-2xl relative">
-            <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-              <PlusCircle className="w-5 h-5 text-blue-400" /> Create Payment Request
+          <div className="bg-white/90 border border-slate-200 rounded-2xl shadow-sm p-4 sm:p-6 relative">
+            <h2 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white">
+                <PlusCircle className="w-4 h-4" />
+              </span>
+              Create Payment Request
             </h2>
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
               <div className="flex-1 w-full relative">
-                <label htmlFor="admin-user-search" className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Select User</label>
+                <label htmlFor="admin-user-search" className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Select User</label>
                 {selectedUser ? (
-                  <div className="flex items-center gap-3 px-4 py-3 bg-blue-500/10 border border-blue-500/30 rounded-xl w-full shadow-inner">
-                    <span className="text-sm font-bold text-white">{selectedUser.fullName}</span>
-                    <span className="text-xs text-blue-400/80">({selectedUser.email})</span>
+                  <div className="flex items-center gap-3 px-4 py-3 bg-indigo-100 border border-indigo-200 rounded-xl w-full">
+                    <span className="text-sm font-bold text-indigo-700">{selectedUser.fullName}</span>
+                    <span className="text-xs text-indigo-500">({selectedUser.email})</span>
                     <button
                       onClick={() => { setSelectedUser(null); setUserSearch(''); }}
-                      className="ml-auto text-blue-400 hover:text-white transition-colors"
+                      className="ml-auto text-indigo-400 hover:text-indigo-700 transition-colors"
                     >
                       <XCircle className="w-5 h-5" />
                     </button>
@@ -178,7 +180,7 @@ export default function AdminDashboardPage() {
                 ) : (
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Search className="h-4 w-4 text-slate-500" />
+                      <Search className="h-4 w-4 text-slate-400" />
                     </div>
                     <input
                       id="admin-user-search"
@@ -186,7 +188,7 @@ export default function AdminDashboardPage() {
                       value={userSearch}
                       onChange={(e) => setUserSearch(e.target.value)}
                       placeholder="Search by name or email..."
-                      className="w-full pl-10 pr-4 py-3 bg-[#060a14]/60 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all text-sm shadow-inner"
+                      className="w-full pl-10 pr-4 py-3 bg-white/80 border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 rounded-xl transition-all text-sm outline-none"
                       onFocus={() => userSearch.length >= 1 && setShowDropdown(true)}
                       onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
                     />
@@ -196,7 +198,7 @@ export default function AdminDashboardPage() {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
-                          className="absolute z-[100] mt-2 w-full bg-[#111827] border border-white/10 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] max-h-60 overflow-y-auto custom-scrollbar"
+                          className="absolute z-[100] mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
                         >
                           {users.map((u) => (
                             <button
@@ -206,9 +208,9 @@ export default function AdminDashboardPage() {
                                 setShowDropdown(false);
                                 setUserSearch('');
                               }}
-                              className="w-full px-4 py-3 text-left hover:bg-white/5 text-sm flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/5 last:border-0 transition-colors"
+                              className="w-full px-4 py-3 text-left hover:bg-indigo-50 text-sm flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 last:border-0 transition-colors"
                             >
-                              <span className="font-bold text-white">{u.fullName}</span>
+                              <span className="font-bold text-slate-700">{u.fullName}</span>
                               <span className="text-xs text-slate-400 mt-1 sm:mt-0">{u.email}</span>
                             </button>
                           ))}
@@ -219,7 +221,7 @@ export default function AdminDashboardPage() {
                 )}
               </div>
               <div className="w-full sm:w-48">
-                <label htmlFor="admin-amount" className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Amount (₹)</label>
+                <label htmlFor="admin-amount" className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Amount (₹)</label>
                 <input
                   id="admin-amount"
                   type="number"
@@ -227,7 +229,7 @@ export default function AdminDashboardPage() {
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
                   min="1"
-                  className="w-full px-4 py-3 bg-[#060a14]/60 rounded-xl border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all text-sm shadow-inner"
+                  className="w-full px-4 py-3 bg-white/80 border border-slate-200 text-slate-800 placeholder-slate-400 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400/20 rounded-xl transition-all text-sm outline-none"
                 />
               </div>
               <div className="w-full sm:w-auto">
@@ -236,67 +238,69 @@ export default function AdminDashboardPage() {
                   onClick={handleCreateRequest}
                   disabled={creating || !selectedUser || !amount}
                   loading={creating}
-                  className="w-full sm:w-auto py-3 px-8 shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+                  className="w-full sm:w-auto py-3 px-8"
                 >
                   Send Request
                 </Button>
               </div>
             </div>
-          </Card>
+          </div>
         </motion.div>
 
         {/* Paid Today / Not Paid Today */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative z-10">
-          <Card glass className="p-6 border-white/5 bg-[#0b1221]/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] rounded-2xl">
-            <h3 className="text-base font-bold text-white mb-6 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center border border-green-500/20">
-                <CheckCircle2 className="w-4 h-4 text-green-400" />
+          {/* Paid Today */}
+          <div className="bg-white/90 border border-slate-200 rounded-2xl shadow-sm p-6">
+            <h3 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white">
+                <CheckCircle2 className="w-4 h-4" />
               </div>
               Paid Today
-              <span className="ml-auto bg-green-500/20 text-green-400 text-xs px-3 py-1 font-bold rounded-lg border border-green-500/30 shadow-inner">
+              <span className="ml-auto bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs px-3 py-1 font-bold rounded-lg">
                 {data.paidTodayUsers.length} Users
               </span>
             </h3>
             {data.paidTodayUsers.length === 0 ? (
-              <div className="py-8 text-center border border-dashed border-white/10 rounded-xl bg-[#060a14]/60">
+              <div className="py-8 text-center border border-dashed border-slate-200 rounded-xl bg-slate-50">
                 <p className="text-slate-400 text-sm font-medium">No payments collected today.</p>
               </div>
             ) : (
               <div className="space-y-3 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
                 {data.paidTodayUsers.map((u) => (
-                  <div key={u.id} className="flex items-center justify-between px-4 py-3 bg-[#060a14]/60 rounded-xl border border-white/5 hover:border-green-500/30 transition-colors shadow-sm">
-                    <span className="text-sm font-bold text-white">{u.fullName}</span>
-                    <span className="text-sm font-black text-green-400 bg-green-500/10 px-3 py-1 rounded-lg border border-green-500/20 shadow-inner">₹{u.totalPaid.toLocaleString('en-IN')}</span>
+                  <div key={u.id} className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3 flex justify-between items-center">
+                    <span className="text-sm font-bold text-slate-700">{u.fullName}</span>
+                    <span className="text-sm font-black text-emerald-700 bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-lg">₹{u.totalPaid.toLocaleString('en-IN')}</span>
                   </div>
                 ))}
               </div>
             )}
-          </Card>
+          </div>
 
-          <Card glass className="p-6 border-white/5 bg-[#0b1221]/80 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] rounded-2xl">
-            <h3 className="text-base font-bold text-white mb-6 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
-                <XCircle className="w-4 h-4 text-red-400" />
+          {/* Not Paid Today */}
+          <div className="bg-white/90 border border-slate-200 rounded-2xl shadow-sm p-6">
+            <h3 className="text-base font-bold text-slate-800 mb-6 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white">
+                <XCircle className="w-4 h-4" />
               </div>
               Not Paid Today
-              <span className="ml-auto bg-red-500/20 text-red-400 text-xs px-3 py-1 font-bold rounded-lg border border-red-500/30 shadow-inner">
+              <span className="ml-auto bg-red-100 text-red-700 border border-red-200 text-xs px-3 py-1 font-bold rounded-lg">
                 {data.notPaidTodayUsers.length} Users
               </span>
             </h3>
             {data.notPaidTodayUsers.length === 0 ? (
-              <div className="py-8 text-center border border-dashed border-white/10 rounded-xl bg-[#060a14]/60">
+              <div className="py-8 text-center border border-dashed border-slate-200 rounded-xl bg-slate-50">
                 <p className="text-slate-400 text-sm font-medium">Everyone is up to date!</p>
               </div>
             ) : (
               <div className="space-y-3 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
                 {data.notPaidTodayUsers.map((u) => (
-                  <div key={u.id} className="flex items-center px-4 py-3 bg-[#060a14]/60 rounded-xl border border-white/5 hover:border-red-500/30 transition-colors shadow-sm">
-                    <span className="text-sm font-bold text-slate-300">{u.fullName}</span>
+                  <div key={u.id} className="bg-red-50 border border-red-100 rounded-xl px-4 py-3">
+                    <span className="text-sm font-bold text-slate-700">{u.fullName}</span>
                   </div>
                 ))}
               </div>
             )}
-          </Card>
+          </div>
         </motion.div>
       </motion.div>
     </div>

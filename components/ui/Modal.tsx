@@ -19,29 +19,16 @@ const sizeStyles: Record<string, string> = {
   xl: 'max-w-4xl',
 };
 
-export default function Modal({
-  isOpen,
-  onClose,
-  title,
-  children,
-  size = 'md',
-}: ModalProps) {
+export default function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-
+    const handleKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
-
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
@@ -51,28 +38,25 @@ export default function Modal({
   if (!isOpen || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Overlay */}
-      <div
-        className="absolute inset-0 bg-[#060a14]/80 backdrop-blur-sm"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-slate-900/20 backdrop-blur-md" onClick={onClose} />
 
       {/* Modal */}
-      <div
-        className={`
-          relative bg-[#0b1221]/90 backdrop-blur-3xl rounded-[2rem] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] mx-4 w-full
-          animate-scale-in overflow-hidden
-          ${sizeStyles[size]}
-        `}
-      >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+      <div className={`
+        relative bg-white/95 backdrop-blur-2xl rounded-2xl border border-slate-200
+        shadow-[0_20px_60px_rgba(99,102,241,0.18)] mx-4 w-full animate-scale-in overflow-hidden
+        ${sizeStyles[size]}
+      `}>
+        {/* Gradient top accent */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500" />
+
         {/* Header */}
-        <div className="flex items-center justify-between px-4 sm:px-8 py-5 border-b border-white/5 relative z-10">
-          <h2 className="text-xl font-bold text-white">{title}</h2>
+        <div className="flex items-center justify-between px-4 sm:px-8 py-5 border-b border-slate-100 relative z-10">
+          <h2 className="text-xl font-bold text-slate-800">{title}</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+            className="p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
