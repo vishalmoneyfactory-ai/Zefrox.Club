@@ -207,7 +207,7 @@ export default function AdminRequestsPage() {
                       value={userSearch}
                       onChange={(e) => setUserSearch(e.target.value)}
                       placeholder="Search by name or email..."
-                      className="w-full pl-10 pr-4 py-3 bg-slate-950/80 rounded-xl border border-white/10 text-slate-800 placeholder-slate-600 focus:outline-none focus:border-aurora-purple/50 focus:ring-1 focus:ring-aurora-purple/50 transition-all text-sm shadow-inner"
+                      className="w-full pl-10 pr-4 py-3 bg-white/80 border-slate-200 text-slate-800 placeholder-slate-600 focus:outline-none focus:border-aurora-purple/50 focus:ring-1 focus:ring-aurora-purple/50 transition-all text-sm shadow-inner"
                       onFocus={() => userSearch.length >= 1 && setShowDropdown(true)}
                       onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
                     />
@@ -250,7 +250,7 @@ export default function AdminRequestsPage() {
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
                   min="1"
-                  className="w-full px-4 py-3 bg-slate-950/80 rounded-xl border border-white/10 text-slate-800 placeholder-slate-600 focus:outline-none focus:border-aurora-purple/50 focus:ring-1 focus:ring-aurora-purple/50 transition-all text-sm shadow-inner font-mono font-bold"
+                  className="w-full px-4 py-3 bg-white/80 border-slate-200 text-slate-800 placeholder-slate-600 focus:outline-none focus:border-aurora-purple/50 focus:ring-1 focus:ring-aurora-purple/50 transition-all text-sm shadow-inner font-mono font-bold"
                 />
               </div>
               <div className="w-full md:w-auto mt-4 md:mt-0">

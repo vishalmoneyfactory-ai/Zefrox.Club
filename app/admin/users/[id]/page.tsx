@@ -124,12 +124,12 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
         <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={() => router.push('/admin/users')}
-            className="shrink-0 p-2.5 bg-white/5 rounded-xl hover:bg-white/10 transition-colors text-slate-300 border border-white/5"
+            className="shrink-0 p-2.5 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors text-slate-600 border border-slate-100"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-black text-white truncate">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-800 truncate">
               {user.fullName}
             </h1>
             <p className="text-xs text-slate-500 font-medium truncate">{user.email}</p>
@@ -143,12 +143,12 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
       {/* Profile + Stats Row */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Avatar + KYC card */}
-        <div className="bg-[#0b1221] border border-white/10 rounded-2xl p-5 flex items-center gap-4 sm:flex-col sm:items-center sm:text-center shadow-lg">
-          <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl sm:text-3xl font-black shadow-[0_0_20px_rgba(59,130,246,0.3)] shrink-0">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex items-center gap-4 sm:flex-col sm:items-center sm:text-center shadow-lg">
+          <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-slate-800 text-2xl sm:text-3xl font-black shadow-[0_0_20px_rgba(59,130,246,0.3)] shrink-0">
             {user.fullName.charAt(0)}
           </div>
           <div className="min-w-0 sm:w-full">
-            <h2 className="font-bold text-white truncate sm:text-center mb-1">{user.fullName}</h2>
+            <h2 className="font-bold text-slate-800 truncate sm:text-center mb-1">{user.fullName}</h2>
             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${kycBadgeColor}`}>
               <ShieldCheck className="w-3.5 h-3.5" />
               {user.kyc?.status || 'UNVERIFIED'}
@@ -157,24 +157,24 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
         </div>
 
         {/* Email */}
-        <div className="bg-[#0b1221] border border-white/10 rounded-2xl p-5 flex items-center gap-4 shadow-lg">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex items-center gap-4 shadow-lg">
           <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0 border border-blue-500/20">
             <Mail className="w-5 h-5" />
           </div>
           <div className="min-w-0">
             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Email Address</p>
-            <p className="text-slate-200 font-semibold text-sm truncate">{user.email}</p>
+            <p className="text-slate-700 font-semibold text-sm truncate">{user.email}</p>
           </div>
         </div>
 
         {/* Phone + Joined */}
-        <div className="bg-[#0b1221] border border-white/10 rounded-2xl p-5 flex items-center gap-4 shadow-lg">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex items-center gap-4 shadow-lg">
           <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 shrink-0 border border-purple-500/20">
             <Phone className="w-5 h-5" />
           </div>
           <div>
             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Phone</p>
-            <p className="text-slate-200 font-semibold">{user.phone}</p>
+            <p className="text-slate-700 font-semibold">{user.phone}</p>
             <p className="text-[10px] text-slate-600 mt-1">Joined: {new Date(user.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
@@ -182,26 +182,26 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
 
       {/* Trading Accounts */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <div className="bg-[#0b1221] border border-white/10 rounded-2xl p-5 shadow-lg">
-          <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-lg">
+          <h3 className="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-blue-400" />
             Trading Accounts
             <span className="ml-auto text-xs text-slate-500 font-medium">{user.tradingAccounts.length} account{user.tradingAccounts.length !== 1 ? 's' : ''}</span>
           </h3>
 
           {user.tradingAccounts.length === 0 ? (
-            <div className="text-center py-10 bg-[#111827] rounded-xl border border-dashed border-white/10">
+            <div className="text-center py-10 bg-slate-50 rounded-xl border border-dashed border-slate-200">
               <p className="text-slate-400 text-sm">No trading accounts found for this user.</p>
             </div>
           ) : (
             <div className="space-y-4">
               {user.tradingAccounts.map(account => (
-                <div key={account.id} className="bg-[#111827] rounded-xl p-4 border border-white/5">
+                <div key={account.id} className="bg-slate-50 rounded-xl p-4 border border-slate-100">
                   {/* Account header */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <span className="px-3 py-1 bg-white text-slate-900 font-bold rounded-lg text-sm">{account.plan}</span>
-                      <span className={`px-2 py-0.5 font-bold rounded text-xs border ${account.type === 'LIVE' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20' : 'bg-slate-700 text-slate-300 border-slate-600'}`}>
+                      <span className={`px-2 py-0.5 font-bold rounded text-xs border ${account.type === 'LIVE' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20' : 'bg-slate-700 text-slate-600 border-slate-600'}`}>
                         {account.type}
                       </span>
                     </div>
@@ -229,7 +229,7 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
                         type="number"
                         value={editFormData.balance}
                         onChange={e => setEditFormData({ ...editFormData, balance: Number(e.target.value) })}
-                        className="w-full bg-[#060a14] border border-white/10 rounded-lg px-3 py-2 text-white text-lg font-bold focus:ring-1 focus:ring-blue-500"
+                        className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-slate-800 text-lg font-bold focus:ring-1 focus:ring-blue-500"
                       />
                     ) : (
                       <p className="text-2xl font-black text-emerald-400">₹{account.balance.toLocaleString('en-IN')}</p>
@@ -243,17 +243,17 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
                       { label: 'MT5 Password', key: 'mt5Password', value: account.mt5Password },
                       { label: 'Server', key: 'server', value: account.server },
                     ].map(field => (
-                      <div key={field.key} className="bg-[#0b1221] rounded-lg p-3 border border-white/5">
+                      <div key={field.key} className="bg-white rounded-lg p-3 border border-slate-100">
                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">{field.label}</p>
                         {editingAccountId === account.id ? (
                           <input
                             type="text"
                             value={(editFormData as any)[field.key] ?? ''}
                             onChange={e => setEditFormData({ ...editFormData, [field.key]: e.target.value })}
-                            className="w-full bg-[#060a14] border border-white/10 rounded-lg px-2 py-1.5 text-white text-sm font-medium focus:ring-1 focus:ring-blue-500"
+                            className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-slate-800 text-sm font-medium focus:ring-1 focus:ring-blue-500"
                           />
                         ) : (
-                          <p className="text-slate-200 font-mono text-sm truncate">{field.value || '—'}</p>
+                          <p className="text-slate-700 font-mono text-sm truncate">{field.value || '—'}</p>
                         )}
                       </div>
                     ))}
@@ -267,14 +267,14 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
 
       {/* Withdrawals Section */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-        <div className="bg-[#0b1221] border border-white/10 rounded-2xl p-5 shadow-lg">
-          <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-lg">
+          <h3 className="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
             <Banknote className="w-5 h-5 text-red-400" />
             Withdrawal Requests
           </h3>
 
           {!user.withdrawals || user.withdrawals.length === 0 ? (
-            <div className="text-center py-10 bg-[#111827] rounded-xl border border-dashed border-white/10">
+            <div className="text-center py-10 bg-slate-50 rounded-xl border border-dashed border-slate-200">
               <p className="text-slate-400 text-sm">No withdrawal requests found for this user.</p>
             </div>
           ) : (
@@ -288,10 +288,10 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
                 const StatusIcon = w.status === 'APPROVED' ? CheckCircle2 : w.status === 'REJECTED' ? XCircle : Clock;
 
                 return (
-                  <div key={w.id} className="bg-[#111827] rounded-xl p-4 border border-white/5">
+                  <div key={w.id} className="bg-slate-50 rounded-xl p-4 border border-slate-100">
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
-                        <p className="text-lg font-black text-white">₹{w.amount.toLocaleString('en-IN')}</p>
+                        <p className="text-lg font-black text-slate-800">₹{w.amount.toLocaleString('en-IN')}</p>
                         <p className="text-xs text-slate-400 font-semibold">{w.method}</p>
                       </div>
                       <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${statusColor} shrink-0`}>
@@ -301,21 +301,21 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div className="bg-[#0b1221] rounded-lg p-3 border border-white/5">
+                      <div className="bg-white rounded-lg p-3 border border-slate-100">
                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">MT5 Account</p>
                         <p className="text-blue-400 font-bold text-xs">{user.tradingAccounts.find(a => a.id === w.accountId)?.mt5Id || 'Unknown'}</p>
                       </div>
-                      <div className="bg-[#0b1221] rounded-lg p-3 border border-white/5">
+                      <div className="bg-white rounded-lg p-3 border border-slate-100">
                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Date</p>
-                        <p className="text-slate-300 font-medium text-xs">{new Date(w.createdAt).toLocaleDateString()}</p>
+                        <p className="text-slate-600 font-medium text-xs">{new Date(w.createdAt).toLocaleDateString()}</p>
                       </div>
                       {w.method === 'UPI Transfer' ? (
-                        <div className="col-span-2 bg-[#0b1221] rounded-lg p-3 border border-white/5">
+                        <div className="col-span-2 bg-white rounded-lg p-3 border border-slate-100">
                           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">UPI ID</p>
                           <p className="text-emerald-400 font-bold text-sm">{w.upiId}</p>
                         </div>
                       ) : (
-                        <div className="col-span-2 bg-[#0b1221] rounded-lg p-3 border border-white/5">
+                        <div className="col-span-2 bg-white rounded-lg p-3 border border-slate-100">
                           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Bank Details</p>
                           <p className="text-blue-400 font-bold text-sm">{w.bankAccount}</p>
                           <p className="text-xs text-slate-400">IFSC: {w.ifscCode}</p>
