@@ -9,7 +9,7 @@ const appName = 'Zerofx.club';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen relative overflow-x-hidden bg-[#060a14] text-slate-200 selection:bg-blue-500/30 selection:text-blue-200 font-sans">
+    <div className="min-h-screen relative overflow-x-hidden bg-[#f0f4ff] text-slate-800 selection:bg-indigo-500/30 selection:text-indigo-900 font-sans">
       
       {/* Dynamic Background Effects */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -26,7 +26,7 @@ export default function AboutPage() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed w-full z-50 top-0 transition-all duration-300 bg-[#060a14]/60 backdrop-blur-xl border-b border-white/5 flex flex-col"
+        className="fixed w-full z-50 top-0 transition-all duration-300 bg-white/70 border-slate-200 shadow-md flex flex-col"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex items-center justify-between h-20">
@@ -35,13 +35,13 @@ export default function AboutPage() {
             </div>
             
             <div className="hidden md:flex items-center justify-center space-x-8">
-              <Link href="/" className="text-slate-400 font-medium hover:text-white transition-colors pb-1">Home</Link>
-              <Link href="/about" className="text-blue-400 font-semibold transition-colors border-b-2 border-blue-500 pb-1">About Us</Link>
+              <Link href="/" className="text-slate-500 hover:text-slate-800 transition-colors pb-1">Home</Link>
+              <Link href="/about" className="text-indigo-500 font-semibold transition-colors border-b-2 border-indigo-500 pb-1">About Us</Link>
             </div>
 
             <div className="flex items-center justify-end">
               <Link href="/login">
-                <Button variant="primary" size="sm" className="shadow-[0_0_15px_rgba(59,130,246,0.15)] border border-blue-500/30">
+                <Button variant="primary" size="sm" className="shadow-[0_0_15px_rgba(59,130,246,0.15)] border border-indigo-500/30">
                   Sign In
                 </Button>
               </Link>
@@ -59,11 +59,11 @@ export default function AboutPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7 }}
             >
-              <h2 className="text-sm font-bold tracking-widest text-blue-500 uppercase mb-3">About Us</h2>
-              <h3 className="text-4xl sm:text-5xl font-black text-white mb-6 leading-tight drop-shadow-sm">
-                Empowering Traders with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Next-Gen</span> Execution
+              <h2 className="text-sm font-bold tracking-widest text-indigo-600 uppercase mb-3">About Us</h2>
+              <h3 className="text-4xl sm:text-5xl font-black text-slate-800 mb-6 leading-tight drop-shadow-sm">
+                Empowering Traders with <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Next-Gen</span> Execution
               </h3>
-              <div className="space-y-6 text-slate-400 text-lg leading-relaxed font-medium">
+              <div className="space-y-6 text-slate-600 text-lg leading-relaxed font-medium">
                 <p>
                   At {appName}, we believe that every trader deserves institutional-grade access to the global financial markets. Built by traders for traders, our platform is engineered to deliver lightning-fast execution, ultra-tight spreads, and an environment completely free from artificial limitations.
                 </p>
@@ -82,24 +82,24 @@ export default function AboutPage() {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="relative"
             >
-              <div className="aspect-square md:aspect-auto md:h-[500px] rounded-[2rem] bg-[#0b1221]/80 backdrop-blur-2xl p-10 flex flex-col justify-between relative overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+              <div className="aspect-square md:aspect-auto md:h-[500px] rounded-[2rem] bg-white/80 border-slate-200 shadow-xl">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
                 <div className="space-y-10 relative z-10">
                   <div>
-                    <h4 className="text-5xl font-black text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">12.4k+</h4>
-                    <p className="text-blue-400 font-semibold mt-2 text-lg">Active Traders globally</p>
+                    <h4 className="text-5xl font-black text-slate-800 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">12.4k+</h4>
+                    <p className="text-indigo-500 font-semibold mt-2 text-lg">Active Traders globally</p>
                   </div>
                   <div>
-                    <h4 className="text-5xl font-black text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">200+</h4>
+                    <h4 className="text-5xl font-black text-slate-800 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">200+</h4>
                     <p className="text-indigo-400 font-semibold mt-2 text-lg">Tradable Instruments</p>
                   </div>
                   <div>
-                    <h4 className="text-5xl font-black text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">&lt;10ms</h4>
+                    <h4 className="text-5xl font-black text-slate-800 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">&lt;10ms</h4>
                     <p className="text-blue-300 font-semibold mt-2 text-lg">Average Execution Speed</p>
                   </div>
                 </div>
                 <div className="mt-10 pt-8 border-t border-white/10 relative z-10">
-                  <p className="text-slate-400 italic font-medium leading-relaxed">
+                  <p className="text-slate-600 italic font-medium leading-relaxed">
                     "The latency and spread on XAU/USD are unmatched. {appName} has completely transformed my day-trading strategy."
                   </p>
                 </div>
@@ -110,19 +110,19 @@ export default function AboutPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 bg-[#060a14] relative z-10 mt-auto">
+      <footer className="border-slate-200 bg-white/50 relative z-10 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
               <span className="text-2xl font-black text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">{appName}</span>
             </div>
             
-            <div className="flex gap-8 text-sm font-semibold text-slate-400">
-              <Link href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</Link>
-              <Link href="#" className="hover:text-blue-400 transition-colors">Terms of Service</Link>
+            <div className="flex gap-8 text-sm font-semibold text-slate-600">
+              <Link href="#" className="hover:text-indigo-500 transition-colors">Privacy Policy</Link>
+              <Link href="#" className="hover:text-indigo-500 transition-colors">Terms of Service</Link>
             </div>
 
-            <p className="text-sm text-slate-500 font-medium">
+            <p className="text-sm text-slate-600 font-medium">
               &copy; {new Date().getFullYear()} {appName}. All rights reserved.
             </p>
           </div>

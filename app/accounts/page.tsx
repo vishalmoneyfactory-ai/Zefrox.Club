@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Eye, EyeOff, Check, X, Shield, History, ChevronLeft, ChevronRight } from 'lucide-react';
 import api from '@/lib/axios';
@@ -54,6 +55,7 @@ const plans = [
 ];
 
 export default function AccountsPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'LIVE' | 'DEMO'>('LIVE');
   const [accounts, setAccounts] = useState<TradingAccount[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,8 +89,21 @@ export default function AccountsPage() {
   const { showSuccess, showError } = useToast();
 
   useEffect(() => {
-    fetchAccounts();
-  }, []);
+    const checkKycAndFetch = async () => {
+      try {
+        const { data: user } = await api.get('/api/users/me');
+        if (user.kycStatus !== 'APPROVED') {
+          router.push('/kyc');
+          return;
+        }
+        fetchAccounts();
+      } catch (error) {
+        showError('Failed to verify user status');
+        setLoading(false);
+      }
+    };
+    checkKycAndFetch();
+  }, [router, showError]);
 
   const fetchAccounts = async () => {
     try {

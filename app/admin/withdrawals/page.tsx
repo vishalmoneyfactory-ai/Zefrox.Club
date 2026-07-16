@@ -96,40 +96,40 @@ export default function AdminWithdrawalsPage() {
     <div className="space-y-6 pb-12">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-3 mb-1">
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-3 mb-1">
           <span className="p-2 bg-rose-500/10 border border-rose-500/20 rounded-xl shrink-0">
             <Banknote className="w-6 h-6 text-rose-400" />
           </span>
           Withdrawal Requests
         </h1>
-        <p className="text-slate-400 text-sm font-medium ml-1">Manage and process user withdrawal requests</p>
+        <p className="text-slate-600 text-sm font-medium ml-1">Manage and process user withdrawal requests</p>
       </motion.div>
 
       {/* Search + Filter */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
           <input
             type="text"
             placeholder="Search name, email, MT5 ID..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 bg-[#111827] border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-colors text-sm"
+            className="w-full pl-11 pr-4 py-3 bg-white/70 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-indigo-400 focus:ring-indigo-400/20 focus:ring-1 focus:ring-blue-500/50 transition-colors text-sm rounded-xl border"
           />
         </div>
         <div className="relative">
-          <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full sm:w-auto pl-11 pr-8 py-3 bg-[#111827] border border-white/10 rounded-xl text-white appearance-none focus:outline-none focus:border-blue-500/50 transition-colors cursor-pointer text-sm"
+            className="w-full sm:w-auto pl-11 pr-8 py-3 bg-[#111827] border border-white/10 rounded-xl text-slate-800 appearance-none focus:outline-none focus:border-blue-500/50 transition-colors cursor-pointer text-sm"
           >
             <option value="ALL">All Status</option>
             <option value="PENDING">Pending</option>
             <option value="APPROVED">Approved</option>
             <option value="REJECTED">Rejected</option>
           </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 pointer-events-none" />
         </div>
       </motion.div>
 
@@ -145,12 +145,12 @@ export default function AdminWithdrawalsPage() {
               <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4 border border-white/5">
                 <FileText className="w-8 h-8 text-slate-600" />
               </div>
-              <p className="text-slate-400 font-semibold">No withdrawal requests found.</p>
+              <p className="text-slate-600 font-semibold">No withdrawal requests found.</p>
             </div>
           ) : (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-slate-100">
               {filteredWithdrawals.map((w) => (
-                <div key={w.id} className="p-4 sm:p-5 hover:bg-white/[0.02] transition-colors">
+                <div key={w.id} className="p-4 sm:p-5 hover:bg-slate-50/50 transition-colors">
                   {/* Row 1: User + Amount + Status */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3 min-w-0">
@@ -158,12 +158,12 @@ export default function AdminWithdrawalsPage() {
                         {w.user.fullName.charAt(0)}
                       </div>
                       <div className="min-w-0">
-                        <p className="font-bold text-white truncate">{w.user.fullName}</p>
+                        <p className="font-bold text-slate-800 truncate">{w.user.fullName}</p>
                         <p className="text-xs text-slate-500 truncate">{w.user.email}</p>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-lg font-black text-white">₹{w.amount.toLocaleString('en-IN')}</p>
+                      <p className="text-lg font-black text-slate-800">₹{w.amount.toLocaleString('en-IN')}</p>
                       <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border mt-0.5 ${getStatusStyles(w.status)}`}>
                         <StatusIcon status={w.status} />
                         {w.status}
@@ -190,7 +190,7 @@ export default function AdminWithdrawalsPage() {
                       <div className="col-span-2 bg-[#111827] rounded-lg p-2.5 border border-white/5">
                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Bank Account</p>
                         <p className="text-blue-400 font-bold">{w.bankAccount}</p>
-                        <p className="text-slate-400 mt-0.5">IFSC: {w.ifscCode} · {w.bankName}</p>
+                        <p className="text-slate-600 mt-0.5">IFSC: {w.ifscCode} · {w.bankName}</p>
                       </div>
                     )}
                   </div>
@@ -211,7 +211,7 @@ export default function AdminWithdrawalsPage() {
                         <button
                           onClick={() => handleApprove(w.id)}
                           disabled={processingId === w.id}
-                          className="flex items-center gap-1.5 px-3 py-2 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white border border-emerald-500/30 rounded-xl transition-all text-xs font-bold disabled:opacity-50"
+                          className="flex items-center gap-1.5 px-3 py-2 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-slate-800 border border-emerald-500/30 rounded-xl transition-all text-xs font-bold disabled:opacity-50"
                         >
                           <CheckCircle2 className="w-4 h-4" />
                           Approve
@@ -219,7 +219,7 @@ export default function AdminWithdrawalsPage() {
                         <button
                           onClick={() => openRejectModal(w.id)}
                           disabled={processingId === w.id}
-                          className="flex items-center gap-1.5 px-3 py-2 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/30 rounded-xl transition-all text-xs font-bold disabled:opacity-50"
+                          className="flex items-center gap-1.5 px-3 py-2 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-slate-800 border border-rose-500/30 rounded-xl transition-all text-xs font-bold disabled:opacity-50"
                         >
                           <XCircle className="w-4 h-4" />
                           Reject
@@ -240,28 +240,28 @@ export default function AdminWithdrawalsPage() {
           <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-[#060a14]/90 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"
               onClick={() => setRejectModalOpen(false)}
             />
             <motion.div
               initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }}
-              className="relative w-full max-w-md bg-[#0b1221] border border-white/10 rounded-2xl p-5 shadow-2xl"
+              className="relative w-full max-w-md bg-white border border-slate-200 rounded-2xl p-5 shadow-2xl"
             >
-              <h3 className="text-lg font-bold text-white mb-1">Reject Withdrawal</h3>
-              <p className="text-slate-400 text-sm mb-4">This will notify the user with the reason you provide.</p>
+              <h3 className="text-lg font-bold text-slate-800 mb-1">Reject Withdrawal</h3>
+              <p className="text-slate-500 text-sm mb-4">This will notify the user with the reason you provide.</p>
               <form onSubmit={handleRejectSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Reason for Rejection *</label>
+                  <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Reason for Rejection *</label>
                   <textarea
                     required
                     value={rejectReason}
                     onChange={(e) => setRejectReason(e.target.value)}
-                    className="w-full bg-[#111827] border border-white/10 rounded-xl p-3 text-white placeholder-slate-600 focus:outline-none focus:border-rose-500 transition-colors min-h-[90px] text-sm resize-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-rose-400 transition-colors min-h-[90px] text-sm resize-none"
                     placeholder="e.g. Invalid bank details provided"
                   />
                 </div>
                 <div className="flex gap-3">
-                  <Button type="button" variant="ghost" onClick={() => setRejectModalOpen(false)} className="flex-1 bg-slate-800 text-white">
+                  <Button type="button" variant="ghost" onClick={() => setRejectModalOpen(false)} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200">
                     Cancel
                   </Button>
                   <Button type="submit" variant="primary" className="flex-1 bg-rose-500 hover:bg-rose-600 text-white border-0" loading={processingId === rejectingId}>
