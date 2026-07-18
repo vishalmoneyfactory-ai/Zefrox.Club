@@ -166,7 +166,7 @@ export default function AccountsPage() {
     try {
       await api.delete(`/api/accounts/${id}`);
       showSuccess('Account deleted successfully');
-      setAccounts(accounts.filter(a => a.id !== id));
+      await fetchAccounts();
     } catch (error: any) {
       showError(error.response?.data?.error || 'Failed to delete account');
     } finally {
@@ -517,7 +517,7 @@ export default function AccountsPage() {
                 ) : (
                   <div className="mt-2 py-3 px-4 bg-orange-50 border border-orange-200 rounded-lg text-orange-600 font-semibold text-xs flex flex-col items-center gap-1.5 text-center">
                     <div className="flex items-center gap-2"><History className="w-4 h-4" /> MT5 Credentials Pending Assignment</div>
-                    <div className="text-[10px] text-orange-400 uppercase tracking-wide">MT5 assignment takes 3-5 hours</div>
+                    <div className="text-[10px] text-orange-400 uppercase tracking-wide font-bold">MT5 ID password will be visible in 2-3 hours</div>
                   </div>
                 )}
               </div>

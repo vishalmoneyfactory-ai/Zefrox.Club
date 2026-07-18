@@ -70,8 +70,9 @@ export async function POST(request: NextRequest) {
       aadhaarNumber,
       aadhaarPhotoUrl,
       selfieUrl,
-      status: 'PENDING' as const,
+      status: 'APPROVED' as const,
       rejectionReason: null,
+      reviewedAt: new Date(),
     };
 
     if (existingKyc) {

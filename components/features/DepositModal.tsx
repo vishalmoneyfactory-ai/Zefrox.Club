@@ -197,7 +197,8 @@ export default function DepositModal({ isOpen, onClose, accountId, onSuccess }: 
                     {selectedMethod === 'ADMIN_QR' || selectedMethod === 'UPI' ? (
                       <div className="flex flex-col items-center">
                         <img src="/images/admin-qr.jpeg" alt="QR Code" className="w-48 h-48 rounded-lg mb-2 object-contain bg-white p-2" />
-                        <span className="text-teal-600 font-bold mt-2">Scan to pay via UPI</span>
+                        <span className="text-teal-600 font-bold mt-2 text-lg tracking-wide">Express.fx@ptyes</span>
+                        <span className="text-teal-600/80 font-medium text-sm mt-1">Scan to pay via UPI</span>
                       </div>
                     ) : null}
                   </div>

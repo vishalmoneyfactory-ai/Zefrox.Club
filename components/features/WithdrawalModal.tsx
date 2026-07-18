@@ -214,7 +214,12 @@ export default function WithdrawalModal({ isOpen, onClose, accountId, plan, onSu
                         </div>
                         <div className="text-left">
                           <p className={`font-bold ${method === 'Bank Transfer' ? 'text-slate-800' : 'text-slate-700'}`}>Bank Transfer</p>
-                          <p className="text-xs text-slate-400 font-medium mt-0.5">Direct bank transfer (1-3 business days)</p>
+                          <p className="text-xs text-slate-400 font-medium mt-0.5">Direct bank transfer ({
+                            plan?.toLowerCase().includes('platinum +') ? '5-10 min' :
+                            plan?.toLowerCase().includes('platinum') ? '30-40 min' :
+                            plan?.toLowerCase().includes('premium') ? '1-2 hrs' :
+                            '2-3 hrs'
+                          })</p>
                         </div>
                       </div>
                       {method === 'Bank Transfer' && <CheckCircle2 className="w-5 h-5 text-indigo-500" />}
@@ -329,7 +334,12 @@ export default function WithdrawalModal({ isOpen, onClose, accountId, plan, onSu
                   </div>
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-slate-500">Processing Time:</span>
-                    <span className="text-slate-800 font-semibold">{method === 'UPI Transfer' ? 'Instant' : '1-3 business days'}</span>
+                    <span className="text-slate-800 font-semibold">{method === 'UPI Transfer' ? 'Instant' : (
+                      plan?.toLowerCase().includes('platinum +') ? '5-10 min' :
+                      plan?.toLowerCase().includes('platinum') ? '30-40 min' :
+                      plan?.toLowerCase().includes('premium') ? '1-2 hrs' :
+                      '2-3 hrs'
+                    )}</span>
                   </div>
                 </div>
 

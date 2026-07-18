@@ -18,6 +18,7 @@ interface UserDetail {
   kyc?: { id: string; status: string };
   tradingAccounts: TradingAccount[];
   withdrawals?: any[];
+  payments?: any[];
 }
 
 interface TradingAccount {
@@ -306,8 +307,8 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
                         <p className="text-blue-400 font-bold text-xs">{user.tradingAccounts.find(a => a.id === w.accountId)?.mt5Id || 'Unknown'}</p>
                       </div>
                       <div className="bg-white rounded-lg p-3 border border-slate-100">
-                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Date</p>
-                        <p className="text-slate-600 font-medium text-xs">{new Date(w.createdAt).toLocaleDateString()}</p>
+                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Date & Time</p>
+                        <p className="text-slate-600 font-medium text-xs">{new Date(w.createdAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
                       </div>
                       {w.method === 'UPI Transfer' ? (
                         <div className="col-span-2 bg-white rounded-lg p-3 border border-slate-100">
@@ -329,6 +330,51 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
                         <p className="text-rose-300 text-sm">{w.rejectionReason}</p>
                       </div>
                     )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </motion.div>
+      {/* Deposit History Section */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-lg mt-5">
+          <h3 className="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <Clock className="w-5 h-5 text-indigo-400" />
+            Deposit History
+          </h3>
+
+          {!user.payments || user.payments.length === 0 ? (
+            <div className="text-center py-10 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+              <p className="text-slate-400 text-sm">No deposit history found for this user.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {user.payments.sort((a: any, b: any) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()).map((p: any) => {
+                const statusColor = p.status === 'APPROVED'
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                  : p.status === 'REJECTED'
+                  ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                  : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20';
+                const StatusIcon = p.status === 'APPROVED' ? CheckCircle2 : p.status === 'REJECTED' ? XCircle : Clock;
+
+                return (
+                  <div key={p.id} className="bg-slate-50 rounded-xl p-4 border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex flex-col">
+                      <p className="text-lg font-black text-slate-800">₹{p.amount.toLocaleString('en-IN')}</p>
+                      <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">{p.upiApp ? `UPI (${p.upiApp})` : 'Manual Deposit'}</p>
+                    </div>
+
+                    <div className="flex flex-col sm:items-end gap-2">
+                      <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${statusColor} w-max`}>
+                        <StatusIcon className="w-3.5 h-3.5" />
+                        {p.status}
+                      </div>
+                      <p className="text-[10px] text-slate-500 font-bold">
+                        {new Date(p.submittedAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
+                      </p>
+                    </div>
                   </div>
                 );
               })}
