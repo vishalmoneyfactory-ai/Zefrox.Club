@@ -26,28 +26,28 @@ interface TradingAccount {
 const plans = [
   {
     name: 'Standard',
-    deposit: '$40 (₹3600)',
+    deposit: '$40 (₹3880)',
     leverage: '1:500',
     description: 'Standard Account',
     iconColor: 'text-emerald-500',
   },
   {
     name: 'Platinum',
-    deposit: '$100 (₹9000)',
+    deposit: '$100 (₹9700)',
     leverage: '1:500',
     description: 'Platinum Account',
     iconColor: 'text-indigo-500',
   },
   {
     name: 'Premium',
-    deposit: '$500 (₹45000)',
+    deposit: '$500 (₹48500)',
     leverage: '1:500',
     description: 'Premium Account',
     iconColor: 'text-red-500',
   },
   {
     name: 'Platinum +',
-    deposit: '$1000 (₹90000)',
+    deposit: '$1000 (₹97000)',
     leverage: '1:500',
     description: 'Platinum + Account',
     iconColor: 'text-yellow-500',
@@ -181,11 +181,11 @@ export default function AccountsPage() {
     <div className="w-full">
       {/* Header */}
       {!viewingAccountId && (
-        <div className="flex justify-center items-center mb-8 relative">
+        <div className="flex flex-col-reverse sm:flex-row justify-center items-center mb-8 relative gap-4 sm:gap-0">
           {showPlans && (
             <button 
               onClick={() => setShowPlans(false)}
-              className="absolute left-0 flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all z-10 shadow-sm"
+              className="sm:absolute left-0 flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all z-10 shadow-sm"
             >
               ← Back to Accounts
             </button>
@@ -392,10 +392,10 @@ export default function AccountsPage() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full max-w-7xl mx-auto"
+          className="flex md:grid md:grid-cols-2 xl:grid-cols-4 gap-6 w-full max-w-7xl mx-auto overflow-x-auto pb-6 snap-x snap-mandatory custom-scrollbar"
         >
           {plans.map((plan, i) => (
-            <div key={i} className="bg-white/90 border border-slate-200 rounded-3xl p-6 w-full flex flex-col items-center shadow-lg">
+            <div key={i} className="bg-white/90 border border-slate-200 rounded-3xl p-6 min-w-[85vw] md:min-w-0 w-full flex flex-col items-center shadow-lg snap-center shrink-0">
               <div className="flex justify-between w-full items-center mb-4">
                 <h3 className="text-xl font-bold text-slate-800">{plan.name}</h3>
                 <span className="bg-rose-100 border border-rose-200 text-rose-600 text-xs font-bold px-2 py-1 rounded-md">Live</span>
@@ -516,7 +516,7 @@ export default function AccountsPage() {
                   </>
                 ) : (
                   <div className="mt-2 py-3 px-4 bg-orange-50 border border-orange-200 rounded-lg text-orange-600 font-semibold text-xs flex flex-col items-center gap-1.5 text-center">
-                    <div className="flex items-center gap-2 uppercase tracking-wide font-bold"><History className="w-4 h-4" /> MT5 ID password will be visible in 2-3 hours</div>
+                    <div className="flex items-center gap-2 uppercase tracking-wide font-bold"><History className="w-4 h-4" /> After Your deposit you will get the password within 2-3 hours</div>
                   </div>
                 )}
               </div>

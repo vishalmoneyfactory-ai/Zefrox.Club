@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, X, AlertCircle, CheckCircle2, QrCode } from 'lucide-react';
+import { Upload, X, AlertCircle, CheckCircle2, QrCode, Building, CreditCard, Landmark, Smartphone } from 'lucide-react';
 import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
 import Button from '@/components/ui/Button';
@@ -17,12 +17,12 @@ interface DepositModalProps {
 
 type PaymentMethod = 'NET_BANKING' | 'CARD' | 'BANK_TRANSFER' | 'UPI' | 'ADMIN_QR';
 
-const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string }[] = [
-  { id: 'NET_BANKING', label: 'Net Banking', icon: '🏦' },
-  { id: 'CARD', label: 'Debit/Credit Card', icon: '💳' },
-  { id: 'BANK_TRANSFER', label: 'Bank Transfer (NEFT/RTGS)', icon: '💸' },
-  { id: 'UPI', label: 'UPI', icon: '📱' },
-  { id: 'ADMIN_QR', label: 'Manual Admin QR', icon: '📷' }
+const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: React.ReactNode }[] = [
+  { id: 'NET_BANKING', label: 'Net Banking', icon: <Landmark className="w-6 h-6 text-indigo-500" /> },
+  { id: 'CARD', label: 'Debit/Credit Card', icon: <CreditCard className="w-6 h-6 text-indigo-500" /> },
+  { id: 'BANK_TRANSFER', label: 'Bank Transfer (NEFT/RTGS)', icon: <Building className="w-6 h-6 text-indigo-500" /> },
+  { id: 'UPI', label: 'UPI', icon: <Smartphone className="w-6 h-6 text-indigo-500" /> },
+  { id: 'ADMIN_QR', label: 'Manual Admin QR', icon: <QrCode className="w-6 h-6 text-indigo-500" /> }
 ];
 
 const UPI_APPS = [
