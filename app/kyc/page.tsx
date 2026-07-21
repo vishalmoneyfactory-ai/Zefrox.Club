@@ -153,18 +153,23 @@ export default function KycPage() {
         data.append('aadhaarPhoto', aadhaarPhotoFile);
       }
 
-      await fetch('/api/kyc', {
+      const res = await fetch('/api/kyc', {
         method: 'POST',
         body: data,
         credentials: 'include',
       });
 
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to submit KYC');
+      }
+
       showSuccess('KYC submitted successfully! We will review it shortly.');
       setKycData((prev) => prev ? { ...prev, status: 'PENDING', rejectionReason: undefined } : null);
       const { data: updatedKyc } = await api.get('/api/kyc');
       setKycData(updatedKyc);
-    } catch {
-      showError('Failed to submit KYC. Please try again.');
+    } catch (error: any) {
+      showError(error.message || 'Failed to submit KYC. Please try again.');
     } finally {
       setSubmitting(false);
     }

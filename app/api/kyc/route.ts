@@ -25,41 +25,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!selfie || !aadhaarPhoto) {
-      return NextResponse.json(
-        { error: 'Both Selfie and Aadhaar Photo are required' },
-        { status: 400 }
-      );
-    }
-
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    if (!allowedTypes.includes(selfie.type) || !allowedTypes.includes(aadhaarPhoto.type)) {
-      return NextResponse.json(
-        { error: 'Only JPG, JPEG, and PNG files are allowed' },
-        { status: 400 }
-      );
-    }
-
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (selfie.size > maxSize || aadhaarPhoto.size > maxSize) {
-      return NextResponse.json(
-        { error: 'File size must be less than 5MB' },
-        { status: 400 }
-      );
-    }
-
-    const selfieBuffer = Buffer.from(await selfie.arrayBuffer());
-    const aadhaarBuffer = Buffer.from(await aadhaarPhoto.arrayBuffer());
-    
-    // Upload both to Cloudinary concurrently
-    const [selfieUrl, aadhaarPhotoUrl] = await Promise.all([
-      uploadToCloudinary(selfieBuffer, 'kyc'),
-      uploadToCloudinary(aadhaarBuffer, 'kyc')
-    ]);
-
     const existingKyc = await prisma.kyc.findUnique({
       where: { userId: authUser.userId },
     });
+
+    if (!existingKyc && (!selfie || !aadhaarPhoto)) {
+      return NextResponse.json(
+        { error: 'Both Selfie and Aadhaar Photo are required for new submissions' },
+        { status: 400 }
+      );
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    
+    let finalSelfieUrl = existingKyc?.selfieUrl || '';
+    let finalAadhaarPhotoUrl = existingKyc?.aadhaarPhotoUrl || '';
+
+    if (selfie) {
+      if (!allowedTypes.includes(selfie.type)) {
+        return NextResponse.json({ error: 'Invalid selfie file type' }, { status: 400 });
+      }
+      if (selfie.size > 5 * 1024 * 1024) return NextResponse.json({ error: 'Selfie must be under 5MB' }, { status: 400 });
+      const selfieBuffer = Buffer.from(await selfie.arrayBuffer());
+      finalSelfieUrl = await uploadToCloudinary(selfieBuffer, 'kyc');
+    }
+
+    if (aadhaarPhoto) {
+      if (!allowedTypes.includes(aadhaarPhoto.type)) {
+        return NextResponse.json({ error: 'Invalid Aadhaar photo file type' }, { status: 400 });
+      }
+      if (aadhaarPhoto.size > 5 * 1024 * 1024) return NextResponse.json({ error: 'Aadhaar photo must be under 5MB' }, { status: 400 });
+      const aadhaarBuffer = Buffer.from(await aadhaarPhoto.arrayBuffer());
+      finalAadhaarPhotoUrl = await uploadToCloudinary(aadhaarBuffer, 'kyc');
+    }
 
     const kycData = {
       fullName,
@@ -68,8 +66,8 @@ export async function POST(request: NextRequest) {
       bankAccount,
       ifscCode,
       aadhaarNumber,
-      aadhaarPhotoUrl,
-      selfieUrl,
+      aadhaarPhotoUrl: finalAadhaarPhotoUrl,
+      selfieUrl: finalSelfieUrl,
       status: 'APPROVED' as const,
       rejectionReason: null,
       reviewedAt: new Date(),
