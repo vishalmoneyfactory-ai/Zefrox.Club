@@ -86,6 +86,12 @@ export default function KycPage() {
     fetchKyc();
   }, [router, reset]);
 
+  useEffect(() => {
+    if (kycData?.status === 'APPROVED') {
+      router.push('/accounts');
+    }
+  }, [kycData?.status, router]);
+
   const handleSelfieChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -207,44 +213,12 @@ export default function KycPage() {
     );
   }
 
-  // Show approved status
+  // Show approved status but also redirecting
   if (kycData?.status === 'APPROVED') {
     return (
-      <div className="max-w-3xl mx-auto mt-12 relative z-10">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-          <div className="p-8 sm:p-12 bg-emerald-50/80 border border-emerald-200 rounded-2xl shadow-[0_4px_24px_rgba(99,102,241,0.08)]">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-emerald-100 mb-6 border border-emerald-200 shadow-inner">
-                <ShieldCheck className="w-12 h-12 text-emerald-500" />
-              </div>
-              <h2 className="text-4xl font-black text-emerald-700 mb-4">Identity Verified</h2>
-              <p className="text-emerald-600 font-medium text-lg">
-                Your KYC is complete. You have full access to trading capabilities.
-              </p>
-            </div>
-            
-            <div className="border-t border-emerald-200 pt-10">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="bg-slate-50/60 p-6 rounded-2xl border border-slate-100 shadow-sm">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Full Name</p>
-                  <p className="text-slate-800 font-black text-xl">{kycData.fullName}</p>
-                </div>
-                <div className="bg-slate-50/60 p-6 rounded-2xl border border-slate-100 shadow-sm">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">UPI ID</p>
-                  <p className="text-slate-800 font-bold text-lg">{kycData.upiId}</p>
-                </div>
-                <div className="bg-slate-50/60 p-6 rounded-2xl border border-slate-100 shadow-sm">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Bank Account</p>
-                  <p className="text-slate-800 font-bold text-lg">{kycData.bankAccount}</p>
-                </div>
-                <div className="bg-slate-50/60 p-6 rounded-2xl border border-slate-100 shadow-sm">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">Aadhaar Number</p>
-                  <p className="text-slate-800 font-mono font-bold text-lg">•••• •••• {kycData.aadhaarNumber?.slice(-4)}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+        <Spinner size="lg" className="text-emerald-500" />
+        <p className="text-emerald-600 font-bold animate-pulse">Identity Verified! Redirecting to Accounts...</p>
       </div>
     );
   }
