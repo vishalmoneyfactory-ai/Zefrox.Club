@@ -145,13 +145,10 @@ export default function AdminDashboardPage() {
         </motion.div>
 
         {/* Stats Grid */}
-        <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+        <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <StatsCard title="Total Users" value={data.totalRegularUsers} color="blue" icon={<Users className="w-6 h-6" />} onClick={() => router.push('/admin/users')} />
           <StatsCard title="Pending KYC" value={data.pendingKyc} color="yellow" icon={<ShieldAlert className="w-6 h-6" />} onClick={() => router.push('/admin/kyc')} />
           <StatsCard title="Pending Proofs" value={data.pendingPayments} color="red" icon={<CreditCard className="w-6 h-6" />} onClick={() => router.push('/admin/payments')} />
-          <StatsCard title="Today's Flow" value={`₹${data.todayApprovedAmount.toLocaleString('en-IN')}`} color="green" icon={<DollarSign className="w-6 h-6" />} />
-          <StatsCard title="Total Flow" value={`₹${data.totalApprovedAmount.toLocaleString('en-IN')}`} color="purple" icon={<Wallet className="w-6 h-6" />} />
-          <StatsCard title="Pending Amt" value={`₹${data.pendingRequestsAmount.toLocaleString('en-IN')}`} color="yellow" icon={<Activity className="w-6 h-6" />} />
         </motion.div>
 
         {/* Create Payment Request */}
