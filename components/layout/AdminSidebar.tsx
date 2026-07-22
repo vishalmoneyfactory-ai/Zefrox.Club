@@ -10,6 +10,7 @@ import { LayoutDashboard, Users, FileCheck, Receipt, FileBarChart, X, ShieldAler
 const adminNavLinks = [
   { name: 'Overview',             href: '/admin',              icon: <LayoutDashboard className="w-5 h-5" /> },
   { name: 'Manage Users',         href: '/admin/users',        icon: <Users className="w-5 h-5" /> },
+  { name: 'Recent Depositors',    href: '/admin/recent-depositors', icon: <Banknote className="w-5 h-5" /> },
   { name: 'Withdrawal Requests',  href: '/admin/withdrawals',  icon: <Banknote className="w-5 h-5" /> },
   { name: 'KYC Verification',     href: '/admin/kyc',          icon: <FileCheck className="w-5 h-5" /> },
   { name: 'Payment Proofs',       href: '/admin/payments',     icon: <Receipt className="w-5 h-5" /> },
