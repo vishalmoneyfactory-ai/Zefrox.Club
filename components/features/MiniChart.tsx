@@ -43,7 +43,6 @@ const MiniChart = memo(({ symbol = "OANDA:EURUSD", theme = "light" }: MiniChartP
         style={{ width: '100%', height: '100%', border: 'none' }}
         scrolling="no"
         title={`TradingView Chart - ${symbol}`}
-        sandbox="allow-scripts allow-same-origin allow-popups"
       />
     </div>
   );

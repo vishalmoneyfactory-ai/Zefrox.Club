@@ -43,7 +43,6 @@ const TickerTape = memo(({ theme = 'dark' }: { theme?: 'light' | 'dark' }) => {
         style={{ width: '100%', height: '56px', border: 'none', overflow: 'hidden' }}
         scrolling="no"
         title="TradingView Ticker Tape"
-        sandbox="allow-scripts allow-same-origin allow-popups"
       />
     </div>
   );
