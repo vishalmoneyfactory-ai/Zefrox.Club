@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 
-export default function TickerTape({ theme = 'dark' }: { theme?: 'light' | 'dark' }) {
+const TickerTape = memo(({ theme = 'dark' }: { theme?: 'light' | 'dark' }) => {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!container.current) return;
     
-    container.current.innerHTML = '<div class="tradingview-widget-container__widget w-full"></div>';
+    if (container.current.querySelector('script')) {
+      return;
+    }
 
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
@@ -36,5 +38,13 @@ export default function TickerTape({ theme = 'dark' }: { theme?: 'light' | 'dark
     container.current.appendChild(script);
   }, [theme]);
 
-  return <div className="tradingview-widget-container w-full" ref={container} />;
-}
+  return (
+    <div className="tradingview-widget-container w-full" ref={container}>
+      <div className="tradingview-widget-container__widget w-full"></div>
+    </div>
+  );
+});
+
+TickerTape.displayName = 'TickerTape';
+
+export default TickerTape;

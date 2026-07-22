@@ -1,20 +1,22 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 
 interface MiniChartProps {
   symbol?: string;
   theme?: 'light' | 'dark';
 }
 
-export default function MiniChart({ symbol = "OANDA:EURUSD", theme = "light" }: MiniChartProps) {
+const MiniChart = memo(({ symbol = "OANDA:EURUSD", theme = "light" }: MiniChartProps) => {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!container.current) return;
     
-    // Clear the container to prevent duplicates or broken scripts on re-render
-    container.current.innerHTML = '<div class="tradingview-widget-container__widget h-full w-full"></div>';
+    // Check if script already exists to prevent duplicate injections in Strict Mode
+    if (container.current.querySelector('script')) {
+      return;
+    }
 
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
@@ -36,5 +38,13 @@ export default function MiniChart({ symbol = "OANDA:EURUSD", theme = "light" }: 
     container.current.appendChild(script);
   }, [symbol, theme]);
 
-  return <div className="tradingview-widget-container h-full w-full" ref={container} />;
-}
+  return (
+    <div className="tradingview-widget-container h-full w-full" ref={container}>
+      <div className="tradingview-widget-container__widget h-full w-full"></div>
+    </div>
+  );
+});
+
+MiniChart.displayName = 'MiniChart';
+
+export default MiniChart;
