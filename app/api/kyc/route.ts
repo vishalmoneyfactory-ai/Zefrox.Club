@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
     
     let finalSelfieUrl = existingKyc?.selfieUrl || '';
     let finalAadhaarPhotoUrl = existingKyc?.aadhaarPhotoUrl || '';

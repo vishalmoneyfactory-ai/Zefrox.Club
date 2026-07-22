@@ -63,7 +63,9 @@ export default function KycPage() {
   useEffect(() => {
     const fetchKyc = async () => {
       try {
-        const { data } = await api.get('/api/kyc');
+        const { data } = await api.get('/api/kyc', {
+          headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '0' }
+        });
         if (data) {
           setKycData(data);
           if (data.status === 'REJECTED') {
@@ -96,9 +98,9 @@ export default function KycPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    if (!validTypes.includes(file.type)) {
-      showError('Only JPG, JPEG, and PNG files are allowed');
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+    if (!validTypes.includes(file.type) && file.name && !file.name.match(/\.(heic|heif)$/i)) {
+      showError('Only JPG, PNG, WEBP, and HEIC files are allowed');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -116,9 +118,9 @@ export default function KycPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-    if (!validTypes.includes(file.type)) {
-      showError('Only JPG, JPEG, and PNG files are allowed');
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+    if (!validTypes.includes(file.type) && file.name && !file.name.match(/\.(heic|heif)$/i)) {
+      showError('Only JPG, PNG, WEBP, and HEIC files are allowed');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -171,8 +173,10 @@ export default function KycPage() {
       }
 
       showSuccess('KYC submitted successfully! We will review it shortly.');
-      setKycData((prev) => prev ? { ...prev, status: 'PENDING', rejectionReason: undefined } : null);
-      const { data: updatedKyc } = await api.get('/api/kyc');
+      setKycData((prev) => prev ? { ...prev, status: 'APPROVED', rejectionReason: undefined } : null);
+      const { data: updatedKyc } = await api.get('/api/kyc', {
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '0' }
+      });
       setKycData(updatedKyc);
     } catch (error: any) {
       showError(error.message || 'Failed to submit KYC. Please try again.');
@@ -364,7 +368,7 @@ export default function KycPage() {
                     </div>
                   )}
                 </div>
-                <input ref={aadhaarInputRef} type="file" accept="image/jpeg,image/jpg,image/png" onChange={handleAadhaarPhotoChange} className="hidden" />
+                <input ref={aadhaarInputRef} type="file" accept="image/jpeg,image/jpg,image/png,image/webp,.heic,.heif" onChange={handleAadhaarPhotoChange} className="hidden" />
               </div>
 
               {/* Selfie Upload */}
@@ -397,7 +401,7 @@ export default function KycPage() {
                     </div>
                   )}
                 </div>
-                <input ref={selfieInputRef} type="file" accept="image/jpeg,image/jpg,image/png" onChange={handleSelfieChange} className="hidden" />
+                <input ref={selfieInputRef} type="file" accept="image/jpeg,image/jpg,image/png,image/webp,.heic,.heif" onChange={handleSelfieChange} className="hidden" />
               </div>
             </div>
 

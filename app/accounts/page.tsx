@@ -91,7 +91,13 @@ export default function AccountsPage() {
   useEffect(() => {
     const checkKycAndFetch = async () => {
       try {
-        const { data: user } = await api.get('/api/users/me');
+        const { data: user } = await api.get('/api/users/me', {
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          },
+        });
         if (user.kycStatus !== 'APPROVED') {
           router.push('/kyc');
           return;
