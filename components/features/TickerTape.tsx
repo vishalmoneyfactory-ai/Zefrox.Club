@@ -7,8 +7,8 @@ export default function TickerTape({ theme = 'dark' }: { theme?: 'light' | 'dark
 
   useEffect(() => {
     if (!container.current) return;
-    // Prevent multiple injections in dev mode
-    if (container.current.querySelector('script')) return;
+    
+    container.current.innerHTML = '<div class="tradingview-widget-container__widget w-full"></div>';
 
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
@@ -36,9 +36,5 @@ export default function TickerTape({ theme = 'dark' }: { theme?: 'light' | 'dark
     container.current.appendChild(script);
   }, [theme]);
 
-  return (
-    <div className="tradingview-widget-container w-full" ref={container}>
-      <div className="tradingview-widget-container__widget w-full"></div>
-    </div>
-  );
+  return <div className="tradingview-widget-container w-full" ref={container} />;
 }

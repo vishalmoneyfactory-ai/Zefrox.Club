@@ -12,7 +12,9 @@ export default function MiniChart({ symbol = "OANDA:EURUSD", theme = "light" }: 
 
   useEffect(() => {
     if (!container.current) return;
-    if (container.current.querySelector('script')) return;
+    
+    // Clear the container to prevent duplicates or broken scripts on re-render
+    container.current.innerHTML = '<div class="tradingview-widget-container__widget h-full w-full"></div>';
 
     const script = document.createElement('script');
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
@@ -34,9 +36,5 @@ export default function MiniChart({ symbol = "OANDA:EURUSD", theme = "light" }: 
     container.current.appendChild(script);
   }, [symbol, theme]);
 
-  return (
-    <div className="tradingview-widget-container h-full w-full" ref={container}>
-      <div className="tradingview-widget-container__widget h-full w-full"></div>
-    </div>
-  );
+  return <div className="tradingview-widget-container h-full w-full" ref={container} />;
 }
