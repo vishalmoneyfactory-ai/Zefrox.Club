@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { User, ShieldCheck, Mail, Phone, Calendar, ArrowLeft, Save, Edit, Trash2, Banknote, CheckCircle2, XCircle, Clock, TrendingUp } from 'lucide-react';
 import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
@@ -43,6 +43,11 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
   const [editingAccountId, setEditingAccountId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<Partial<TradingAccount>>({});
   const [savingAccount, setSavingAccount] = useState(false);
+
+  const [processingWithdrawalId, setProcessingWithdrawalId] = useState<string | null>(null);
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUser();
@@ -101,6 +106,42 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
       showError('Failed to update account');
     } finally {
       setSavingAccount(false);
+    }
+  };
+
+  const handleApproveWithdrawal = async (id: string) => {
+    if (!confirm('Are you sure you want to approve this withdrawal? The amount will be deducted from the user balance.')) return;
+    setProcessingWithdrawalId(id);
+    try {
+      await api.post(`/api/withdrawals/${id}/approve`);
+      showSuccess('Withdrawal approved successfully');
+      fetchUser();
+    } catch (error: any) {
+      showError(error.response?.data?.error || 'Failed to approve withdrawal');
+    } finally {
+      setProcessingWithdrawalId(null);
+    }
+  };
+
+  const openRejectModal = (id: string) => {
+    setRejectingId(id);
+    setRejectReason('');
+    setRejectModalOpen(true);
+  };
+
+  const handleRejectSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!rejectingId) return;
+    setProcessingWithdrawalId(rejectingId);
+    try {
+      await api.post(`/api/withdrawals/${rejectingId}/reject`, { reason: rejectReason });
+      showSuccess('Withdrawal rejected');
+      setRejectModalOpen(false);
+      fetchUser();
+    } catch (error: any) {
+      showError(error.response?.data?.error || 'Failed to reject withdrawal');
+    } finally {
+      setProcessingWithdrawalId(null);
     }
   };
 
@@ -330,6 +371,27 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
                         <p className="text-rose-300 text-sm">{w.rejectionReason}</p>
                       </div>
                     )}
+
+                    {w.status === 'PENDING' && (
+                      <div className="mt-3 pt-3 border-t border-slate-200 flex justify-end gap-2">
+                        <button
+                          onClick={() => handleApproveWithdrawal(w.id)}
+                          disabled={processingWithdrawalId === w.id}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-500/30 rounded-xl transition-all text-xs font-bold disabled:opacity-50"
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => openRejectModal(w.id)}
+                          disabled={processingWithdrawalId === w.id}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-500/10 text-rose-600 hover:bg-rose-500 hover:text-white border border-rose-500/30 rounded-xl transition-all text-xs font-bold disabled:opacity-50"
+                        >
+                          <XCircle className="w-4 h-4" />
+                          Reject
+                        </button>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -382,6 +444,46 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
           )}
         </div>
       </motion.div>
+
+      {/* Reject Modal */}
+      <AnimatePresence>
+        {rejectModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"
+              onClick={() => setRejectModalOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }}
+              className="relative w-full max-w-md bg-white border border-slate-200 rounded-2xl p-5 shadow-2xl"
+            >
+              <h3 className="text-lg font-bold text-slate-800 mb-1">Reject Withdrawal</h3>
+              <p className="text-slate-500 text-sm mb-4">This will notify the user with the reason you provide.</p>
+              <form onSubmit={handleRejectSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Reason for Rejection *</label>
+                  <textarea
+                    required
+                    value={rejectReason}
+                    onChange={(e) => setRejectReason(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-rose-400 transition-colors min-h-[90px] text-sm resize-none"
+                    placeholder="e.g. Invalid bank details provided"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <Button type="button" variant="ghost" onClick={() => setRejectModalOpen(false)} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200">
+                    Cancel
+                  </Button>
+                  <Button type="submit" variant="primary" className="flex-1 bg-rose-500 hover:bg-rose-600 text-white border-0" loading={processingWithdrawalId === rejectingId}>
+                    Confirm Reject
+                  </Button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

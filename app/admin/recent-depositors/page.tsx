@@ -104,7 +104,7 @@ export default function RecentDepositorsPage() {
             <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shadow-md">
               <Banknote className="w-5 h-5" />
             </span>
-            Recent Depositors
+            Updated List
           </h1>
           <p className="text-slate-600 mt-2 font-medium">Bulk edit account balances for users who deposited in the last 7 days.</p>
         </motion.div>
@@ -115,7 +115,6 @@ export default function RecentDepositorsPage() {
               <thead>
                 <tr className="bg-slate-50/50 border-b border-slate-200">
                   <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">User</th>
-                  <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">Recent Deposits (7d)</th>
                   <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">Latest Date</th>
                   <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-widest min-w-[250px]">Account Balances</th>
                 </tr>
@@ -123,7 +122,7 @@ export default function RecentDepositorsPage() {
               <tbody className="divide-y divide-slate-100">
                 {depositors.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="p-8 text-center text-slate-500 font-medium">
+                    <td colSpan={3} className="p-8 text-center text-slate-500 font-medium">
                       No recent depositors found in the last 7 days.
                     </td>
                   </tr>
@@ -133,9 +132,6 @@ export default function RecentDepositorsPage() {
                       <td className="p-4">
                         <div className="font-bold text-slate-800">{user.fullName}</div>
                         <div className="text-xs text-slate-500">{user.email}</div>
-                      </td>
-                      <td className="p-4 font-bold text-emerald-600">
-                        ₹{user.recentDepositTotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
                       </td>
                       <td className="p-4 text-sm text-slate-600 font-medium">
                         {new Date(user.latestDepositDate).toLocaleDateString()}
