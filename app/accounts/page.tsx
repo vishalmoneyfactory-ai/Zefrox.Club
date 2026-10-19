@@ -89,31 +89,18 @@ export default function AccountsPage() {
   const { showSuccess, showError } = useToast();
 
   useEffect(() => {
-    const checkKycAndFetch = async () => {
-      try {
-        const { data: user } = await api.get('/api/users/me', {
-          headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-          },
-        });
-        if (user.kycStatus !== 'APPROVED') {
-          router.push('/kyc');
-          return;
-        }
-        fetchAccounts();
-      } catch (error) {
-        showError('Failed to verify user status');
-        setLoading(false);
-      }
-    };
-    checkKycAndFetch();
-  }, [router, showError]);
+    fetchAccounts();
+  }, []);
 
   const fetchAccounts = async () => {
     try {
-      const { data } = await api.get('/api/accounts');
+      const { data } = await api.get('/api/accounts', {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      });
       setAccounts(data.accounts);
     } catch (error) {
       showError('Failed to load accounts');
@@ -121,6 +108,8 @@ export default function AccountsPage() {
       setLoading(false);
     }
   };
+
+
 
   useEffect(() => {
     if (viewingAccountId) {
@@ -519,6 +508,9 @@ export default function AccountsPage() {
                       </button>
                     </p>
                     <p className="text-slate-500">Server: <span className="text-slate-700 font-semibold">{account.server}</span></p>
+                    <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded border border-amber-200 mt-2 text-center w-full max-w-[250px] mx-auto">
+                      Note: It may take up to 5 mins for your credentials to become active on the MT5 server.
+                    </p>
                   </>
                 ) : (
                   <div className="mt-2 py-3 px-4 bg-orange-50 border border-orange-200 rounded-lg text-orange-600 font-semibold text-xs flex flex-col items-center gap-1.5 text-center">

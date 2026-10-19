@@ -76,15 +76,6 @@ export default function AdminDashboardPage() {
       color: 'indigo',
     },
     {
-      title: 'Pending KYC',
-      value: stats.pendingKyc,
-      subValue: 'Requires attention',
-      icon: AlertCircle,
-      trend: stats.pendingKycChange,
-      color: 'yellow',
-      warning: stats.pendingKyc > 0,
-    },
-    {
       title: 'Pending Deposits',
       value: stats.pendingPayments,
       subValue: `₹${stats.totalPendingRequestsSum.toLocaleString('en-IN')} pending`,
@@ -129,7 +120,7 @@ export default function AdminDashboardPage() {
         </div>
       </motion.div>
 
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {cards.map((card, idx) => {
           const isPositive = card.trend > 0;
           const TrendIcon = isPositive ? TrendingUp : TrendingDown;
@@ -173,7 +164,7 @@ export default function AdminDashboardPage() {
       </motion.div>
 
       {/* Action required section */}
-      {(stats.pendingKyc > 0 || stats.pendingPayments > 0) && (
+      {stats.pendingPayments > 0 && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-8">
            <Card glass className="p-8 bg-red-500/5 border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.05)]">
              <div className="flex items-center gap-4 mb-6">
@@ -183,36 +174,19 @@ export default function AdminDashboardPage() {
                <h2 className="text-2xl font-bold text-white">Action Required</h2>
              </div>
              
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {stats.pendingKyc > 0 && (
-                  <a href="/admin/kyc" className="flex items-center justify-between p-5 bg-[#111827]/60 rounded-2xl border border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10 transition-all group">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
-                        <Users className="w-5 h-5 text-red-400" />
-                      </div>
-                      <div>
-                        <p className="text-white font-bold group-hover:text-red-400 transition-colors">Review Pending KYC</p>
-                        <p className="text-sm text-slate-400 font-medium">{stats.pendingKyc} applications waiting</p>
-                      </div>
+             <div>
+                <a href="/admin/payments" className="flex items-center justify-between p-5 bg-[#111827]/60 rounded-2xl border border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10 transition-all group">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                      <IndianRupee className="w-5 h-5 text-red-400" />
                     </div>
-                    <span className="text-red-400 font-bold group-hover:translate-x-1 transition-transform">→</span>
-                  </a>
-                )}
-                
-                {stats.pendingPayments > 0 && (
-                  <a href="/admin/payments" className="flex items-center justify-between p-5 bg-[#111827]/60 rounded-2xl border border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10 transition-all group">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
-                        <IndianRupee className="w-5 h-5 text-red-400" />
-                      </div>
-                      <div>
-                        <p className="text-white font-bold group-hover:text-red-400 transition-colors">Verify Deposits</p>
-                        <p className="text-sm text-slate-400 font-medium">{stats.pendingPayments} proofs uploaded</p>
-                      </div>
+                    <div>
+                      <p className="text-white font-bold group-hover:text-red-400 transition-colors">Verify Deposits</p>
+                      <p className="text-sm text-slate-400 font-medium">{stats.pendingPayments} proofs uploaded</p>
                     </div>
-                    <span className="text-red-400 font-bold group-hover:translate-x-1 transition-transform">→</span>
-                  </a>
-                )}
+                  </div>
+                  <span className="text-red-400 font-bold group-hover:translate-x-1 transition-transform">→</span>
+                </a>
              </div>
            </Card>
         </motion.div>

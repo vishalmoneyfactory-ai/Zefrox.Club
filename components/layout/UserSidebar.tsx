@@ -5,18 +5,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUIStore } from '@/store/uiStore';
-import { LayoutDashboard, History, ShieldCheck, User, X } from 'lucide-react';
+import { LayoutDashboard, History, User, X, Headphones } from 'lucide-react';
 
 const navLinks = [
-  { name: 'Accounts',         href: '/accounts', icon: <LayoutDashboard className="w-5 h-5" /> },
-  { name: 'KYC Verification', href: '/kyc',      icon: <ShieldCheck className="w-5 h-5" /> },
-  { name: 'Profile',          href: '/profile',  icon: <User className="w-5 h-5" /> },
+  { name: 'Accounts', href: '/accounts', icon: <LayoutDashboard className="w-5 h-5" /> },
+  { name: 'Profile',  href: '/profile',  icon: <User className="w-5 h-5" /> },
+  { name: 'Support',  href: '#support',  icon: <Headphones className="w-5 h-5" />, isAction: true },
 ];
 
 export default function UserSidebar() {
   const pathname = usePathname();
   const sidebarOpen = useUIStore((s) => s.sidebarOpen);
   const setSidebarOpen = useUIStore((s) => s.setSidebarOpen);
+  const openModal = useUIStore((s) => s.openModal);
 
   const isActive = (href: string) => pathname === href;
 
@@ -26,9 +27,15 @@ export default function UserSidebar() {
         const active = isActive(link.href);
         return (
           <Link
-            key={link.href}
+            key={link.name}
             href={link.href}
-            onClick={() => setSidebarOpen(false)}
+            onClick={(e) => {
+              if (link.isAction) {
+                e.preventDefault();
+                openModal('support');
+              }
+              setSidebarOpen(false);
+            }}
             className={`
               relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300 group
               ${active ? 'text-indigo-700' : 'text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 hover:-translate-y-0.5'}

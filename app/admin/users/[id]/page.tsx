@@ -153,12 +153,6 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
     );
   }
 
-  const kycBadgeColor = user.kyc?.status === 'APPROVED'
-    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-    : user.kyc?.status === 'REJECTED'
-    ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-    : 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-
   return (
     <div className="space-y-5 pb-12">
       {/* Header */}
@@ -184,17 +178,16 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
 
       {/* Profile + Stats Row */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {/* Avatar + KYC card */}
+        {/* Avatar card */}
         <div className="bg-white border border-slate-200 rounded-2xl p-5 flex items-center gap-4 sm:flex-col sm:items-center sm:text-center shadow-lg">
           <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-slate-800 text-2xl sm:text-3xl font-black shadow-[0_0_20px_rgba(59,130,246,0.3)] shrink-0">
             {user.fullName.charAt(0)}
           </div>
           <div className="min-w-0 sm:w-full">
             <h2 className="font-bold text-slate-800 truncate sm:text-center mb-1">{user.fullName}</h2>
-            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${kycBadgeColor}`}>
-              <ShieldCheck className="w-3.5 h-3.5" />
-              {user.kyc?.status || 'UNVERIFIED'}
-            </div>
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-600 border border-indigo-200">
+              {user.role}
+            </span>
           </div>
         </div>
 

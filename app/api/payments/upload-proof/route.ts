@@ -11,17 +11,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    const kyc = await prisma.kyc.findUnique({
-      where: { userId: authUser.userId },
-    });
-
-    if (!kyc || kyc.status !== 'APPROVED') {
-      return NextResponse.json(
-        { error: 'KYC must be approved before uploading payment proof' },
-        { status: 403 }
-      );
-    }
-
     const formData = await request.formData();
     const accountId = formData.get('accountId') as string;
     const amountStr = formData.get('amount') as string;

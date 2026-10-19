@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ToastProvider } from '@/components/ui/Toast';
+import SupportModal from '@/components/features/SupportModal';
 
 const appName = 'Zerofx.club';
 
 export const metadata: Metadata = {
   title: `${appName} — Secure Payment Management`,
-  description: `${appName} is a secure, admin-verified payment management platform. Submit KYC, track payments, and manage transactions with ease.`,
-  keywords: ['payment', 'management', 'KYC', 'verification', 'secure', 'admin'],
+  description: `${appName} is a secure, admin-verified payment management platform. Track payments and manage transactions with ease.`,
+  keywords: ['payment', 'management', 'trading', 'accounts', 'secure', 'admin'],
 };
 
 export default function RootLayout({
@@ -26,6 +27,7 @@ export default function RootLayout({
         </div>
         <ToastProvider>
           {children}
+          <SupportModal />
         </ToastProvider>
       </body>
     </html>

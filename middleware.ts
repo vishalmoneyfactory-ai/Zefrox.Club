@@ -61,6 +61,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Redirect any KYC route access directly
+  if (pathname.startsWith('/admin/kyc')) {
+    return NextResponse.redirect(new URL('/admin', request.url));
+  }
+  if (pathname.startsWith('/kyc')) {
+    return NextResponse.redirect(new URL('/accounts', request.url));
+  }
+
   // Admin pages require ADMIN role
   if (pathname.startsWith('/admin')) {
     if (!token) {
@@ -81,10 +89,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Protected user routes: /accounts, /kyc, /profile
+  // Protected user routes: /accounts, /profile
   if (
     pathname.startsWith('/accounts') ||
-    pathname.startsWith('/kyc') ||
     pathname.startsWith('/profile')
   ) {
     if (!token) {

@@ -9,6 +9,7 @@ import MiniChart from '@/components/features/MiniChart';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import api from '@/lib/axios';
+import { useUIStore } from '@/store/uiStore';
 
 const appName = 'Zerofx.club';
 
@@ -86,6 +87,7 @@ const itemVariants: Variants = {
 export default function LandingPage() {     
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const openModal = useUIStore((s) => s.openModal);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -133,6 +135,7 @@ export default function LandingPage() {
             <div className="hidden md:flex items-center justify-center space-x-8">
               <Link href="/" className="text-indigo-600 font-semibold transition-colors border-b-2 border-indigo-500 pb-1">Home</Link>
               <Link href="/about" className="text-slate-600 font-medium hover:text-indigo-600 transition-colors pb-1">About Us</Link>
+              <button onClick={() => openModal('support')} className="text-slate-600 font-medium hover:text-indigo-600 transition-colors pb-1">Support</button>
             </div>
 
             <div className="flex items-center gap-3">
@@ -164,6 +167,7 @@ export default function LandingPage() {
               <div className="flex flex-col px-4 py-4 gap-2">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-xl text-indigo-600 font-bold bg-indigo-50 border border-indigo-200">Home</Link>
                 <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-xl text-slate-700 font-semibold hover:bg-indigo-50 hover:text-indigo-600 transition-colors">About Us</Link>
+                <button onClick={() => { setMobileMenuOpen(false); openModal('support'); }} className="text-left px-4 py-3 rounded-xl text-slate-700 font-semibold hover:bg-indigo-50 hover:text-indigo-600 transition-colors">Support</button>
               </div>
             </motion.div>
           )}
@@ -392,7 +396,16 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_4px_24px_rgba(99,102,241,0.08)] hover:shadow-[0_8px_32px_rgba(99,102,241,0.15)] hover:border-indigo-200 h-full text-center group rounded-2xl p-6 sm:p-8 transition-all">
+                <div
+                  onClick={() => {
+                    if (feature.title === '24/7 Support') {
+                      openModal('support');
+                    }
+                  }}
+                  className={`bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_4px_24px_rgba(99,102,241,0.08)] hover:shadow-[0_8px_32px_rgba(99,102,241,0.15)] hover:border-indigo-200 h-full text-center group rounded-2xl p-6 sm:p-8 transition-all ${
+                    feature.title === '24/7 Support' ? 'cursor-pointer hover:scale-[1.02]' : ''
+                  }`}
+                >
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-100 to-violet-100 border border-indigo-200/60 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300">
                     {feature.icon}
                   </div>
@@ -549,6 +562,7 @@ export default function LandingPage() {
             <div className="flex gap-8 text-sm font-semibold text-slate-500">
               <Link href="#" className="hover:text-indigo-600 transition-colors">Privacy Policy</Link>
               <Link href="#" className="hover:text-indigo-600 transition-colors">Terms of Service</Link>
+              <button onClick={() => openModal('support')} className="hover:text-indigo-600 transition-colors">Support</button>
             </div>
 
             <p className="text-sm text-slate-400 font-medium">

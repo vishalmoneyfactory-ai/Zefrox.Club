@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Mail, Phone, Edit2, Camera, Calendar, Hash, ArrowRight } from 'lucide-react';
+import { User, Mail, Phone, Edit2, Calendar, Hash, Headphones } from 'lucide-react';
 import api from '@/lib/axios';
 import { useToast } from '@/components/ui/Toast';
-import Badge from '@/components/ui/Badge';
+import { useUIStore } from '@/store/uiStore';
 import Spinner from '@/components/ui/Spinner';
 import ScreenshotModal from '@/components/features/ScreenshotModal';
 import Card from '@/components/ui/Card';
@@ -41,6 +41,7 @@ interface UserData {
 
 export default function ProfilePage() {
   const { showSuccess, showError } = useToast();
+  const openModal = useUIStore((s) => s.openModal);
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -239,42 +240,25 @@ export default function ProfilePage() {
           </div>
         </motion.div>
 
-        {/* KYC Status */}
+        {/* Support Card */}
         <motion.div variants={itemVariants}>
-          <div className="bg-white/80 backdrop-blur-xl border border-white/70 shadow-[0_4px_24px_rgba(99,102,241,0.08)] rounded-2xl p-6 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
-            <div>
-              <h2 className="text-2xl font-black text-slate-800 mb-3 flex items-center gap-3">
-                <div className="p-2.5 bg-indigo-100 border border-indigo-200 rounded-xl">
-                  <Camera className="w-5 h-5 text-indigo-500" />
-                </div>
-                KYC Status
-              </h2>
-              <div className="flex flex-col sm:flex-row gap-6 sm:items-center mt-6">
-                {user.kyc?.selfieUrl && (
-                  <div className="relative group cursor-pointer w-24 h-24 rounded-2xl overflow-hidden border border-slate-200 shadow-xl" onClick={() => setImageModal({ open: true, url: user.kyc!.selfieUrl!, title: 'Your KYC Selfie' })}>
-                    <img src={user.kyc!.selfieUrl} alt="KYC selfie" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/60 backdrop-blur-sm">
-                      <Camera className="w-8 h-8 text-slate-700 drop-shadow-md" />
-                    </div>
-                  </div>
-                )}
-                <div>
-                  <Badge variant={user.kycStatus === 'APPROVED' ? 'approved' : user.kycStatus === 'REJECTED' ? 'rejected' : 'pending'}>
-                    {user.kycStatus || 'Not Submitted'}
-                  </Badge>
-                  {user.kyc?.rejectionReason && (
-                    <p className="text-red-600 text-sm mt-3 font-medium bg-red-50 px-4 py-3 rounded-xl border border-red-200 shadow-inner">
-                      <span className="font-bold text-red-700">Reason:</span> {user.kyc!.rejectionReason}
-                    </p>
-                  )}
-                  {(user.kycStatus === 'REJECTED' || !user.kycStatus) && (
-                    <a href="/kyc" className="inline-flex mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-bold items-center gap-2 transition-colors bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-xl border border-indigo-200">
-                      {user.kycStatus === 'REJECTED' ? 'Resubmit KYC' : 'Submit KYC'} <ArrowRight className="w-4 h-4" />
-                    </a>
-                  )}
-                </div>
+          <div className="bg-white/80 backdrop-blur-xl border border-white/70 shadow-[0_4px_24px_rgba(99,102,241,0.08)] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-100 border border-indigo-200 flex items-center justify-center text-indigo-600 shrink-0 shadow-inner">
+                <Headphones className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-800">Need Help or Support?</h3>
+                <p className="text-slate-500 text-sm font-medium">Reach our 24/7 assistance team directly via email</p>
+                <p className="text-indigo-600 font-bold text-sm mt-1">support@zerofx.club</p>
               </div>
             </div>
+            <button
+              onClick={() => openModal('support')}
+              className="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-sm whitespace-nowrap"
+            >
+              Contact Support
+            </button>
           </div>
         </motion.div>
 

@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Zap } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { useUIStore } from '@/store/uiStore';
 
 const appName = 'Zerofx.club';
 
 export default function AboutPage() {
+  const openModal = useUIStore((s) => s.openModal);
   return (
     <div className="min-h-screen relative overflow-x-hidden bg-[#f0f4ff] text-slate-800 selection:bg-indigo-500/30 selection:text-indigo-900 font-sans">
       
@@ -37,6 +39,7 @@ export default function AboutPage() {
             <div className="hidden md:flex items-center justify-center space-x-8">
               <Link href="/" className="text-slate-500 hover:text-slate-800 transition-colors pb-1">Home</Link>
               <Link href="/about" className="text-indigo-500 font-semibold transition-colors border-b-2 border-indigo-500 pb-1">About Us</Link>
+              <button onClick={() => openModal('support')} className="text-slate-500 hover:text-indigo-600 transition-colors pb-1">Support</button>
             </div>
 
             <div className="flex items-center justify-end">
@@ -120,6 +123,7 @@ export default function AboutPage() {
             <div className="flex gap-8 text-sm font-semibold text-slate-600">
               <Link href="#" className="hover:text-indigo-500 transition-colors">Privacy Policy</Link>
               <Link href="#" className="hover:text-indigo-500 transition-colors">Terms of Service</Link>
+              <button onClick={() => openModal('support')} className="hover:text-indigo-600 transition-colors">Support</button>
             </div>
 
             <p className="text-sm text-slate-600 font-medium">

@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 
 const APP_NAME = 'Zerofx.club';
+const SENDER_EMAIL = process.env.ADMIN_EMAIL || 'support@zerofx.club';
 
 const transporter = nodemailer.createTransport({
   host: 'smtp-relay.brevo.com',
@@ -73,7 +74,8 @@ export async function sendOtpEmail(email: string, otp: string, name: string): Pr
   `;
 
   await transporter.sendMail({
-    from: `"${APP_NAME}" <${process.env.ADMIN_EMAIL}>`,
+    from: `"${APP_NAME}" <${SENDER_EMAIL}>`,
+    replyTo: SENDER_EMAIL,
     to: email,
     subject: `${APP_NAME} — Your Verification Code`,
     html: emailWrapper(content),
@@ -99,7 +101,8 @@ export async function sendKycApprovedEmail(email: string, name: string): Promise
   `;
 
   await transporter.sendMail({
-    from: `"${APP_NAME}" <${process.env.ADMIN_EMAIL}>`,
+    from: `"${APP_NAME}" <${SENDER_EMAIL}>`,
+    replyTo: SENDER_EMAIL,
     to: email,
     subject: `${APP_NAME} — KYC Approved`,
     html: emailWrapper(content),
@@ -128,7 +131,8 @@ export async function sendKycRejectedEmail(email: string, name: string, reason: 
   `;
 
   await transporter.sendMail({
-    from: `"${APP_NAME}" <${process.env.ADMIN_EMAIL}>`,
+    from: `"${APP_NAME}" <${SENDER_EMAIL}>`,
+    replyTo: SENDER_EMAIL,
     to: email,
     subject: `${APP_NAME} — KYC Requires Resubmission`,
     html: emailWrapper(content),
@@ -166,7 +170,8 @@ export async function sendPaymentApprovedEmail(
   `;
 
   await transporter.sendMail({
-    from: `"${APP_NAME}" <${process.env.ADMIN_EMAIL}>`,
+    from: `"${APP_NAME}" <${SENDER_EMAIL}>`,
+    replyTo: SENDER_EMAIL,
     to: email,
     subject: `${APP_NAME} — Payment Approved (₹${amount.toLocaleString('en-IN')})`,
     html: emailWrapper(content),
@@ -200,7 +205,8 @@ export async function sendPaymentRejectedEmail(
   `;
 
   await transporter.sendMail({
-    from: `"${APP_NAME}" <${process.env.ADMIN_EMAIL}>`,
+    from: `"${APP_NAME}" <${SENDER_EMAIL}>`,
+    replyTo: SENDER_EMAIL,
     to: email,
     subject: `${APP_NAME} — Payment Rejected`,
     html: emailWrapper(content),

@@ -5,14 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUIStore } from '@/store/uiStore';
-import { LayoutDashboard, Users, FileCheck, Receipt, FileBarChart, X, ShieldAlert, Banknote } from 'lucide-react';
+import { LayoutDashboard, Users, Receipt, FileBarChart, X, ShieldAlert, Banknote } from 'lucide-react';
 
 const adminNavLinks = [
   { name: 'Overview',             href: '/admin',              icon: <LayoutDashboard className="w-5 h-5" /> },
   { name: 'Manage Users',         href: '/admin/users',        icon: <Users className="w-5 h-5" /> },
   { name: 'Updated List',         href: '/admin/recent-depositors', icon: <Banknote className="w-5 h-5" /> },
   { name: 'Withdrawal Requests',  href: '/admin/withdrawals',  icon: <Banknote className="w-5 h-5" /> },
-  { name: 'KYC Verification',     href: '/admin/kyc',          icon: <FileCheck className="w-5 h-5" /> },
   { name: 'Payment Proofs',       href: '/admin/payments',     icon: <Receipt className="w-5 h-5" /> },
   { name: 'Payment Requests',     href: '/admin/requests',     icon: <FileBarChart className="w-5 h-5" /> },
 ];

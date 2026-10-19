@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useUIStore } from '@/store/uiStore';
-import { Menu, LogOut } from 'lucide-react';
+import { Menu, LogOut, Headphones } from 'lucide-react';
 import NotificationBell from '@/components/features/NotificationBell';
 
 interface UserNavbarProps {
@@ -13,6 +13,7 @@ interface UserNavbarProps {
 
 export default function UserNavbar({ userName }: UserNavbarProps) {
   const toggleSidebar = useUIStore((s) => s.toggleSidebar);
+  const openModal = useUIStore((s) => s.openModal);
 
   const handleLogout = async () => {
     try {
@@ -53,7 +54,16 @@ export default function UserNavbar({ userName }: UserNavbarProps) {
         </div>
 
         {/* Right */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            onClick={() => openModal('support')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 font-bold text-xs transition-colors border border-transparent hover:border-indigo-100"
+            title="Customer Support"
+          >
+            <Headphones className="w-4 h-4 text-indigo-500" />
+            <span className="hidden sm:inline">Support</span>
+          </button>
+
           <div className="p-1.5 rounded-full hover:bg-indigo-50 transition-colors cursor-pointer">
             <NotificationBell />
           </div>
