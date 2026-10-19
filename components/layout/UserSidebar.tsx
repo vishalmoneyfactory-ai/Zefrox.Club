@@ -90,7 +90,7 @@ export default function UserSidebar() {
               className="relative w-72 h-full bg-white/95 backdrop-blur-3xl p-5 shadow-[4px_0_30px_rgba(99,102,241,0.12)] border-r border-slate-200 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-8 pb-5 border-b border-slate-200">
-                <span className="text-2xl font-black tracking-tighter gradient-text">
+                <span className="text-2xl font-black tracking-tighter text-[#00b6a0]">
                   Zerofx.club
                 </span>
                 <button

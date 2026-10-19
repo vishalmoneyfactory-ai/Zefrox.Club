@@ -47,7 +47,7 @@ export default function UserNavbar({ userName }: UserNavbarProps) {
           </button>
 
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-2xl font-black tracking-tighter gradient-text hidden sm:block transition-all duration-300">
+            <span className="text-2xl font-black tracking-tighter text-[#00b6a0] hidden sm:block transition-all duration-300">
               {appName}
             </span>
           </Link>

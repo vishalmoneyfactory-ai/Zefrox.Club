@@ -182,7 +182,7 @@ export default function LoginPage() {
           className="text-center mb-8 flex flex-col items-center"
         >
           <Link href="/">
-            <h1 className="text-4xl font-black tracking-tighter bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent drop-shadow-sm hover:opacity-80 transition-opacity cursor-pointer">{appName}</h1>
+            <h1 className="text-4xl font-black tracking-tighter text-[#00b6a0] drop-shadow-sm hover:opacity-80 transition-opacity cursor-pointer">{appName}</h1>
           </Link>
           <p className="text-slate-500 mt-2 font-medium">
             {activeTab === 'login' ? 'Welcome back, trader' : signupStep === 1 ? 'Start your trading journey' : signupStep === 2 ? 'Verify your identity' : 'Secure your account'}

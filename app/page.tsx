@@ -129,7 +129,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex items-center justify-between h-16 sm:h-20">
             <div className="flex items-center justify-start gap-3">
-              <span className="text-xl sm:text-2xl font-black tracking-tighter gradient-text bg-gradient-to-r from-indigo-500 to-violet-600 bg-clip-text text-transparent">{appName}</span>
+              <span className="text-xl sm:text-2xl font-black tracking-tighter text-[#00b6a0]">{appName}</span>
             </div>
             
             <div className="hidden md:flex items-center justify-center space-x-8">
@@ -556,7 +556,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-violet-600">{appName}</span>
+              <span className="text-2xl font-black text-[#00b6a0]">{appName}</span>
             </div>
             
             <div className="flex gap-8 text-sm font-semibold text-slate-500">

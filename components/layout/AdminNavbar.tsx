@@ -50,7 +50,7 @@ export default function AdminNavbar({ adminName = 'Admin' }: AdminNavbarProps) {
               <ShieldAlert className="w-5 h-5 text-white" />
             </div>
             <div className="hidden sm:flex flex-col">
-              <span className="text-xl font-black tracking-tight text-slate-800 leading-none group-hover:text-red-600 transition-colors">
+              <span className="text-xl font-black tracking-tight text-[#00b6a0] leading-none transition-colors">
                 {appName}
               </span>
               <span className="text-[10px] font-bold text-red-500 tracking-widest uppercase">Admin Panel</span>
