@@ -1,0 +1,277 @@
+'use client';
+
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Upload, X, AlertCircle, CheckCircle2, QrCode, Building, CreditCard, Landmark, Smartphone } from 'lucide-react';
+import api from '@/lib/axios';
+import { useToast } from '@/components/ui/Toast';
+import Button from '@/components/ui/Button';
+
+interface DepositModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  accountId: string;
+  onSuccess: () => void;
+}
+
+type PaymentMethod = 'NET_BANKING' | 'CARD' | 'BANK_TRANSFER' | 'UPI' | 'ADMIN_QR';
+
+const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: React.ReactNode }[] = [
+  { id: 'NET_BANKING', label: 'Net Banking', icon: <Landmark className="w-6 h-6 text-indigo-500" /> },
+  { id: 'CARD', label: 'Debit/Credit Card', icon: <CreditCard className="w-6 h-6 text-indigo-500" /> },
+  { id: 'BANK_TRANSFER', label: 'Bank Transfer (NEFT/RTGS)', icon: <Building className="w-6 h-6 text-indigo-500" /> },
+  { id: 'UPI', label: 'UPI', icon: <Smartphone className="w-6 h-6 text-indigo-500" /> },
+  { id: 'ADMIN_QR', label: 'Manual Admin QR', icon: <QrCode className="w-6 h-6 text-indigo-500" /> }
+];
+
+const UPI_APPS = [
+  { id: 'PhonePe', label: 'PhonePe', color: 'bg-purple-500 hover:bg-purple-400', icon: 'pe' },
+  { id: 'Google Pay', label: 'Google Pay', color: 'bg-blue-500 hover:bg-blue-400', icon: 'G' },
+  { id: 'Paytm', label: 'Paytm', color: 'bg-blue-600 hover:bg-blue-500', icon: 'paytm' },
+  { id: 'BharatPe', label: 'BharatPe', color: 'bg-emerald-500 hover:bg-emerald-400', icon: 'bharat' }
+];
+
+export default function DepositModal({ isOpen, onClose, accountId, onSuccess }: DepositModalProps) {
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
+  const [selectedUpiApp, setSelectedUpiApp] = useState<string | null>(null);
+  const [amount, setAmount] = useState('');
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string>('');
+  const [loading, setLoading] = useState(false);
+  const { showSuccess, showError } = useToast();
+
+  const handleMethodSelect = (method: PaymentMethod) => {
+    if (['NET_BANKING', 'CARD', 'BANK_TRANSFER'].includes(method)) {
+      showError('Your bank does not support this method.');
+      return;
+    }
+    setSelectedMethod(method);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selected = e.target.files[0];
+      if (selected.size > 10 * 1024 * 1024) {
+        showError('File size must be less than 10MB');
+        return;
+      }
+      setFile(selected);
+      setPreview(URL.createObjectURL(selected));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!file) {
+      showError('Please upload a payment screenshot');
+      return;
+    }
+    if (!amount || Number(amount) <= 0) {
+      showError('Please enter a valid amount');
+      return;
+    }
+
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('accountId', accountId);
+    formData.append('amount', amount);
+    formData.append('screenshot', file);
+    if (selectedUpiApp) {
+      formData.append('upiApp', selectedUpiApp);
+    }
+
+    try {
+      await api.post('/api/payments/upload-proof', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      showSuccess('Deposit proof uploaded successfully! Awaiting admin approval.');
+      onSuccess();
+    } catch (error: any) {
+      showError(error.response?.data?.error || 'Failed to upload proof');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetState = () => {
+    setSelectedMethod(null);
+    setSelectedUpiApp(null);
+    setAmount('');
+    setFile(null);
+    setPreview('');
+  };
+
+  const handleClose = () => {
+    resetState();
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="absolute inset-0 bg-slate-900/20 backdrop-blur-md"
+        onClick={handleClose}
+      />
+      
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="relative w-full max-w-lg bg-white/95 border border-slate-200 rounded-2xl shadow-[0_20px_60px_rgba(99,102,241,0.18)] overflow-hidden"
+      >
+        {/* Gradient top bar — teal to emerald */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500" />
+
+        <div className="flex justify-between items-center p-6 border-b border-slate-100 bg-white mt-1">
+          <h2 className="text-xl font-bold text-slate-800">Deposit Funds</h2>
+          <button onClick={handleClose} className="text-slate-400 hover:text-slate-600 transition-colors rounded-lg p-1 hover:bg-slate-100">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="p-6 max-h-[80vh] overflow-y-auto">
+          {!selectedMethod ? (
+            <div className="space-y-4">
+              <p className="text-slate-500 text-sm mb-4">Select a payment method to proceed:</p>
+              {PAYMENT_METHODS.map((method) => (
+                <button
+                  key={method.id}
+                  onClick={() => handleMethodSelect(method.id)}
+                  className="w-full flex items-center p-4 bg-white border border-slate-200 rounded-xl hover:bg-indigo-50 hover:border-indigo-300 transition-all group"
+                >
+                  <span className="text-2xl mr-4">{method.icon}</span>
+                  <span className="text-slate-700 font-semibold group-hover:text-indigo-600 transition-colors">
+                    {method.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : selectedMethod === 'UPI' && !selectedUpiApp ? (
+            <div className="space-y-6">
+              <div className="text-center">
+                <h3 className="text-slate-800 font-bold text-lg mb-2">Select UPI App</h3>
+                <p className="text-slate-500 text-sm">Choose your preferred UPI app for payment</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {UPI_APPS.map((app) => (
+                  <button
+                    key={app.id}
+                    onClick={() => setSelectedUpiApp(app.id)}
+                    className={`h-24 ${app.color} rounded-2xl flex flex-col items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg border border-white/10`}
+                  >
+                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center mb-2 shadow-inner">
+                      {app.icon === 'G' ? (
+                        <span className="text-xl font-bold text-blue-500">G</span>
+                      ) : app.icon === 'pe' ? (
+                        <span className="text-xl font-bold text-purple-600">पे</span>
+                      ) : app.icon === 'paytm' ? (
+                        <span className="text-sm font-black text-[#002e6e]">Paytm</span>
+                      ) : (
+                        <span className="text-xs font-black text-emerald-600">Bharat</span>
+                      )}
+                    </div>
+                    <span className="text-white font-bold text-sm tracking-wide">{app.label}</span>
+                  </button>
+                ))}
+              </div>
+              <Button type="button" variant="ghost" className="w-full mt-4 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50" onClick={() => setSelectedMethod(null)}>
+                Back
+              </Button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="bg-teal-50 border border-teal-200 p-4 rounded-xl flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" />
+                <div className="text-sm text-teal-800">
+                  <p className="font-semibold mb-1">Manual Deposit Instructions</p>
+                  <p className="text-teal-700">
+                    Please send the exact amount to the details below, then upload a screenshot of your successful transaction.
+                  </p>
+                  <div className="mt-3 p-3 bg-white/70 rounded-lg font-mono text-sm border border-teal-200/60 flex flex-col items-center">
+                    {selectedMethod === 'ADMIN_QR' || selectedMethod === 'UPI' ? (
+                      <div className="flex flex-col items-center">
+                        <img src="/images/admin-qr.jpeg" alt="QR Code" className="w-48 h-48 rounded-lg mb-2 object-contain bg-white p-2" />
+                        <span className="text-teal-600 font-bold mt-2 text-lg tracking-wide">Express.fx@ptyes</span>
+                        <span className="text-teal-600/80 font-medium text-sm mt-1">Scan to pay via UPI</span>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Amount to Deposit (₹)
+                  {amount && !isNaN(Number(amount)) && (
+                    <span className="text-indigo-500 ml-2">
+                      (~${(Number(amount) / 97).toFixed(2)})
+                    </span>
+                  )}
+                </label>
+                <input
+                  type="number"
+                  required
+                  min="1"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="w-full px-4 py-3 bg-white/80 border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-colors"
+                  placeholder="Enter amount"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Payment Screenshot</label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
+                  <div className={`w-full border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center transition-colors ${
+                    preview ? 'border-emerald-400/60 bg-emerald-50' : 'border-slate-200 bg-slate-50 hover:border-indigo-400/50 hover:bg-indigo-50/30'
+                  }`}>
+                    {preview ? (
+                      <div className="flex flex-col items-center text-emerald-600">
+                        <CheckCircle2 className="w-8 h-8 mb-2" />
+                        <span className="text-sm font-semibold">Screenshot Selected</span>
+                        <span className="text-xs text-slate-400 mt-1">{file?.name}</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center text-slate-400">
+                        <Upload className="w-8 h-8 mb-3 text-slate-400" />
+                        <span className="text-sm font-medium text-slate-500">Click or drag image here</span>
+                        <span className="text-xs mt-1 text-slate-400 opacity-70">JPG, PNG up to 10MB</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <Button type="button" variant="ghost" className="flex-1 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50" onClick={() => {
+                  if (selectedMethod === 'UPI') {
+                    setSelectedUpiApp(null);
+                  } else {
+                    setSelectedMethod(null);
+                  }
+                }}>
+                  Back
+                </Button>
+                <Button type="submit" variant="primary" className="flex-1 bg-gradient-to-r from-indigo-500 to-violet-600 text-white border-0 shadow-[0_4px_14px_rgba(99,102,241,0.4)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.55)]" loading={loading}>
+                  Submit Proof
+                </Button>
+              </div>
+            </form>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
