@@ -7,11 +7,12 @@ import SupportModal from '@/components/features/SupportModal';
 const appName = 'Zerofx.club';
 
 export const metadata: Metadata = {
-  title: 'Broker',
+  title: 'Zerofx.club',
   openGraph: {
-    title: 'Broker',
+    title: 'Zerofx.club',
+    description: 'Broker',
   },
-  description: `${appName} is a secure, admin-verified payment management platform. Track payments and manage transactions with ease.`,
+  description: 'Broker',
   keywords: ['payment', 'management', 'trading', 'accounts', 'secure', 'admin'],
 };
 
